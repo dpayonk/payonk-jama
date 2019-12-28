@@ -57,6 +57,7 @@ export default ({ children, location }) => (
                 position: 'absolute',
                 textAlign: 'center',
                 left: 0,
+                color: 'darkred',
                 right: 0,
                 top: rhythm(4),
                 marginTop: '0',
