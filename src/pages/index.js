@@ -4,9 +4,8 @@ import get from 'lodash/get'
 import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 
-import Bio from '../components/Bio'
 import Layout from '../components/layout'
-import { rhythm } from '../utils/typography'
+import { rhythm, scale } from '../utils/typography'
 
 class BlogIndex extends React.Component {
   render() {
@@ -21,7 +20,33 @@ class BlogIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
-        <Bio settings={author} />
+        
+        
+        <h1
+              style={{
+                ...scale(1.3),
+                
+                textAlign: 'center',
+                left: 0,
+                color: 'darkred',
+                right: 0,
+                top: rhythm(4),
+                marginTop: '0',
+                height: rhythm(2.5),
+              }}
+            >
+              <Link
+                style={{
+                  boxShadow: 'none',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                }}
+                to={'/'}
+              >
+                {siteTitle}
+              </Link>
+            </h1>
+          
         {posts.map(({ node }) => {
           const title = get(node, 'title') || node.slug
           return (
@@ -37,7 +62,7 @@ class BlogIndex extends React.Component {
               </h3>
               <small>{node.created}</small>
               <p
-                dangerouslySetInnerHTML={{ __html: node.metadata.description }}
+                dangerouslySetInnerHTML={{ __html: node.metadata.headline }}
               />
             </div>
           )
@@ -56,6 +81,8 @@ export const pageQuery = graphql`
         node {
           metadata {
             description
+            content
+            headline
           }
           slug
           title

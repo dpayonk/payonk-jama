@@ -2,9 +2,10 @@ import React from 'react'
 import { Link } from 'gatsby'
 import { StaticQuery, graphql } from 'gatsby'
 
-import cosmicjsLogo from '../../static/cosmicjs.svg'
-import gatsbyLogo from '../../static/gatsby.png'
 import { rhythm, scale } from '../utils/typography'
+import get from 'lodash/get'
+
+import Bio from '../components/Bio'
 
 // Import typefaces
 import 'typeface-montserrat'
@@ -17,6 +18,12 @@ export default ({ children, location }) => (
         cosmicjsSettings(slug: { eq: "general" }) {
           metadata {
             site_heading
+            site_title
+            author_name
+            author_bio
+            author_avatar { 
+              imgix_url
+            }
             homepage_hero {
               imgix_url
             }
@@ -26,6 +33,9 @@ export default ({ children, location }) => (
     `}
     render={data => {
       const siteTitle = data.cosmicjsSettings.metadata.site_heading
+      
+      const author = get(this, 'props.data.cosmicjsSettings.metadata')
+
       const homgePageHero =
         data.cosmicjsSettings.metadata.homepage_hero.imgix_url
       let header
@@ -51,30 +61,6 @@ export default ({ children, location }) => (
               marginBottom: `${rhythm(1.5)}`,
             }}
           >
-            <h1
-              style={{
-                ...scale(1.3),
-                position: 'absolute',
-                textAlign: 'center',
-                left: 0,
-                color: 'darkred',
-                right: 0,
-                top: rhythm(4),
-                marginTop: '0',
-                height: rhythm(2.5),
-              }}
-            >
-              <Link
-                style={{
-                  boxShadow: 'none',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-                to={'/'}
-              >
-                {siteTitle}
-              </Link>
-            </h1>
           </div>
         )
       } else {
@@ -123,6 +109,7 @@ export default ({ children, location }) => (
               padding: `0 20px 80px 0`,
             }}
           >
+            
           </footer>
         </div>
       )
