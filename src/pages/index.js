@@ -22,35 +22,13 @@ class BlogIndex extends React.Component {
         <Helmet title={siteTitle} />
         
         
-        <h1
-              style={{
-                ...scale(1.3),
-                
-                textAlign: 'center',
-                left: 0,
-                color: 'darkred',
-                right: 0,
-                top: rhythm(4),
-                marginTop: '0',
-                height: rhythm(2.5),
-              }}
-            >
-              <Link
-                style={{
-                  boxShadow: 'none',
-                  textDecoration: 'none',
-                  color: 'inherit',
-                }}
-                to={'/'}
-              >
-                {siteTitle}
-              </Link>
-            </h1>
+        
           
         {posts.map(({ node }) => {
           const title = get(node, 'title') || node.slug
           return (
             <div key={node.slug}>
+              
               <h3
                 style={{
                   marginBottom: rhythm(1 / 4),
