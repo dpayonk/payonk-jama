@@ -62,8 +62,10 @@ export default ({ children, location }) => (
               marginBottom: `${rhythm(1.5)}`,
             }}
           >
-            <nav style={{background:"rgba(255,255,255,0.3)", position: 'absolute', width: '100%', zIndex: '1', padding: "0px 24px"}}>           
-              <Link style={{fontSize: "4rem", color: "rgba(112,155,138)", textDecoration: "none"}} to="/">P</Link>
+            <nav style={{ position: 'absolute', width: '100%', zIndex: '1', padding: "0px 24px"}}>           
+              <Link style={{fontSize: "4rem", color: "rgba(112,155,138)", textDecoration: "none"}} to="/">
+              <img style={{maxWidth:"20vw"}} src={'/logo-payonk.png'} alt="Logo" />
+              </Link>
                 <div style={{display:"inline-block", margin:"0px 8vw 0px 16vw"}}>
                   
                 </div>
