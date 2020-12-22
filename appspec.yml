@@ -1,0 +1,25 @@
+domains:
+- domain: www.payonk.com
+  type: PRIMARY
+- domain: payonk.com
+  type: ALIAS
+name: payonk-jama
+region: nyc
+static_sites:
+- build_command: npm run build
+  environment_slug: gatsby
+  envs:
+  - key: COSMIC_BUCKET
+    scope: BUILD_TIME
+    value: payonk-jama
+  - key: COSMIC_READ_KEY
+    scope: BUILD_TIME
+    type: SECRET
+    value: EV[1:WUPX1usWiNufHolgmJLuootnQNovpNEE:lwEX+wETAUbxokoyg6BU1RZa3IyO+BxzwTBrsCllMruUh18uBwnajmHtKYC7bykxPn6ihb+QbnHSsUwxK1qk7b0o]
+  github:
+    branch: master
+    deploy_on_push: true
+    repo: dpayonk/payonk-jama
+  name: payonk-jama
+  routes:
+  - path: /

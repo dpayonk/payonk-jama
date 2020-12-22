@@ -12,7 +12,7 @@ export default function HTML(props) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
         {props.headComponents}
-        <link href="http://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
+        <link href="https://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
         <style dangerouslySetInnerHTML={{__html: `
           h1, h2, h3 {font-family: 'Adlinnaka', sans-serif;}
        `}} />
