@@ -76,7 +76,6 @@ class BlogPostTemplate extends React.Component {
             position: 'relative',
           }}
         />
-        <h2>Content</h2>
         <div
           className="post-content"
           dangerouslySetInnerHTML={{ __html: post.content }}
