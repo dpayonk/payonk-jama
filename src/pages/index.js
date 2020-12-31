@@ -7,7 +7,7 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import { rhythm, scale } from '../utils/typography'
 
-class BlogIndex extends React.Component {
+class RootIndex extends React.Component {
   render() {
     const siteTitle = get(
       this,
@@ -20,14 +20,16 @@ class BlogIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
+        <div class="container">
+            <section>
+
+            
+        <h2>Recent Posts</h2>
         
-        
-        
-          
         {posts.map(({ node }) => {
           const title = get(node, 'title') || node.slug
           return (
-            <div key={node.slug}>
+            <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
               
               <h3
                 style={{
@@ -45,12 +47,14 @@ class BlogIndex extends React.Component {
             </div>
           )
         })}
+        </section>
+        </div>
       </Layout>
     )
   }
 }
 
-export default BlogIndex
+export default RootIndex
 
 export const pageQuery = graphql`
   query IndexQuery {
