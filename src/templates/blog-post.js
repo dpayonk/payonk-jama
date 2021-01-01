@@ -51,7 +51,8 @@ class BlogPostTemplate extends React.Component {
         <h1
           style={{
             marginTop: rhythm(1),
-            marginBottom: "2rem"
+            marginBottom: "2rem",
+            fontSize: "3rem"
           }}
         >
           {post.title}
@@ -78,7 +79,7 @@ class BlogPostTemplate extends React.Component {
           }}
         />
         <div
-          className="post-content"
+          className="post-content" style={{marginTop: "80px"}}
           dangerouslySetInnerHTML={{ __html: post.content }}
         />        
         <hr

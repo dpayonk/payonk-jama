@@ -27,6 +27,9 @@ export default function HTML(props) {
           .navbar-burger{
             box-shadow: "none"
           }
+          .navbar:hover {
+            background:#A5C9FF !important;
+          }
        `}} />
         <style>
           

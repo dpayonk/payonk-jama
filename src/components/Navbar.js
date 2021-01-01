@@ -1,10 +1,10 @@
 import React from 'react'
 
 export default ({ settings }) => (  
-        <nav style={{width: '100%', background: 'transparent', zIndex: 1}} className="navbar" role="navigation" aria-label="main navigation">
+        <nav id="main-menu" style={{width: '100%', background: 'transparent', zIndex: 1}} className="navbar" role="navigation" aria-label="main navigation">
           <div className="navbar-brand">
             <a className="navbar-item" href="/" style={{boxShadow: "none"}}>
-              <img src="https://payonk.com/logo-payonk.png" width={112} height={28} />
+              <img src="https://payonk.com/logo-payonk.png" height={42} />
             </a>
             <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
               <span aria-hidden="true" />

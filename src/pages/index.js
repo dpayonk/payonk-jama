@@ -20,34 +20,37 @@ class RootIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
-        <div class="container">
-            <section>
-
-            
-        <h2>Recent Posts</h2>
-        
-        {posts.map(({ node }) => {
-          const title = get(node, 'title') || node.slug
-          return (
-            <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
+        <div class="container columns">
+          <div class="column is-two-thirds">
+            <section> 
+                <h2>Recent Posts</h2>
               
-              <h3
-                style={{
-                  marginBottom: rhythm(1 / 4),
-                }}
-              >
-                <Link style={{ boxShadow: 'none' }} to={`posts/${node.slug}`}>
-                  {title}
-                </Link>
-              </h3>
-              <small>{node.created}</small>
-              <p
-                dangerouslySetInnerHTML={{ __html: node.metadata.headline }}
-              />
+                  {posts.map(({ node }) => {
+                    const title = get(node, 'title') || node.slug
+                    return (
+                      <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
+                        
+                        <h3
+                          style={{
+                            marginBottom: rhythm(1 / 4),
+                          }}
+                        >
+                          <Link style={{ boxShadow: 'none' }} to={`posts/${node.slug}`}>
+                            {title}
+                          </Link>
+                        </h3>
+                        <small>{node.created}</small>
+                        <p
+                          dangerouslySetInnerHTML={{ __html: node.metadata.headline }}
+                        />
+                      </div>
+                    )
+                  })}
+              </section>
             </div>
-          )
-        })}
-        </section>
+            <div class="column is-one-third pull-right">
+                  <h2>Topics</h2>
+            </div>
         </div>
       </Layout>
     )
