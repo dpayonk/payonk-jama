@@ -4,4 +4,6 @@ import Loadable from "@loadable/component"
 
 const LoadableCliqueViewer = Loadable(() => import("./CliqueViewer"))
 
-export default LoadableCliqueViewer
+const LoadableAuthForm = Loadable(() => import("./AuthForm"))
+
+export { LoadableCliqueViewer, LoadableAuthForm}

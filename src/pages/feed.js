@@ -19,10 +19,9 @@ class AboutIndex extends React.Component {
       <Layout location={location}>
         <Helmet title={siteTitle} />       
         <section style={{marginTop: "20vh"}}>
-        <h1 style={{paddingBottom: "3vh"}}>About this site</h1>
+        <h1 style={{paddingBottom: "3vh"}}>Our Family Feed</h1>
         <p style={{maxWidth: "75vw"}}>
-            This site is maintained by Dennis Payonk for all personal projects.  Any opinions
-            here reflect my own and not any of my employers.
+            <img src="https://imgix.cosmicjs.com/cad48a00-4d6e-11eb-a95b-8ff65ff92e11-2020-04-0520-59-55664.jpeg" />
         </p>
         </section>
         

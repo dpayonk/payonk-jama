@@ -7,8 +7,7 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import { rhythm, scale } from '../utils/typography'
 
-import LoadableCliqueViewer from '../app/client_library'
-// import CliqueViewer  from '../app/CliqueViewer'
+import {LoadableAuthForm} from '../app/client_library'
 
 class RootIndex extends React.Component {
   render() {
@@ -27,7 +26,7 @@ class RootIndex extends React.Component {
           <div className="column is-two-thirds">
             <section> 
               <section>
-                  <LoadableCliqueViewer />
+                  <LoadableAuthForm />
               </section>
                 <h2>Recent Posts</h2>
               

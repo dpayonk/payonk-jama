@@ -40,7 +40,7 @@ export default ({ settings }) => (
               </div>
               <div className="navbar-item">
                 <div className="buttons">
-                  <a href="https://clique.payonk.com/login/" className="button is-light">
+                  <a href="/feed" className="button is-light">
                     Log in
                   </a>
                 </div>
