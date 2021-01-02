@@ -7,6 +7,9 @@ import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 import { rhythm, scale } from '../utils/typography'
 
+import LoadableCliqueViewer from '../app/client_library'
+// import CliqueViewer  from '../app/CliqueViewer'
+
 class RootIndex extends React.Component {
   render() {
     const siteTitle = get(
@@ -20,9 +23,12 @@ class RootIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
-        <div class="container columns">
-          <div class="column is-two-thirds">
+        <div className="container columns">
+          <div className="column is-two-thirds">
             <section> 
+              <section>
+                  <LoadableCliqueViewer />
+              </section>
                 <h2>Recent Posts</h2>
               
                   {posts.map(({ node }) => {
@@ -48,8 +54,17 @@ class RootIndex extends React.Component {
                   })}
               </section>
             </div>
-            <div class="column is-one-third pull-right">
-                  <h2>Topics</h2>
+            <div className="column is-one-third pull-right">
+              
+            
+                  <h2 style={{paddingBottom: "20px"}}>Topics</h2>                  
+                  <section>
+                    <h4 style={{paddingBottom: "20px"}}>NFL Week 17</h4>
+                    <div>
+                    <div className="metabet-gametile metabet-size-320x50 metabet-query-456967"></div>        
+                    </div>                  
+                  </section>
+                  
             </div>
         </div>
       </Layout>

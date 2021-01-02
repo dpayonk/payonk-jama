@@ -11,7 +11,7 @@ export default function HTML(props) {
         {props.headComponents}
         <link href="https://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
-
+        <script defer src="https://go.metabet.io/js/global.js"></script>
         <style dangerouslySetInnerHTML={{__html: `
           h1, h2, h3 {
             font-family: 'Adlinnaka', 
