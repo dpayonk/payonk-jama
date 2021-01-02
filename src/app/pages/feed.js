@@ -3,11 +3,9 @@ import { Link } from 'gatsby'
 import get from 'lodash/get'
 import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
+import Layout from '../../components/layout'
 
-import Layout from '../components/layout'
-import { rhythm, scale } from '../utils/typography'
-
-class AboutIndex extends React.Component {
+class FeedIndex extends React.Component {
   render() {
     const siteTitle = get(
       this,
@@ -30,7 +28,7 @@ class AboutIndex extends React.Component {
   }
 }
 
-export default AboutIndex
+export default FeedIndex
 
 // export const pageQuery = graphql`
 //   query IndexQuery {

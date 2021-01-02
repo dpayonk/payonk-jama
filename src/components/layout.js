@@ -48,7 +48,7 @@ export default ({ children, location }) => (
         postsPath = __PATH_PREFIX__ + `/posts`
       }
 
-      if (location.pathname === rootPath) {
+      if (location !== undefined && location.pathname === rootPath) {
         header = (
           <div>
             <Navbar />

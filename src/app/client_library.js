@@ -2,8 +2,9 @@ import Loadable from "@loadable/component"
 
 // these two libraries are client-side only
 
+const LoadableAuthForm = Loadable(() => import("./AuthForm"))
+const LoadableAuthService = Loadable(() => import("./AuthService"))
 const LoadableCliqueViewer = Loadable(() => import("./CliqueViewer"))
 
-const LoadableAuthForm = Loadable(() => import("./AuthForm"))
 
-export { LoadableCliqueViewer, LoadableAuthForm}
+export { LoadableCliqueViewer, LoadableAuthForm, LoadableAuthService}

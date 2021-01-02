@@ -20,8 +20,13 @@ class AuthForm extends Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  async componentDidMount(){
+  async isLoggedIn() {
     const isLoggedIn = await this.state.magic.user.isLoggedIn();
+    return isLoggedIn;
+  }
+
+  async componentDidMount(){
+    const isLoggedIn = await this.isLoggedIn();
     if (isLoggedIn){
       const idToken = await this.state.magic.user.getIdToken();
       
@@ -84,6 +89,7 @@ class AuthForm extends Component {
         </form>
   </div>);
  }
-}
+};
+
 
 export default AuthForm
