@@ -50,11 +50,6 @@ class AuthForm extends Component {
   async handleLogin(e) {
     e.preventDefault();
     if(this.isValidEmail(this.state.email)){
-      /* One-liner login 🤯 */
-      // The reference implementation is wrong
-
-      // let redirectURI = window.location.protocol + "//" + window.location.host + "/feed";
-      let redirectURI = "Hello";
       this.setState({currentState: "Starting auth process..."});
 
       await this.state.authService.loginMagic(this.state.email);
@@ -99,7 +94,7 @@ class AuthForm extends Component {
     return (<div style={{minHeight: "10vh", marginBottom: "5vh"}}>
       <h1>{label}</h1>
       <br/><br/>
-      <p>{description}</p>      
+      <div>{description}</div>      
     </div>);
  }
 };

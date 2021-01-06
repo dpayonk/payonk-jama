@@ -24,11 +24,13 @@ class App extends React.Component {
 
   async checkAuth() {
     // for testing... await new Promise(r => setTimeout(r, 2000));
-    let isLoggedInd = await this.state.service.isLoggedIn()
-    this.setState({isLoggedIn: isLoggedInd, status: 'complete'});
+    let isLoggedIn = await this.state.service.isLoggedIn();
+    console.log(`Check Auth Status: ${isLoggedIn}`);
+    this.setState({isLoggedIn: isLoggedIn, status: 'complete'});
   }
 
   async componentDidMount(){
+    console.log("App Mounted");
     this.checkAuth();
   }
 

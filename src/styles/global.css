@@ -1,40 +1,36 @@
-
 .feature-square-image {
-    max-width: 50vw;
+  max-width: 50vw;
 }
 
-.main-content{
+.main-content {
   margin-top: 75px;
 }
 
 h1 {
-  margin-top: 1.75rem; 
-  margin-bottom: 2rem; 
+  margin-top: 1.75rem;
+  margin-bottom: 2rem;
   font-size: 3rem;
 }
 
 h2 {
-    padding-bottom: "20px";
-    text-transform: capitalize;
+  padding-bottom: '20px';
+  text-transform: capitalize;
 }
 
 .post-content {
-    text-align: justify;
-  }
-  .post-hero {
-    /*
+  text-align: justify;
+  margin: 80px;
+}
+.post-content p {
+  font-size: 1.5rem;
+  max-width: 75vw;
+}
+
+.post-hero {
+  /*
     width: calc(100% + ${rhythm(8)});
     margin-left: ${rhythm(-4)};
     height: ${rhythm(18)}; 
     */
-    height: 20vh;
-  }
-  
-  
-  /*@media (max-width: ${rhythm(32)}) {*/
-    .post-hero {
-      /*width: calc(100% + ${rhythm((3 / 4) * 2)});*/
-      /* margin-left: ${rhythm(-3 / 4)};*/
-      /* height: ${rhythm(13)};*/
-      height: 13vh;    
-    }
+  height: 50vh;
+}

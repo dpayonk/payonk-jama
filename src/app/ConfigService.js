@@ -22,6 +22,10 @@ class ConfigService extends Component {
         return this.environment;
     }
 
+    getAppRoute(){
+        return '/app';
+    }
+
     getSetting(key) {
         console.log(`Fetching maybe unknown key ${key}`);
         console.log(`Current Environment: ${this.environment}`);
@@ -35,6 +39,7 @@ class ConfigService extends Component {
     get_magic_key(){
         console.log(`Current Environment: ${this.environment}`);
         if(this.environment !== 'production'){
+            console.log(`Using key: ${this.configs.development.MAGIC_PUBLISHABLE_KEY}`)
             return this.configs.development.MAGIC_PUBLISHABLE_KEY;
         } else {
             return this.configs.production.MAGIC_PUBLISHABLE_KEY;
