@@ -9,6 +9,9 @@ static_sites:
 - build_command: npm run build
   environment_slug: gatsby
   envs:
+  - key: NODE_ENV
+    value: production
+    scope: BUILD_TIME
   - key: COSMIC_BUCKET
     scope: BUILD_TIME
     value: payonk-jama

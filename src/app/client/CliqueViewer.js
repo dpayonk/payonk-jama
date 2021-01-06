@@ -1,12 +1,12 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { graphql } from 'gatsby'
-import bannerImage from '../../static/french-lick.jpg'
+// import { graphql } from 'gatsby' // cant use gatsby because this is client side
 
+/* Rethink structure with the above */
+import bannerImage from '../../../static/french-lick.jpg'
+import Loader from '../../components/Loader';
 
-import Loader from '../components/Loader';
-// import {LoadableAuthService} from './client_library';
-import AuthService from './services/AuthService'
+import AuthService from './services/AuthService' // Changed auth service architecture to be runtime oriented
 
 
 class CliqueViewer extends Component {

@@ -2,7 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import AuthService from './services/AuthService'
 
-import Loader from '../components/Loader';
+import Loader from '../../components/Loader';
+import ConfigService from '../ConfigService';
 
 class AuthForm extends Component {
   
@@ -74,7 +75,8 @@ class AuthForm extends Component {
     }
 
     if (this.state.isLoggedIn){
-      label = "Welcome back!";
+      label = `Welcome!`;
+
       description = (<div>
         <p style={{textIndent: "20px"}}>
           Check out the <a style={{padding: "5px"}} href="/app"> private feed</a> for new pics

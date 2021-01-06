@@ -6,7 +6,7 @@ import { Router } from "@reach/router"
 import AboutIndex from "../pages/about"
 import FeedIndex from "../app/pages/feed"
 import {LoadableAuthForm} from "../app/client_library"
-import AuthService from "../app/services/AuthService"
+import AuthService from "../app/client/services/AuthService"
 import Layout from '../components/layout'
 import Loader from "../components/Loader"
 

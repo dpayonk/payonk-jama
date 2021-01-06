@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Magic } from 'magic-sdk';
-
+import ConfigService from '../../ConfigService';
 
 class AuthService extends Component{
   constructor(props){
@@ -8,7 +8,8 @@ class AuthService extends Component{
   }
 
   getMagicFactory(){
-    const apiKey = 'pk_test_05CC9C10E2A6DA8C';
+    const cfg = new ConfigService();
+    const apiKey = cfg.get_magic_key();
     return new Magic(apiKey);
   }
 
