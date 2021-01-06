@@ -59,26 +59,7 @@ export default ({ children, location }) => (
           </section>
             
           </div>
-        )
-      // } else if (location.pathname === postsPath) {
-      //   header = (
-      //     <div>
-      //       <Navbar />
-      //       <section className="hero">
-      //         <div className="hero-body" 
-      //           style={{
-      //             backgroundColor: '#007ACC',
-      //             backgroundImage: `url("${homgePageHero}?w=2000")`,
-      //             backgroundSize: 'cover',
-      //             backgroundPosition: 'right',
-      //             width: '100%',
-      //             position: 'relative',
-      //           }}>
-      //       </div>
-      //       </section>
-      //     </div>
-      //   )
-
+        )      
       } else {
         header = (
           <div>

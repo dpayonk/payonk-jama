@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import { Magic } from 'magic-sdk';
 
+import Loader from '../components/Loader';
+
 class AuthForm extends Component {
   
   constructor(props) {
@@ -12,7 +14,7 @@ class AuthForm extends Component {
       date: new Date(),
       email: "", 
       isLoggedIn: false,
-      currentState: "",
+      currentState: "initialized",
       magic: new Magic(apiKey)
     };
 
@@ -29,13 +31,12 @@ class AuthForm extends Component {
     const isLoggedIn = await this.isLoggedIn();
     if (isLoggedIn){
       const idToken = await this.state.magic.user.getIdToken();
-      
-
       this.setState({isLoggedIn: isLoggedIn, idToken: idToken});
-
     } else {
+
       this.setState({isLoggedIn: isLoggedIn});    
     }
+    this.setState({currentState: 'mounted'});
   }
 
   handleChange(event) {
@@ -69,25 +70,42 @@ class AuthForm extends Component {
 
   render() {
     let label = "Check out pics of our family!";
+    let description = (<p>Add yourself to the waitlist to check out the latest updates!</p>);
+    let form = "";
+
+    if (this.state.currentState !== 'mounted'){
+      return (
+      <div style={{minHeight: "10vh"}}> 
+      <Loader />
+      </div>);
+    }
 
     if (this.state.isLoggedIn){
       label = "Welcome back!";
+      description = (<div>
+        <p style={{textIndent: "20px"}}>
+          Check out the <a style={{padding: "5px"}} href="/feed"> private feed</a> for new pics
+          </p>
+        <a href="/feed" />
+      </div>);
     }
 
-  return (<div>
-    <h1>{label}</h1>
-    <br/><br/>
-    <p>Add yourself to the waitlist to check out the latest updates!</p>
-    <div>{this.state.currentState}</div>
-        <form>
-          <input value={this.state.email} onChange={this.handleChange} className="input" type="email" name="email" 
-          required="required" placeholder="Enter your email" />
-          <br/><br/>
-          <button onClick={this.handleLogin} className="button is-light pull-right" type="submit">
-            Register
-          </button>
-        </form>
-  </div>);
+    if (!this.state.isLoggedIn){
+      description = (<form>
+        <input value={this.state.email} onChange={this.handleChange} className="input" type="email" name="email" 
+        required="required" placeholder="Enter your email" />
+        <br/><br/>
+        <button onClick={this.handleLogin} className="button is-light pull-right" type="submit">
+          Register
+        </button>
+      </form>
+      );
+    }
+    return (<div style={{minHeight: "10vh", marginBottom: "5vh"}}>
+      <h1>{label}</h1>
+      <br/><br/>
+      <p>{description}</p>      
+    </div>);
  }
 };
 

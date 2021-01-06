@@ -16,7 +16,7 @@ class RootIndex extends React.Component {
       'props.data.cosmicjsSettings.metadata.site_title'
     )
     const posts = get(this, 'props.data.allCosmicjsPosts.edges')
-    const author = get(this, 'props.data.cosmicjsSettings.metadata')
+    const labels = get(this, 'props.data.whealthy.getObjects.objects')
     const location = get(this, 'props.location')
 
     return (
@@ -52,18 +52,25 @@ class RootIndex extends React.Component {
                     )
                   })}
               </section>
-            </div>
+          </div>
             <div className="column is-one-third pull-right">
               
             
-                  <h2 style={{paddingBottom: "20px"}}>Topics</h2>                  
-                  <section>
-                    <h4 style={{paddingBottom: "20px"}}>NFL Week 17</h4>
-                    <div>
-                    <div className="metabet-gametile metabet-size-320x50 metabet-query-456967"></div>        
-                    </div>                  
-                  </section>
-                  
+                  <h2 style={{paddingBottom: "20px"}}>Interests</h2>       
+                  {
+                    labels.map((label) => {
+                      return (<div style={{marginBottom: "3vh"}} key={label.slug}>
+                         <Link style={{ boxShadow: 'none' }} to={`topics/${label.slug}`}>
+                            <h4>
+                            {label.title}
+                            </h4>
+                          </Link>
+                        <div style={{visibility: "hidden"}}>
+                          Content related to the interest  
+                        </div>
+                      </div>)
+                    })
+                  }           
             </div>
         </div>
       </Layout>
@@ -89,6 +96,7 @@ export const pageQuery = graphql`
         }
       }
     }
+    
     cosmicjsSettings(slug: { eq: "general" }) {
       metadata {
         site_title
@@ -99,5 +107,22 @@ export const pageQuery = graphql`
         }
       }
     }
+
+    whealthy {
+ 
+      getObjects(bucket_slug: "payonk-jama", input: {
+        limit: 20,
+        read_key: "",
+        type: "labels"
+      }) {
+        objects {
+          slug
+          title
+          content
+        }
+      }
+    }
+    
+
   }
 `

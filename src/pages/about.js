@@ -32,32 +32,3 @@ class AboutIndex extends React.Component {
 }
 
 export default AboutIndex
-
-// export const pageQuery = graphql`
-//   query IndexQuery {
-//     allCosmicjsPosts(sort: { fields: [created], order: DESC }, limit: 1000) {
-//       edges {
-//         node {
-//           metadata {
-//             description
-//             content
-//             headline
-//           }
-//           slug
-//           title
-//           created(formatString: "DD MMMM, YYYY")
-//         }
-//       }
-//     }
-//     cosmicjsSettings(slug: { eq: "general" }) {
-//       metadata {
-//         site_title
-//         author_name
-//         author_bio
-//         author_avatar {
-//           imgix_url
-//         }
-//       }
-//     }
-//   }
-// `

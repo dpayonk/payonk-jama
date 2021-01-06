@@ -18,8 +18,17 @@ class AuthService{
 
   async getProfile() {
     if(await this.isLoggedIn()){
-      debugger;
-      return this.magic.user.getProfile;
+      // Assumes a user is already logged in
+      try {
+
+        const { email, publicAddress } = await this.magic.user.getMetadata();
+        console.log("No exctuion");
+        return {email, publicAddress};
+      } catch {
+        console.error("An error was thrown");
+        // Handle errors if required!
+        return null;
+      }
     } else {
       return null;
     }

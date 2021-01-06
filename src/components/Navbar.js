@@ -27,10 +27,13 @@ export default ({ settings }) => (
                   More
                 </a>
                 <div className="navbar-dropdown">
+                <a href="/eating" className="navbar-item" style={{boxShadow: "none"}}>
+                    Recipes
+                  </a>
+                  <hr className="navbar-divider" />
                   <a href="/about" className="navbar-item" style={{boxShadow: "none"}}>
                     About
                   </a>
-                  <hr className="navbar-divider" />
                   <a href="mailto:us@payonk.com" subject="I would like to help" className="navbar-item"
                   style={{boxShadow: "none"}}
                   >

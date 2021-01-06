@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 import Layout from '../../components/layout'
+import {LoadableCliqueViewer} from '../client_library'
 
 class FeedIndex extends React.Component {
   render() {
@@ -15,46 +16,20 @@ class FeedIndex extends React.Component {
 
     return (
       <Layout location={location}>
-        <Helmet title={siteTitle} />       
-        <section style={{marginTop: "20vh"}}>
-        <h1 style={{paddingBottom: "3vh"}}>Our Family Feed</h1>
-        <p style={{maxWidth: "75vw"}}>
-            <img src="https://imgix.cosmicjs.com/cad48a00-4d6e-11eb-a95b-8ff65ff92e11-2020-04-0520-59-55664.jpeg" />
-        </p>
-        </section>
-        
+        <Helmet title={siteTitle} />     
+        <div className="container" style={{marginTop: "10vh"}}>
+          <div className="columns">
+            <div className="column">
+              <h1 style={{textAlign: "center", paddingBottom: "3vh"}}>Our Family Feed</h1>
+            </div>
+          </div>
+          <div className="container">
+            <LoadableCliqueViewer />
+          </div>
+        </div>
       </Layout>
     )
   }
 }
 
 export default FeedIndex
-
-// export const pageQuery = graphql`
-//   query IndexQuery {
-//     allCosmicjsPosts(sort: { fields: [created], order: DESC }, limit: 1000) {
-//       edges {
-//         node {
-//           metadata {
-//             description
-//             content
-//             headline
-//           }
-//           slug
-//           title
-//           created(formatString: "DD MMMM, YYYY")
-//         }
-//       }
-//     }
-//     cosmicjsSettings(slug: { eq: "general" }) {
-//       metadata {
-//         site_title
-//         author_name
-//         author_bio
-//         author_avatar {
-//           imgix_url
-//         }
-//       }
-//     }
-//   }
-// `

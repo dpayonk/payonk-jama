@@ -1,89 +1,86 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { Magic } from 'magic-sdk';
+import { graphql } from 'gatsby'
+import bannerImage from '../../static/french-lick.jpg'
+
+
+import Loader from '../components/Loader';
+// import LoadableAuthService from './client_library';
+import AuthService from './services/AuthService'
+
 
 class CliqueViewer extends Component {
-  
+
   constructor(props) {
-    super(props);    
-    const apiKey = 'pk_test_05CC9C10E2A6DA8C';
-    
+    super(props);
+
     this.state = {
-      date: new Date(),
-      email: "", 
-      isLoggedIn: false,
-      currentState: "",
-      magic: new Magic(apiKey)
+      isAuthorized: false,
+      username: "",
+      ready: false,
+      authService: new AuthService()
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
   }
 
-  async componentDidMount(){
-    const isLoggedIn = await this.state.magic.user.isLoggedIn();
-    if (isLoggedIn){
-      const idToken = await this.state.magic.user.getIdToken();
-      
+  async componentDidMount() {
+    // const isLoggedIn = await this.state.AuthService.isLoggedIn();       
+    const profile = await this.state.authService.getProfile();
 
-      this.setState({isLoggedIn: isLoggedIn, idToken: idToken});
+    if (profile !== null) {
+      console.log(profile);
+      this.setState({ isAuthorized: true, username: profile.email });
+      console.log("running GQL");
+      // TODO: This needs to be replaced to 
+      // payonk-api for authorization
+      // and payonk-api for images and locations
+      // const contacts = await get(this, 'props.data.whealthy.contacts');
 
-    } else {
-      this.setState({isLoggedIn: isLoggedIn});    
+      this.setState({contacts: contacts});
     }
+
+    // check to see is valid email
+    this.setState({ ready: true });
   }
 
   handleChange(event) {
-    this.setState({email: event.target.value});
+    this.setState({ email: event.target.value });
   }
-
-  isValidEmail(emailText) {
-    return true;
-  }
-
-  async handleLogin(e) {
-    e.preventDefault();
-    if(this.isValidEmail(this.state.email)){
-      /* One-liner login 🤯 */
-      // The reference implementation is wrong
-
-      let redirectURI = window.location.protocol 
-      + "//" 
-      + window.location.host + "/feed";
-
-      this.setState({currentState: "Starting auth process..."});
-
-      await this.state.magic.auth.loginWithMagicLink(
-        { email: this.state.email, 
-          showUI: true,
-          redirectURI: redirectURI 
-        }
-      );
-    }
-  };
 
   render() {
     let label = "Check out pics of our family!";
 
-    if (this.state.isLoggedIn){
-      label = "Welcome back!";
+    if (!this.state.ready) {
+      return (
+        <div className="has-text-centered">
+<Loader />
+        </div>
+
+        
+      )
+    } else {
+      let personalizedMessage = this.state.username;
+      const caption = "See our new family";
+      // is authorized?
+      return (
+        <div>
+        <div className="columns is-centered">
+            <div className="column is-full has-text-centered">
+            <h2>{personalizedMessage}</h2>
+          </div>
+        </div>
+        <div style={{ marginTop: "10vh" }} className="columns is-centered">
+          <div style={{ textAlign: "center" }} className="column is-full">
+            <h3 style={{ paddingBottom: "3vh" }}>{caption}</h3>
+            <img className="feature-square-image" src={bannerImage} />
+          </div>
+        </div>
+        </div >);
     }
 
-  return (<div>
-    <h1>{label}</h1>
-    <br/><br/>
-    <p>Add yourself to the waitlist to check out the latest updates!</p>
-    <div>{this.state.currentState}</div>
-        <form>
-          <input value={this.state.email} onChange={this.handleChange} className="input" type="email" name="email" 
-          required="required" placeholder="Enter your email" />
-          <br/><br/>
-          <button onClick={this.handleLogin} className="button is-light pull-right" type="submit">
-            Register
-          </button>
-        </form>
-  </div>);
- }
+  }
 }
 
 export default CliqueViewer
+

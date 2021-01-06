@@ -6,8 +6,9 @@ import { Router } from "@reach/router"
 import AboutIndex from "../pages/about"
 import FeedIndex from "../app/pages/feed"
 import {LoadableAuthForm} from "../app/client_library"
-import AuthService from "../app/AuthService"
+import AuthService from "../app/services/AuthService"
 import Layout from '../components/layout'
+import Loader from "../components/Loader"
 
 import ProfileIndex from "../app/pages/profile"
 
@@ -34,7 +35,9 @@ class App extends React.Component {
   render(){
     if (this.state.status == 'loading' ) {
       return (
-        <div style={{textAlign: "center", marginTop: "33vh"}}>Loading...</div>
+        <div style={{textAlign: "center", marginTop: "33vh"}}>
+          <Loader />
+        </div>
       );
     }
     else if (!this.state.status !== 'loading' && !this.state.isLoggedIn){
