@@ -5,7 +5,7 @@ import bannerImage from '../../static/french-lick.jpg'
 
 
 import Loader from '../components/Loader';
-// import LoadableAuthService from './client_library';
+// import {LoadableAuthService} from './client_library';
 import AuthService from './services/AuthService'
 
 
@@ -17,16 +17,16 @@ class CliqueViewer extends Component {
     this.state = {
       isAuthorized: false,
       username: "",
-      ready: false,
-      authService: new AuthService()
+      ready: false    
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
   async componentDidMount() {
-    // const isLoggedIn = await this.state.AuthService.isLoggedIn();       
-    const profile = await this.state.authService.getProfile();
+    // const isLoggedIn = await this.state.AuthService.isLoggedIn();   
+    let authService = new AuthService();    
+    const profile = await authService.getProfile();
 
     if (profile !== null) {
       console.log(profile);
@@ -36,7 +36,7 @@ class CliqueViewer extends Component {
       // payonk-api for authorization
       // and payonk-api for images and locations
       // const contacts = await get(this, 'props.data.whealthy.contacts');
-
+      const contacts = {};
       this.setState({contacts: contacts});
     }
 

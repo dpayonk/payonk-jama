@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { Magic } from 'magic-sdk';
+import AuthService from './services/AuthService'
 
 import Loader from '../components/Loader';
 
@@ -8,14 +8,13 @@ class AuthForm extends Component {
   
   constructor(props) {
     super(props);    
-    const apiKey = 'pk_test_05CC9C10E2A6DA8C';
     
     this.state = {
       date: new Date(),
       email: "", 
       isLoggedIn: false,
       currentState: "initialized",
-      magic: new Magic(apiKey)
+      authService: new AuthService()
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,15 +22,15 @@ class AuthForm extends Component {
   }
 
   async isLoggedIn() {
-    const isLoggedIn = await this.state.magic.user.isLoggedIn();
+    const isLoggedIn = await this.state.authService.isLoggedIn();
     return isLoggedIn;
   }
 
   async componentDidMount(){
     const isLoggedIn = await this.isLoggedIn();
     if (isLoggedIn){
-      const idToken = await this.state.magic.user.getIdToken();
-      this.setState({isLoggedIn: isLoggedIn, idToken: idToken});
+      const profile = await this.state.authService.getProfile();
+      this.setState({isLoggedIn: isLoggedIn, profile: profile});
     } else {
 
       this.setState({isLoggedIn: isLoggedIn});    
@@ -53,18 +52,12 @@ class AuthForm extends Component {
       /* One-liner login 🤯 */
       // The reference implementation is wrong
 
-      let redirectURI = window.location.protocol 
-      + "//" 
-      + window.location.host + "/feed";
-
+      // let redirectURI = window.location.protocol + "//" + window.location.host + "/feed";
+      let redirectURI = "Hello";
       this.setState({currentState: "Starting auth process..."});
 
-      await this.state.magic.auth.loginWithMagicLink(
-        { email: this.state.email, 
-          showUI: true,
-          redirectURI: redirectURI 
-        }
-      );
+      await this.state.authService.loginMagic(this.state.email);
+      
     }
   };
 
@@ -84,9 +77,9 @@ class AuthForm extends Component {
       label = "Welcome back!";
       description = (<div>
         <p style={{textIndent: "20px"}}>
-          Check out the <a style={{padding: "5px"}} href="/feed"> private feed</a> for new pics
+          Check out the <a style={{padding: "5px"}} href="/app"> private feed</a> for new pics
           </p>
-        <a href="/feed" />
+        <a href="/app" />
       </div>);
     }
 

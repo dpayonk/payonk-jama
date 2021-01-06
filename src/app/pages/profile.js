@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 
 import Layout from '../../components/layout'
-import AuthService from '../services/AuthService'
+import {LoadableAuthService} from '../client_library'
 
 class ProfileIndex extends React.Component {
 
@@ -13,7 +13,7 @@ class ProfileIndex extends React.Component {
         super(props);
 
         this.state = {
-            authService: new AuthService(),
+            authService: new LoadableAuthService(),
             profile: null
         };
     }

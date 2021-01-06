@@ -14,17 +14,14 @@ class TopicsIndexTemplate extends React.Component {
     const siteTitle = "Recipes"
     const location = "pantry"
     //const location = get(this, 'props.location')
-    console.log("YHO: ");
+
     const list = get(this, 'props.data.whealthy.getObject')
-    console.log(list);
+
     return (
       <Layout location={location}>
-        <Helmet title={siteTitle} />
+        <Helmet title={siteTitle} />      
         <section style={{ marginTop: "20vh" }}>
-          <h1 style={{ paddingBottom: "3vh" }}>What's in our pantry</h1>
-        </section>
-        <section>
-          <h2>{list.title}</h2>
+          <h2 style={{paddingBottom: "20px", textTransform: "capitalize"}}>{list.title}</h2>
           <p dangerouslySetInnerHTML={{ __html: list.content}} />
 
         </section>

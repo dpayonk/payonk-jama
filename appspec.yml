@@ -16,8 +16,12 @@ static_sites:
     scope: BUILD_TIME
     type: SECRET
     value: EV[1:WUPX1usWiNufHolgmJLuootnQNovpNEE:lwEX+wETAUbxokoyg6BU1RZa3IyO+BxzwTBrsCllMruUh18uBwnajmHtKYC7bykxPn6ihb+QbnHSsUwxK1qk7b0o]
+  - key: MAGIC_PUBLISHABLE_KEY
+    scope: BUILD_TIME
+    value: 'pk_test_05CC9C10E2A6DA8C'
+
   github:
-    branch: master
+    branch: main
     deploy_on_push: true
     repo: dpayonk/payonk-jama
   name: payonk-jama

@@ -21,25 +21,7 @@ class BlogPostTemplate extends React.Component {
 
     return (
       <Layout location={location}>
-        <style>
-          {`
-          .post-content {
-            text-align: justify;
-          }
-          .post-hero {
-            width: calc(100% + ${rhythm(8)});
-            margin-left: ${rhythm(-4)};
-            height: ${rhythm(18)};
-          }
-          @media (max-width: ${rhythm(32)}) {
-            .post-hero {
-              width: calc(100% + ${rhythm((3 / 4) * 2)});
-              margin-left: ${rhythm(-3 / 4)};
-              height: ${rhythm(13)};
-            }
-          }
-        `}
-        </style>
+       
         <Helmet title={`${post.title} | ${siteTitle}`} />
         <div
           style={{

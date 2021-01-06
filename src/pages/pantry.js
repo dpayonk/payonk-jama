@@ -17,7 +17,7 @@ class PantryIndex extends React.Component {
     const siteTitle = "Recipes"
     const location = "pantry"
     //const location = get(this, 'props.location')
-    console.log("YHO: ");
+
     const list = get(this, 'props.data.whealthy.food_item')
     console.log(list);
     return (
