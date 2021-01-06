@@ -21,7 +21,7 @@ class RecipeIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
-        <div style={{ marginTop: "10vh" }} className="container columns is-centered">
+        <div className="main-content container columns is-centered">
           <div style={{textAlign: "center"}} className="column is-full">
             <h1 style={{ paddingBottom: "3vh" }}>Family recipes we've created and inherited over the years</h1>            
             <img className="feature-square-image" src={headline} />

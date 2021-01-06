@@ -77,7 +77,7 @@ class RecipePostTemplate extends React.Component {
         >
           {previous && (
             <li>
-              <Link to={`posts/${previous.slug}`} rel="prev">
+              <Link to={`blog/${previous.slug}`} rel="prev">
                 ← {previous.title}
               </Link>
             </li>

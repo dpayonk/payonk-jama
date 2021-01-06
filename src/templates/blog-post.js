@@ -22,14 +22,7 @@ class BlogPostTemplate extends React.Component {
     return (
       <Layout location={location}>
        
-        <Helmet title={`${post.title} | ${siteTitle}`} />
-        <div
-          style={{
-            marginTop: rhythm(1.4),
-          }}
-        >
-          <Link to="/">← Back to Posts</Link>
-        </div>
+        <Helmet title={`${post.title} | ${siteTitle}`} />        
         <h1
           style={{
             marginTop: rhythm(1),
@@ -70,7 +63,6 @@ class BlogPostTemplate extends React.Component {
           }}
         />
         <Bio settings={author} />
-
         <ul
           style={{
             display: 'flex',
@@ -82,7 +74,7 @@ class BlogPostTemplate extends React.Component {
         >
           {previous && (
             <li>
-              <Link to={`posts/${previous.slug}`} rel="prev">
+              <Link to={`blog/${previous.slug}`} rel="prev">
                 ← {previous.title}
               </Link>
             </li>
@@ -90,7 +82,7 @@ class BlogPostTemplate extends React.Component {
 
           {next && (
             <li>
-              <Link to={`posts/${next.slug}`} rel="next">
+              <Link to={`blog/${next.slug}`} rel="next">
                 {next.title} →
               </Link>
             </li>

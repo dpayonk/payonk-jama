@@ -3,6 +3,10 @@
     max-width: 50vw;
 }
 
+.main-content{
+  margin-top: 75px;
+}
+
 h2 {
     padding-bottom: "20px";
     text-transform: capitalize;

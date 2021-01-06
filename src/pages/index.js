@@ -28,49 +28,33 @@ class RootIndex extends React.Component {
               <section>
                   <LoadableAuthForm />
               </section>
-                <h2>Recent Posts</h2>
-              
-                  {posts.map(({ node }) => {
-                    const title = get(node, 'title') || node.slug
-                    return (
-                      <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
-                        
-                        <h3
-                          style={{
-                            marginBottom: rhythm(1 / 4),
-                          }}
-                        >
-                          <Link style={{ boxShadow: 'none' }} to={`posts/${node.slug}`}>
-                            {title}
-                          </Link>
-                        </h3>
-                        <small>{node.created}</small>
-                        <p
-                          dangerouslySetInnerHTML={{ __html: node.metadata.headline }}
-                        />
-                      </div>
-                    )
-                  })}
+                
               </section>
           </div>
             <div className="column is-one-third pull-right">
+            <h2>Recent Posts</h2>
               
-            
-                  <h2 style={{paddingBottom: "20px"}}>Interests</h2>       
-                  {
-                    labels.map((label) => {
-                      return (<div style={{marginBottom: "3vh"}} key={label.slug}>
-                         <Link style={{ boxShadow: 'none' }} to={`topics/${label.slug}`}>
-                            <h4>
-                            {label.title}
-                            </h4>
-                          </Link>
-                        <div style={{visibility: "hidden"}}>
-                          Content related to the interest  
-                        </div>
-                      </div>)
-                    })
-                  }           
+              {posts.map(({ node }) => {
+                const title = get(node, 'title') || node.slug
+                return (
+                  <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
+                    
+                    <h3
+                      style={{
+                        marginBottom: rhythm(1 / 4),
+                      }}
+                    >
+                      <Link style={{ boxShadow: 'none' }} to={`blog/${node.slug}`}>
+                        {title}
+                      </Link>
+                    </h3>
+                    <small>{node.created}</small>
+                    <p
+                      dangerouslySetInnerHTML={{ __html: node.metadata.headline }}
+                    />
+                  </div>
+                )
+              })}                         
             </div>
         </div>
       </Layout>

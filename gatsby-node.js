@@ -6,24 +6,11 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const indexPage = path.resolve('./src/pages/index.js')
   // const recipePage = path.resolve('./src/pages/index.js')
-
   // Apparently, it will create index by default as well
   // as anything in src/pages/* as static pages
-
-  // Creating a landing page programattically for
-  // all posts
-  createPage({
-    path: `posts`,
-    component: indexPage,
-  })
-
-  // createPage({
-  //   path: 'recipes',
-  //   component: indexPage
-  // })
-
+  
   const topicArticles = path.resolve('./src/templates/topic-articles.js')
-  await graphql(        `
+  await graphql(`
       query FindAllLabels {
         whealthy {
           getObjects(bucket_slug: "payonk-jama", input: {type: "labels"}) {
@@ -34,34 +21,74 @@ exports.createPages = async ({ graphql, actions }) => {
         }
       }
       `
-    ).then(result => {
-      if (result.errors) {
-        console.log(result.errors)
-        reject(result.errors)
-      }
+  ).then(result => {
+    if (result.errors) {
+      console.log(result.errors)
+      reject(result.errors)
+    }
 
-      const topics = result.data.whealthy.getObjects.objects;
+    const topics = result.data.whealthy.getObjects.objects;
 
-      each(topics, (topic) => {
+    each(topics, (topic) => {
 
-        createPage({
-          path: `topics/${topic.slug}`,
-          component: topicArticles,
-          context: {
-            slug: topic.slug,              
-          },
-        })
+      createPage({
+        path: `topics/${topic.slug}`,
+        component: topicArticles,
+        context: {
+          slug: topic.slug,
+        },
       })
     })
+  })
 
+  const postRoot = 'blog';
 
+  // createPage({
+  //   path: postRoot,
+  //   component: indexPage,
+  // })
+  const blogPost = path.resolve('./src/templates/blog-post.js')
+  await graphql(
+    `
+        {
+          allCosmicjsPosts(sort: { fields: [created], order: DESC }, limit: 1000) {
+            edges {
+              node {
+                slug,
+                title
+              }
+            }
+          }
+        }
+      `
+  ).then(result => {
+    if (result.errors) {
+      console.log(result.errors)
+      reject(result.errors)
+    }
+    console.log("Got here----");
+    // Create blog posts pages.
+    const posts = result.data.allCosmicjsPosts.edges;
+
+    each(posts, (post, index) => {
+      const next = index === posts.length - 1 ? null : posts[index + 1].node;
+      const previous = index === 0 ? null : posts[index - 1].node;
+
+      createPage({
+        path: `${postRoot}/${post.node.slug}`,
+        component: blogPost,
+        context: {
+          slug: post.node.slug,
+          previous,
+          next,
+        },
+      })
+    })
+  });
 
 
   return new Promise((resolve, reject) => {
-    
-    const blogPost = path.resolve('./src/templates/blog-post.js')
     const recipePost = path.resolve('./src/templates/recipe-post.js')
-    
 
     resolve(
       graphql(
@@ -102,47 +129,6 @@ exports.createPages = async ({ graphql, actions }) => {
         })
       })
     )
-
-    resolve(
-      graphql(
-        `
-          {
-            allCosmicjsPosts(sort: { fields: [created], order: DESC }, limit: 1000) {
-              edges {
-                node {
-                  slug,
-                  title
-                }
-              }
-            }
-          }
-        `
-      ).then(result => {
-        if (result.errors) {
-          console.log(result.errors)
-          reject(result.errors)
-        }
-
-        // Create blog posts pages.
-        const posts = result.data.allCosmicjsPosts.edges;
-
-        each(posts, (post, index) => {
-          const next = index === posts.length - 1 ? null : posts[index + 1].node;
-          const previous = index === 0 ? null : posts[index - 1].node;
-
-          createPage({
-            path: `stuff/${post.node.slug}`,
-            component: blogPost,
-            context: {
-              slug: post.node.slug,
-              previous,
-              next,
-            },
-          })
-        })
-      })
-    )
-
 
   })
 }

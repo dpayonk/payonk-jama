@@ -1,11 +1,8 @@
 import React from 'react'
-import { Link } from 'gatsby'
 import get from 'lodash/get'
 import Helmet from 'react-helmet'
-import { graphql } from 'gatsby'
-
 import Layout from '../components/layout'
-import { rhythm, scale } from '../utils/typography'
+
 
 class AboutIndex extends React.Component {
   render() {
@@ -18,7 +15,7 @@ class AboutIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />       
-        <section style={{marginTop: "20vh"}}>
+        <section className="main-content">
         <h1 style={{paddingBottom: "3vh"}}>About this site</h1>
         <p style={{maxWidth: "75vw"}}>
             This site is maintained by Dennis Payonk for all personal projects.  Any opinions
