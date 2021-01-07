@@ -14,7 +14,8 @@ class AuthForm extends Component {
       date: new Date(),
       email: "", 
       isLoggedIn: false,
-      currentState: "initialized",
+      isAuthorized: false,
+      currentState: "initialized",      
       authService: new AuthService()
     };
 
@@ -29,12 +30,17 @@ class AuthForm extends Component {
 
   async componentDidMount(){
     const isLoggedIn = await this.isLoggedIn();
+
     if (isLoggedIn){
       const profile = await this.state.authService.getProfile();
-      this.setState({isLoggedIn: isLoggedIn, profile: profile});
+      let isAuthorized = false;
+      if(profile !== null){
+        isAuthorized = profile.isAuthorized;
+      }
+      this.setState({isLoggedIn: isLoggedIn, isAuthorized: isAuthorized, profile: profile});
     } else {
 
-      this.setState({isLoggedIn: isLoggedIn});    
+        this.setState({isLoggedIn: isLoggedIn});    
     }
     this.setState({currentState: 'mounted'});
   }
@@ -71,13 +77,20 @@ class AuthForm extends Component {
 
     if (this.state.isLoggedIn){
       label = `Welcome!`;
-
-      description = (<div>
-        <p style={{textIndent: "20px"}}>
-          Check out the <a style={{padding: "5px"}} href="/app"> private feed</a> for new pics
-          </p>
-        <a href="/app" />
-      </div>);
+      if(this.state.isAuthorized){
+        description = (<div>
+          <p style={{textIndent: "20px"}}>
+            Check out the <a className="button is-ghost" href="/app"> private feed</a> for new pics
+            </p>
+        </div>);
+      } else {
+        description = (<div>
+          <p style={{textIndent: "20px"}}>
+            We don't have your email address on file yet.  Give us a few minutes to authorize you.
+            If you're impatient, send us a message.
+            </p>         
+        </div>);
+      }
     }
 
     if (!this.state.isLoggedIn){

@@ -8,7 +8,7 @@ class AuthService extends Component {
     this.cfg = new ConfigService();
   }
 
-  getMagicFactory() {    
+  getMagicFactory() {
     const apiKey = this.cfg.get_magic_key();
     return new Magic(apiKey);
   }
@@ -28,6 +28,29 @@ class AuthService extends Component {
     return redirectURI;
   }
 
+  async isAuthorized(emailAddress) {
+    let data = { email: emailAddress };
+    console.log(`Checking authorization status: ${emailAddress}`)
+    let response = await fetch('https://api.payonk.com/authorized', {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      headers: {
+        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    // Other options
+    // credentials: 'same-origin', // include, *same-origin, omit
+    // redirect: 'follow', // manual, *follow, error
+    // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    let message = await response.json();
+    console.log("Returned STatus");
+    console.log(message);
+    return message.authorized;
+  }
+
   async loginMagic(email) {
     /* One-liner login 🤯 */
     // The reference implementation is wrong
@@ -44,8 +67,19 @@ class AuthService extends Component {
       try {
 
         const { email, publicAddress } = await this.getMagicFactory().user.getMetadata();
-        console.log("No exctuion");
-        return { email, publicAddress };
+        try {
+          let isAuthorized = await this.isAuthorized(email);
+          if (isAuthorized === undefined || isAuthorized === null) {
+            isAuthorized = false;
+          }
+          console.log("returning");
+          console.log(isAuthorized);
+          return { email, isAuthorized, publicAddress };
+
+        } catch (error) {
+          console.log("Error");
+          return null;
+        }
       } catch {
         console.error("An error was thrown");
         // Handle errors if required!

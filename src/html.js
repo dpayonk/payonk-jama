@@ -12,28 +12,13 @@ export default function HTML(props) {
         <link href="https://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
         <script defer src="https://go.metabet.io/js/global.js"></script>
-        <style dangerouslySetInnerHTML={{__html: `
-          h1, h2, h3 {
-            font-family: 'Adlinnaka', 
-            sans-serif; 
-            
-          }
-          h1:first, h2:first, h3:first{
-            padding: 1.5rem 0rem 0rem 0rem;
-          }
-          nav .a {
-            box-shadow: "none"  
-          }
-          .navbar-burger{
-            box-shadow: "none"
-          }
-          .navbar:hover {
-            background:#A5C9FF !important;
-          }
-       `}} />
-        <style>
+        <script
+        dangerouslySetInnerHTML= {{ __html: ` 
+        window.$crisp=[];window.CRISP_WEBSITE_ID="051c9d05-11bd-4dae-a9f5-6ae3b1f716fe";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+         `}}
+        />
           
-          </style>  
+          
       </head>
       <body {...props.bodyAttributes}>
         {props.preBodyComponents}

@@ -17,30 +17,68 @@ class CliqueViewer extends Component {
     this.state = {
       isAuthorized: false,
       username: "",
-      ready: false    
+      personalizedMessage: "",
+      ready: false,
+      pics: []
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
 
+  async getFeed() {
+    let data = { accessToken: 'static:TODO' };
+    console.log("Capturing feed");
+    try {
+      let response = await fetch('https://api.payonk.com/feed', {
+        method: 'GET', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+        headers: {
+          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        // body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      console.log(response);
+      if (response.status === 200) {
+        console.log("Setting pics response");
+        let message = await response.json();
+        console.log(message);
+        this.setState({ pics: message.pics });
+
+      } else {
+        console.log("Route not available");
+      }
+
+    } catch (error) {
+      console.log("Error getting feed");
+      console.log(error);
+    }
+  }
+
   async componentDidMount() {
     // const isLoggedIn = await this.state.AuthService.isLoggedIn();   
-    let authService = new AuthService();    
+    let authService = new AuthService();
     const profile = await authService.getProfile();
 
     if (profile !== null) {
       console.log(profile);
-      this.setState({ isAuthorized: true, username: profile.email });
-      console.log("running GQL");
+      this.setState({ isAuthorized: profile.isAuthorized, username: profile.email });
       // TODO: This needs to be replaced to 
       // payonk-api for authorization
       // and payonk-api for images and locations
       // const contacts = await get(this, 'props.data.whealthy.contacts');
       const contacts = {};
-      this.setState({contacts: contacts});
+      this.setState({ contacts: contacts });
+      console.log("Trigger feed");
+      this.getFeed();
+    } else {
+      this.setState({ isAuthorized: false, });
     }
 
     // check to see is valid email
+    console.log("PICS STATE");
+    console.log(this.state.pics);
     this.setState({ ready: true });
   }
 
@@ -48,35 +86,51 @@ class CliqueViewer extends Component {
     this.setState({ email: event.target.value });
   }
 
-  render() {
-    let label = "Check out pics of our family!";
+  renderUnauthorized() {
+    return (
+      <div>It does not appear you are authorized yet.</div>
+    )
+  }
 
-    if (!this.state.ready) {
-      return (
-        <div className="has-text-centered">
-<Loader />
-        </div>
+  renderFeed() {
+    const caption = "To be implemented in pics";
+    const placeholderImage = bannerImage;
 
-        
-      )
+    if (this.state.pics.length === 0) {
+      return (<div>Nothing to show yet</div>);
     } else {
-      let personalizedMessage = this.state.username;
-      const caption = "See our new family";
-      // is authorized?
       return (
         <div>
-        <div className="columns is-centered">
+          <div className="columns is-centered">
             <div className="column is-full has-text-centered">
-            <h2>{personalizedMessage}</h2>
+              <h2>{this.state.personalizedMessage}</h2>
+            </div>
           </div>
-        </div>
-        <div style={{ marginTop: "10vh" }} className="columns is-centered">
-          <div style={{ textAlign: "center" }} className="column is-full">
-            <h3 style={{ paddingBottom: "3vh" }}>{caption}</h3>
-            <img className="feature-square-image" src={bannerImage} />
-          </div>
-        </div>
+          { this.state.pics.map((pic) => {
+            return (
+              <div style={{ marginTop: "10vh" }} className="columns is-centered">
+            <div style={{ textAlign: "center" }} className="column is-full">
+
+              <h3 style={{ paddingBottom: "3vh" }}>{pic.title}</h3>
+              <img className="feature-square-image" src={pic.image_url} />
+            </div>
+          </div>)
+          })
+          }
+
+          
         </div >);
+    }
+  }
+
+  render() {
+    if (!this.state.ready) {
+      return (<div className="has-text-centered"><Loader /></div>)
+    } else {
+      if (this.state.isAuthorized === true) {
+        return this.renderFeed();
+      }
+      return this.renderUnauthorized();
     }
 
   }

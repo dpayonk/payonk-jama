@@ -86,7 +86,6 @@ export const pageQuery = graphql`
       edges {
         node {
           metadata {
-            description
             content
             headline
           }
