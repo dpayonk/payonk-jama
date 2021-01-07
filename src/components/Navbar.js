@@ -1,18 +1,41 @@
 import React from 'react'
 
-export default ({ settings }) => (
-  <nav id="main-menu" style={{ width: '100%', background: 'transparent', zIndex: 1 }} className="navbar" role="navigation" aria-label="main navigation">
+
+class Navbar extends React.Component{
+
+  constructor(props){
+    super(props);
+    // this.state.isDisplayed = false;
+    this.state = {
+      isDisplayed: false
+    };
+
+    this.toggleMenu = this.toggleMenu.bind(this);
+  }
+
+  toggleMenu(){
+    console.log("Togg")
+    this.setState({isDisplayed:!this.state.isDisplayed});
+  }
+
+  render(){
+    const isDisplayed = this.state.isDisplayed;
+
+    return (
+    <nav id="main-menu" style={{ width: '100%', background: 'transparent', zIndex: 1 }} className="navbar" role="navigation" aria-label="main navigation">
     <div className="navbar-brand">
       <a className="navbar-item" href="/" style={{ boxShadow: "none" }}>
         <img src="https://payonk.com/logo-payonk.png" height={42} />
       </a>
-      <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <a onClick={this.toggleMenu} role="button" 
+      className="navbar-burger" 
+      aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
       </a>
     </div>
-    <div id="navbarBasicExample" className="navbar-menu">
+    <div id="navbarBasicExample" className={"navbar-menu " + (isDisplayed ? 'is-active' : '')}>
       <div className="navbar-start">
         <a href="/about" className="navbar-item" style={{ boxShadow: "none" }}>
           About
@@ -55,4 +78,8 @@ export default ({ settings }) => (
       </div>
     </div>
   </nav>
-)
+    )
+  }
+}
+
+export default Navbar;

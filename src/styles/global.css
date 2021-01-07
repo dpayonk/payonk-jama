@@ -44,10 +44,10 @@ h1:first, h2:first, h3:first{
   padding: 1.5rem 0rem 0rem 0rem;
 }
 nav .a {
-  box-shadow: "none"  
+  box-shadow: none;  
 }
 .navbar-burger{
-  box-shadow: "none"
+  box-shadow: none;
 }
 .navbar:hover {
   background:#A5C9FF !important;

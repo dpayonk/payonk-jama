@@ -18,7 +18,6 @@ export default function HTML(props) {
          `}}
         />
           
-          
       </head>
       <body {...props.bodyAttributes}>
         {props.preBodyComponents}
