@@ -28,41 +28,51 @@ class ProfileIndex extends React.Component {
 
     async componentDidMount(){
         let profile = await this.state.authService.getProfile();
-        console.log("Profile");
-        console.log(profile);
         if(profile !== null){
             this.setState({
                 email: profile.email, 
                 publicAddress: profile.publicAddress, 
                 isAuthorized: profile.isAuthorized
             });    
+
+        } else {
+            console.log("Profile is null");
         }
     }
 
     render() {
-        const siteTitle = get(
-        this,
-        'props.data.cosmicjsSettings.metadata.site_title'
-        )
         const location = get(this, 'props.location')
-
+        console.log("Authorization Status: ");
+        console.log(this.state.isAuthorized);
 
         return (
         <Layout location={location}>
-            <section style={{marginTop: "20vh"}}>
+            <section class="main-content">
             <h1 style={{paddingBottom: "3vh"}}>My Profile</h1>
             <div>
-                <div>
-                <label>Email</label>
-                {this.state.email}
-                </div>
-                <div>
-                <label>Authorized</label>
-                {this.state.isAuthorized}
+                <div id="email-control" className="field">
+                    <label className="label">Email</label>
+                    <div className="control has-icons-left">
+                        <input value={this.state.email} onChange={this.handleChange} className="input " type="email" name="email"
+                        required="required" placeholder="your@email.com" />
+                        <span className="icon is-small is-left">
+                        <i className="fas fa-envelope"></i>
+                        </span>
+                    </div>
 
                 </div>
-                <div>
-                    <button onClick={this.handleLogout} className="button button-primary">Logout</button>
+                <div className="field">
+                    <label className="label">Authorization Status</label>
+                    <div className="control">
+                        
+                    </div>
+                </div>
+                <label class="checkbox" disabled>
+                    <input type="checkbox" checked={(this.state.isAuthorized ? 'checked' : '')} disabled />
+                    Authorized 
+                </label>
+                <div className="field">
+                    <button onClick={this.handleLogout} className="button button-primary is-pulled-right">Logout</button>
                 </div>
             </div>
             </section>        

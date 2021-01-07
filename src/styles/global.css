@@ -12,8 +12,6 @@ p{
 }
 
 h1 {
-  margin-top: 1.75rem;
-  margin-bottom: 2rem;
   font-size: 3rem;
 }
 
@@ -43,7 +41,7 @@ h2 {
 h1, h2, h3 {
   font-family: 'Adlinnaka', 
   sans-serif; 
-  
+  padding-bottom: 14px;
 }
 h1:first, h2:first, h3:first{
   padding: 1.5rem 0rem 0rem 0rem;

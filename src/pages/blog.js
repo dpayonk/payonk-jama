@@ -22,12 +22,10 @@ class RootIndex extends React.Component {
     return (
       <Layout location={location}>
         <Helmet title={siteTitle} />
-        <div className="container columns">
+        <div className="main-content container columns">
           <div className="column is-two-thirds">
             <section> 
-              <section>
-                  <LoadableAuthForm />
-              </section>
+             
                 <h2>Recent Posts</h2>
               
                   {posts.map(({ node }) => {
@@ -54,16 +52,19 @@ class RootIndex extends React.Component {
               </section>
           </div>
             <div className="column is-one-third pull-right">
-              
+                  <h2>Exclusive Content</h2>
+                  <section>
+                    <LoadableAuthForm />
+                  </section>
             
                   <h2 style={{paddingBottom: "20px"}}>Interests</h2>       
                   {
                     labels.map((label) => {
                       return (<div style={{marginBottom: "3vh"}} key={label.slug}>
                          <Link style={{ boxShadow: 'none' }} to={`topics/${label.slug}`}>
-                            <h4>
+                            <h3 style={{textTransform: "capitalize"}}>
                             {label.title}
-                            </h4>
+                            </h3>
                           </Link>
                         <div style={{visibility: "hidden"}}>
                           Content related to the interest  
