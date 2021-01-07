@@ -80,7 +80,7 @@ class AuthForm extends Component {
       if(this.state.isAuthorized){
         description = (<div>
           <p style={{textIndent: "20px"}}>
-            Check out the <a className="button is-ghost" href="/app"> private feed</a> for new pics
+            Check out the <a className="" href="/app"> private feed</a> for new pics!
             </p>
         </div>);
       } else {

@@ -5,7 +5,7 @@ import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 
 import Layout from '../../components/layout'
-import {LoadableAuthService} from '../client_library'
+import AuthService from '../client/services/AuthService'
 
 class ProfileIndex extends React.Component {
 
@@ -13,15 +13,30 @@ class ProfileIndex extends React.Component {
         super(props);
 
         this.state = {
-            authService: new LoadableAuthService(),
-            profile: null
+            authService: new AuthService(),
+            email: null,
+            isAuthorized: false,
+            publicAddress: ""
         };
+        this.handleLogout = this.handleLogout.bind(this);
+    }
+
+    async handleLogout(){
+        this.state.authService.logout();
+        console.log("redirect?");
     }
 
     async componentDidMount(){
         let profile = await this.state.authService.getProfile();
+        console.log("Profile");
         console.log(profile);
-        this.setState({profile: profile});
+        if(profile !== null){
+            this.setState({
+                email: profile.email, 
+                publicAddress: profile.publicAddress, 
+                isAuthorized: profile.isAuthorized
+            });    
+        }
     }
 
     render() {
@@ -31,12 +46,24 @@ class ProfileIndex extends React.Component {
         )
         const location = get(this, 'props.location')
 
+
         return (
         <Layout location={location}>
             <section style={{marginTop: "20vh"}}>
             <h1 style={{paddingBottom: "3vh"}}>My Profile</h1>
             <div>
-                {this.state.profile}
+                <div>
+                <label>Email</label>
+                {this.state.email}
+                </div>
+                <div>
+                <label>Authorized</label>
+                {this.state.isAuthorized}
+
+                </div>
+                <div>
+                    <button onClick={this.handleLogout} className="button button-primary">Logout</button>
+                </div>
             </div>
             </section>        
         </Layout>

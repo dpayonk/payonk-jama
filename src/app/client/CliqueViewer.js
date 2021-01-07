@@ -42,9 +42,9 @@ class CliqueViewer extends Component {
       console.log(response);
       if (response.status === 200) {
         console.log("Setting pics response");
-        let message = await response.json();
-        console.log(message);
-        this.setState({ pics: message.pics });
+        let picsList = await response.json();
+        console.log(picsList);
+        this.setState({ pics: picsList });
 
       } else {
         console.log("Route not available");
@@ -99,27 +99,25 @@ class CliqueViewer extends Component {
     if (this.state.pics.length === 0) {
       return (<div>Nothing to show yet</div>);
     } else {
-      return (
+      return (<div>
         <div>
-          <div className="columns is-centered">
-            <div className="column is-full has-text-centered">
-              <h2>{this.state.personalizedMessage}</h2>
-            </div>
-          </div>
-          { this.state.pics.map((pic) => {
+          <h2>{this.state.personalizedMessage}</h2>
+        </div>
+        {
+          this.state.pics.map((pic) => {
             return (
-              <div style={{ marginTop: "10vh" }} className="columns is-centered">
-            <div style={{ textAlign: "center" }} className="column is-full">
-
-              <h3 style={{ paddingBottom: "3vh" }}>{pic.title}</h3>
-              <img className="feature-square-image" src={pic.image_url} />
-            </div>
-          </div>)
+              <div key={pic.id} style={{ marginTop: "3vh" }} className="columns is-centered">
+                <div style={{ textAlign: "center" }} className="column is-full">
+                  <h3 style={{ paddingBottom: "3vh" }}>{pic.title}</h3>
+                  <img className="feature-square-image" src={pic.image_url} />
+                  <p>Commenting coming soon!</p>
+                </div>
+              </div>)
           })
-          }
+        }
 
-          
-        </div >);
+
+      </div >);
     }
   }
 

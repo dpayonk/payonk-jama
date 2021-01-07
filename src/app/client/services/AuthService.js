@@ -61,6 +61,11 @@ class AuthService extends Component {
     });
   }
 
+  async logout(){
+    let m = this.getMagicFactory();
+    m.user.logout();
+  }
+
   async getProfile() {
     if (await this.isLoggedIn()) {
       // Assumes a user is already logged in

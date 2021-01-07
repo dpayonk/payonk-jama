@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import Helmet from 'react-helmet'
 import { graphql } from 'gatsby'
 import Layout from '../../components/layout'
-import {LoadableCliqueViewer} from '../client_library'
+import { LoadableCliqueViewer } from '../client_library'
 import ConfigService from '../ConfigService'
 
 class FeedIndex extends React.Component {
@@ -18,21 +18,18 @@ class FeedIndex extends React.Component {
     const environment = cfg.get_environment();
     let bannerStyle = {
       position: 'absolute', top: '0px', left: '0px', marginTop: '70px',
-      background: "red", width: '100%', textAlign: 'center', color: 'white'};
-    if (environment === 'production'){
+      background: "red", width: '100%', textAlign: 'center', color: 'white'
+    };
+    if (environment === 'production') {
       bannerStyle.background = 'green';
     }
 
     return (
       <Layout location={location}>
         <div style={bannerStyle}>{environment}</div>
-        <Helmet title={siteTitle} />     
-        <div className="container" style={{marginTop: "10vh"}}>
-          <div className="columns">
-            <div className="column">
-              <h1 style={{textAlign: "center", paddingBottom: "3vh"}}>Our Family Feed</h1>
-            </div>
-          </div>
+        <Helmet title={siteTitle} />
+        <div className="container main-content">
+          <h1 style={{ textAlign: "center", paddingBottom: "1vh" }}>Our Family Feed</h1>
           <div className="container">
             <LoadableCliqueViewer />
           </div>
