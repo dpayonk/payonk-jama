@@ -46,15 +46,11 @@ class RecipeIndex extends React.Component {
 
           </div>
           <div className="column is-two-fifths">
-            <h2>What's in our pantry?</h2>
-            <ul>
-              <li>Meat</li>
-            </ul>
-
+            
           </div>
         </div>
         <div className="container columns">
-          <h3>Other things</h3>
+          
         </div>
       </Layout>
     )

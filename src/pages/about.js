@@ -18,8 +18,11 @@ class AboutIndex extends React.Component {
         <section className="main-content">
         <h1 style={{paddingBottom: "3vh"}}>About this site</h1>
         <p style={{maxWidth: "75vw"}}>
-            This site is maintained by Dennis Payonk for all personal projects.  Any opinions
-            here reflect my own and not any of my employers.
+            This site is maintained by <a href="https://medium.com/@dpayonk">Dennis Payonk</a> for 
+            overengineered super cool projects and a home for content you hopefully find interesting.  
+            </p>
+            <p>
+            Any opinions here reflect my own and not any of my employers.
         </p>
         </section>
         

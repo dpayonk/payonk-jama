@@ -25,7 +25,7 @@ class RecipePostTemplate extends React.Component {
         
         <Helmet title={`${recipe.title} | ${siteTitle}`} />
         <div>
-          <Link to="/recipes">← Back to Recipes</Link>
+          <Link to="/eating">← Back to Recipes</Link>
         </div>
         <h1
           style={{            
