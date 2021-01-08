@@ -23,7 +23,7 @@ class AuthService extends Component {
   }
 
   getRedirectUri() {
-    const appUrl = this.cfg.getAppRoute();
+    const appUrl = this.cfg.getAuthRoute();
     let redirectURI = window.location.protocol + "//" + window.location.host + appUrl;
     return redirectURI;
   }
@@ -64,6 +64,11 @@ class AuthService extends Component {
   async logout(){
     let m = this.getMagicFactory();
     m.user.logout();
+  }
+
+  async onRedirectLogin(){
+    let m = this.getMagicFactory();    
+    await m.auth.loginWithCredential();
   }
 
   async getProfile() {

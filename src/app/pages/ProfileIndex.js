@@ -47,13 +47,13 @@ class ProfileIndex extends React.Component {
 
         return (
         <Layout location={location}>
-            <section class="main-content">
+            <section className="main-content">
             <h1 style={{paddingBottom: "3vh"}}>My Profile</h1>
             <div>
                 <div id="email-control" className="field">
                     <label className="label">Email</label>
                     <div className="control has-icons-left">
-                        <input value={this.state.email} onChange={this.handleChange} className="input " type="email" name="email"
+                        <input readOnly="readonly" value={this.state.email} onChange={this.handleChange} className="input " type="email" name="email"
                         required="required" placeholder="your@email.com" />
                         <span className="icon is-small is-left">
                         <i className="fas fa-envelope"></i>
@@ -67,7 +67,7 @@ class ProfileIndex extends React.Component {
                         
                     </div>
                 </div>
-                <label class="checkbox" disabled>
+                <label className="checkbox" disabled>
                     <input type="checkbox" checked={(this.state.isAuthorized ? 'checked' : '')} disabled />
                     Authorized 
                 </label>

@@ -6,7 +6,6 @@ class ConfigService extends Component {
 
     constructor(props) {
         super(props);
-        console.log(`Loading Environment: ${process.env.NODE_ENV}`);
         this.environment = process.env.NODE_ENV;
         this.configs = {
             'development': {
@@ -26,6 +25,10 @@ class ConfigService extends Component {
         return '/app';
     }
 
+    getAuthRoute(){
+        return '/app/auth';
+    }
+
     getSetting(key) {
         console.log(`Fetching maybe unknown key ${key}`);
         console.log(`Current Environment: ${this.environment}`);
@@ -36,10 +39,9 @@ class ConfigService extends Component {
         }   
     }
 
-    get_magic_key(){
-        console.log(`Current Environment: ${this.environment}`);
+    get_magic_key(){        
         if(this.environment !== 'production'){
-            console.log(`Using key: ${this.configs.development.MAGIC_PUBLISHABLE_KEY}`)
+            // console.log(`Using key: ${this.configs.development.MAGIC_PUBLISHABLE_KEY}`)
             return this.configs.development.MAGIC_PUBLISHABLE_KEY;
         } else {
             return this.configs.production.MAGIC_PUBLISHABLE_KEY;

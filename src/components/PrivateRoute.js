@@ -1,12 +1,12 @@
 import React from "react"
 import { navigate } from "gatsby"
-
-import {LoadableAuthService} from '../app/client_library'
+// import AuthService from './services/AuthService'
 
 const PrivateRoute = async ({ component: Component, location, ...rest }) => {
 
     // TODO: Just check for previous existence, validate in    
-    // let authService = LoadableAuthService();
+    // let authService = new AuthService();
+    console.log("Loading private route");
 
     // let beenHereBefore = authService.hasBeenHere();
     let beenHereBefore = true;

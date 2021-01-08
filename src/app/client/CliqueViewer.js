@@ -59,6 +59,17 @@ class CliqueViewer extends Component {
   async componentDidMount() {
     // const isLoggedIn = await this.state.AuthService.isLoggedIn();   
     let authService = new AuthService();
+    try {
+      // only execute this if notLoggedIn and referred
+      // from magicLink
+      console.log("Authing");
+      const l = await authService.login();     
+      console.log("Authd");
+      console.log(l); 
+    } catch (error) {
+      console.log("Error occured in CliqueViewer");
+    }
+
     const profile = await authService.getProfile();
 
     if (profile !== null) {

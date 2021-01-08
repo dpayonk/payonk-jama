@@ -117,8 +117,8 @@ class AuthForm extends Component {
           </div>
 
         </div>
-        <div class="field is-grouped">
-          <div class="control">
+        <div className="field is-grouped">
+          <div className="control">
           <div className="field">
             <button onClick={this.handleLogin} className="button is-light is-pull-right" type="submit">
               Register

@@ -56,13 +56,13 @@ class Navbar extends React.Component {
                 <a href="https://clique.payonk.com" className="navbar-item" style={{ boxShadow: "none" }}>
                   Clique
               <span style={{ display: 'inline-block', paddingLeft: '8px' }} className="icon is-small is-left">
-                    <i class="fas fa-external-link-alt"></i>
+                    <i className="fas fa-external-link-alt"></i>
                   </span>
                 </a>
                 <a href="https://irene.love" className="navbar-item" style={{ boxShadow: "none" }}>
                   Irene
               <span style={{ display: 'inline-block', paddingLeft: '8px' }} className="icon is-small is-left">
-                    <i class="fas fa-external-link-alt"></i>
+                    <i className="fas fa-external-link-alt"></i>
                   </span>
 
                 </a>
