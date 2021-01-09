@@ -38,7 +38,12 @@ class AuthForm extends Component {
       if (profile !== null) {
         if (!isAuthorized) {
           this.setState({ email: profile.email });
-          this.setState({ alert: `Sorry, ${this.getFriendlyName()}! You have not been approved yet.` });
+          if(profile.isAuthorized){
+            this.setState({ alert: `Hi ${this.getFriendlyName()}!` });
+
+          } else {
+            this.setState({ alert: `Sorry, ${this.getFriendlyName()}! You have not been approved yet.` });
+          }
         }
         isAuthorized = profile.isAuthorized;
       } else {
