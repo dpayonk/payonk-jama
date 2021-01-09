@@ -80,7 +80,7 @@ class Navbar extends React.Component {
             </div>
             <div className="navbar-item">
               <div className="buttons">
-                <a href="/app" className="button is-light">
+                <a href="/app/login" className="button is-light">
                   Log in
                   </a>
               </div>

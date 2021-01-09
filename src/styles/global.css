@@ -6,6 +6,16 @@ p{
   margin-bottom: 1.75rem !important;
 }
 
+.dev-banner{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  margin-top: 70px;
+  width: 100%;
+  text-align: center; 
+  color: white;
+}
+
 .main-content {
   margin-top: 75px;
   padding-top: 35px;

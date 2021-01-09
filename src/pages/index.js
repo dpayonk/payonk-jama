@@ -26,6 +26,7 @@ class RootIndex extends React.Component {
           <div className="column is-two-thirds">
             <section> 
               <section>
+                <h2>Check out updates of our family!</h2>
                   <LoadableAuthForm />
               </section>
                 

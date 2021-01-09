@@ -4,6 +4,7 @@ import AuthService from './services/AuthService'
 
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
+import UserModel from '../client/UserModel';
 
 class AuthForm extends Component {
 
@@ -16,7 +17,7 @@ class AuthForm extends Component {
       isAuthorized: false,
       currentState: "initialized",
       alert: "",
-      authService: new AuthService()
+      authService: new AuthService(),
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -62,7 +63,10 @@ class AuthForm extends Component {
   async handleLogin(e) {
     e.preventDefault();
     if (this.isValidEmail(this.state.email)) {
-      this.setState({ currentState: "Starting auth process..." });
+      this.setState({ currentState: "Starting auth process, setting email..." });
+      
+      let userModel = new UserModel({emailAddress: this.state.email});
+      this.setState({userModel: userModel});
 
       await this.state.authService.loginMagic(this.state.email);
 
@@ -75,7 +79,7 @@ class AuthForm extends Component {
   }
 
   render() {
-    let label = "Check out updates of our family!";
+    
     let description = (<p>Register for the waitlist to check out the latest updates!</p>);
 
     if (this.state.currentState !== 'mounted') {
@@ -86,7 +90,6 @@ class AuthForm extends Component {
     }
 
     if (this.state.isLoggedIn) {
-      label = `Welcome!`;
       if (this.state.isAuthorized) {
         description = (<div>
           <p style={{ textIndent: "20px" }}>
@@ -94,7 +97,6 @@ class AuthForm extends Component {
             </p>
         </div>);
       } else {
-        label = this.state.alert
         description = (<div>
           <p style={{ textIndent: "20px" }}>
             We don't have your email address on file yet.  Give us a few minutes to authorize you.
@@ -131,7 +133,9 @@ class AuthForm extends Component {
     }
     return (
       <div className="container" style={{ minHeight: "150px", marginBottom: "5vh" }}>
-        <label style={{fontSize: "2rem", fontWeight: "700", paddingBottom: "10px"}}>{label}</label>
+        <label style={{fontSize: "2rem", fontWeight: "700", paddingBottom: "10px"}}>
+          {this.state.alert}
+        </label>
         <div>{description}</div>
       </div>);
   }

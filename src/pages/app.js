@@ -1,21 +1,17 @@
 import React from "react"
 import { Router } from "@reach/router"
-
-// TODO: Implement in Client Components
-// import PrivateRoute from "../components/PrivateRoute";
 import FeedIndex from "../app/pages/FeedIndex"
 import AuthIndex from "../app/pages/AuthIndex"
-import { LoadableAuthForm } from "../app/client_library"
 import AuthService from "../app/client/services/AuthService"
-import Layout from '../components/layout'
-import Loader from "../components/Loader"
+
+import Layout from '../components/layout';
+import Loader from "../components/Loader";
+import { LoadableAuthForm } from '../app/client_library';
 
 import ProfileIndex from "../app/pages/ProfileIndex"
 
 
 class App extends React.Component {
-  // = () => {
-  // // <PrivateRoute path="/" component={FeedIndex} />
 
   constructor(props) {
     super(props);
@@ -23,44 +19,50 @@ class App extends React.Component {
       status: 'loading',
       isLoggedIn: false,
       alert: "Hang tight",
-      service: new AuthService()
+      authService: new AuthService()
     };
   }
+
+  statics() {
+    return {
+      'title': "This app requires you to be authenticated and authorized",
+      'status': ['loading', 'mounted', 'complete'],
+      'routes': { '/feed': 'Clique Viewer', '/profile': 'My Profile' }
+    }
+  }
+
 
   async checkAuth() {
     try {
       let isLoggedIn = false;
-      console.log("TODO: Figure out routing");
+
       if (window.location.search.length > 0) {
-        this.setState({ alert: "Verifying credentials" });
         console.log("Found magic credential, checking auth");
         let result = await this.state.authService.onRedirectLogin();
-        console.log("Result of onRedirectLogin");
-        console.log(result);
-        isLoggedIn = await this.state.service.isLoggedIn();
+        console.log(`Result of onRedirectLogin ${result}`);
+        isLoggedIn = await this.state.authService.isLoggedIn();
         console.log("Check log in status now?");
-        this.setState({ status: 'complete', isLoggedIn: isLoggedIn });
       } else {
-        this.setState({ alert: "No magic link in query string.  Verifying credentials"});
-        isLoggedIn = await this.state.service.isLoggedIn();
-        console.log("Log in status: " + isLoggedIn);
-        this.setState({ isLoggedIn: isLoggedIn, status: 'complete' });
+        this.setState({ alert: "No magic link in query string.  Verifying credentials" });
+        isLoggedIn = await this.state.authService.isLoggedIn();
       }
+
+      this.setState({ isLoggedIn: isLoggedIn })
       console.log(`Checked Auth Status: ${isLoggedIn}`);
     } catch (error) {
-      console.log("Error checking auth");
       this.setState({ alert: "An exception occured. " });
-      console.log(error);
+      console.log(`Error checking auth: ${error}`);
     }
   }
 
   async componentDidMount() {
     console.log("App Mounted, checking auth");
-    this.checkAuth();
+    await this.checkAuth();
     this.setState({ status: 'mounted' });
   }
 
   render() {
+    console.log(`App.render(): loggedIn:${this.state.isLoggedIn}, status:${this.state.status}`);
     if (this.state.status === 'loading') {
       return (
         <div style={{ textAlign: "center", marginTop: "33vh" }}>
@@ -69,24 +71,26 @@ class App extends React.Component {
         </div>
       );
     }
-    else if (this.state.status === 'complete' && this.state.isLoggedIn == false) {
+    else if (this.state.status === 'mounted' && this.state.isLoggedIn === false) {
       return (
         <Layout location={location}>
           <div className="columns is-centered" style={{ textAlign: "center", marginTop: "33vh" }}>
             <div className="is-half">
-              <h2 style={{ textTransform: "none" }}>Sorry, nothing here for you.</h2>
+              <h2 style={{ textTransform: "none" }}>{this.statics().title}</h2>
               <LoadableAuthForm title="Ask for permission" />
             </div>
           </div>
         </Layout>
       );
     } else {
+      console.log(`Showing app routes with loginStatus: ${this.state.isLoggedIn}`)
       return (
         <div>
           <Router basepath="/app">
-            <AuthIndex path="/auth" />
+            <AuthIndex path="/login" />
             <ProfileIndex path="/profile" />
-            <FeedIndex auth="validate" path="/" />
+            <FeedIndex authService={this.state.authService} path="/feed" />
+            <FeedIndex authService={this.state.authService} path="/" />
           </Router>
         </div>
       );

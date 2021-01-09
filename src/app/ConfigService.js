@@ -26,7 +26,7 @@ class ConfigService extends Component {
     }
 
     getAuthRoute(){
-        return '/app/auth';
+        return '/app/login';
     }
 
     getSetting(key) {
@@ -47,6 +47,7 @@ class ConfigService extends Component {
             return this.configs.production.MAGIC_PUBLISHABLE_KEY;
         }        
     }
+    
 }
 
 export default ConfigService;

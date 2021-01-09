@@ -1,10 +1,8 @@
 import React from 'react'
-import { Link } from 'gatsby'
 import get from 'lodash/get'
 import Helmet from 'react-helmet'
-import { graphql } from 'gatsby'
 import Layout from '../../components/layout'
-import { LoadableCliqueViewer } from '../client_library'
+import { LoadableFeedViewer } from '../client_library'
 import ConfigService from '../ConfigService'
 
 class FeedIndex extends React.Component {
@@ -29,9 +27,13 @@ class FeedIndex extends React.Component {
         <div style={bannerStyle}>{environment}</div>
         <Helmet title={siteTitle} />
         <div className="container main-content">
-          <h1 style={{ textAlign: "center", paddingBottom: "1vh" }}>Our Family Feed</h1>
-          <div className="container">
-            <LoadableCliqueViewer />
+          <div className="main-content columns">
+            <div className="column">
+              <h1 className="has-text-centered">Our Family Feed</h1>
+              <div className="container">
+                <LoadableFeedViewer authService={this.props.authService} />
+              </div>
+            </div>
           </div>
         </div>
       </Layout>

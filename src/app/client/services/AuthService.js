@@ -1,11 +1,26 @@
-import React, { Component } from "react";
 import { Magic } from 'magic-sdk';
 import ConfigService from '../../ConfigService';
+import UserModel from '../UserModel';
 
-class AuthService extends Component {
+class AuthService { 
+  statics(){
+    return {
+      'apiEndpoint': 'https://api.payonk.com/authorized'
+    }
+  }
   constructor(props) {
-    super(props)
+    // TODO: Pull from localStorage the sessionToken perhaps...
+    // super(props)
     this.cfg = new ConfigService();
+    this.emailAddress = "";
+  }
+
+  get(key){
+    return this.emailAddress;
+  }
+
+  set(key, val){
+    this.emailAddress = val;
   }
 
   getMagicFactory() {
@@ -15,6 +30,7 @@ class AuthService extends Component {
 
   async isLoggedIn() {
     const isLoggedIn = await this.getMagicFactory().user.isLoggedIn();
+    console.log(`AuthService.isLoggedIn(): ${isLoggedIn}`);
     return isLoggedIn;
   }
 
@@ -24,75 +40,65 @@ class AuthService extends Component {
 
   getRedirectUri() {
     const appUrl = this.cfg.getAuthRoute();
-    let redirectURI = window.location.protocol + "//" + window.location.host + appUrl;
-    return redirectURI;
+    return `${window.location.protocol}//${window.location.host}${appUrl}`;
   }
 
-  async isAuthorized(emailAddress) {
-    let data = { email: emailAddress };
-    console.log(`Checking authorization status: ${emailAddress}`)
-    let response = await fetch('https://api.payonk.com/authorized', {
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, *cors, same-origin
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      headers: {
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(data) // body data type must match "Content-Type" header
+  async isAuthorized(emailAddress, permissionName) {
+    let data = { email: emailAddress, permissionName: permissionName };
+    console.log(`Checking permission ${permissionName} for email: ${emailAddress}`)
+    let response = await fetch(this.statics().apiEndpoint, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
     });
-    // Other options
-    // credentials: 'same-origin', // include, *same-origin, omit
-    // redirect: 'follow', // manual, *follow, error
-    // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
     let message = await response.json();
-    console.log("Returned STatus");
-    console.log(message);
-    return message.authorized;
+    console.log(`AuthService.isAuthorized:`,message);
+    
+    if (message.authorized === undefined || message.authorized === null) {
+      isAuthorized = false;
+    } else {
+      return message.authorized;
+    }
   }
 
-  async loginMagic(email) {
+  async loginMagic(emailAddress) {
     /* One-liner login 🤯 */
     // The reference implementation is wrong
-    await this.getMagicFactory().auth.loginWithMagicLink({
-      email: email,
+    this.set('emailAddress', emailAddress);
+
+    let token = await this.getMagicFactory().auth.loginWithMagicLink({
+      email: emailAddress,
       showUI: true,
       redirectURI: this.getRedirectUri()
     });
+    console.log(`DID Token: ${token}`);
   }
 
-  async logout(){
+  async logout() {
     let m = this.getMagicFactory();
     m.user.logout();
   }
 
-  async onRedirectLogin(){
-    let m = this.getMagicFactory();    
-    await m.auth.loginWithCredential();
+  async onRedirectLogin() {
+    let m = this.getMagicFactory();
+    let accessToken = await m.auth.loginWithCredential();
+    UserModel.storeKey('accessToken', accessToken);
+    UserModel.storeKey('updatedAt', new Date());
+    // TODO: Potentially store this
   }
 
   async getProfile() {
     if (await this.isLoggedIn()) {
-      // Assumes a user is already logged in
       try {
-
         const { email, publicAddress } = await this.getMagicFactory().user.getMetadata();
-        try {
-          let isAuthorized = await this.isAuthorized(email);
-          if (isAuthorized === undefined || isAuthorized === null) {
-            isAuthorized = false;
-          }
-          console.log("returning");
-          console.log(isAuthorized);
-          return { email, isAuthorized, publicAddress };
-
-        } catch (error) {
-          console.log("Error");
-          return null;
-        }
-      } catch {
-        console.error("An error was thrown");
-        // Handle errors if required!
+        console.log("AuthService.getProfile: TODO: Remove static permission feed");
+        let isAuthorized = await this.isAuthorized(email, 'feed');
+        return { email, isAuthorized, publicAddress };
+      } catch (error) {
+        console.error("An error was thrown obtaining profile");
+        console.error(error);
         return null;
       }
     } else {
