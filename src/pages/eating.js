@@ -35,7 +35,7 @@ class RecipeIndex extends React.Component {
               return (
                 <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
                   <h3>
-                    <Link style={{ boxShadow: 'none' }} to={`recipes/${node.slug}`}>
+                    <Link style={{ boxShadow: 'none' }} to={`/recipes/${node.slug}`}>
                       {title}
                     </Link>
                   </h3>

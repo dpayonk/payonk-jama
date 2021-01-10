@@ -12,7 +12,7 @@ class AuthForm extends Component {
     super(props);
 
     this.state = {
-      email: "",
+      emailInput: "",
       isLoggedIn: false,
       isAuthorized: false,
       currentState: "initialized",
@@ -33,11 +33,11 @@ class AuthForm extends Component {
     const isLoggedIn = await this.isLoggedIn();
 
     if (isLoggedIn) {
-      const profile = await this.state.authService.getProfile();
+      const profile = await this.state.authService.getAuthenticationProfile();
       let isAuthorized = false;
       if (profile !== null) {
         if (!isAuthorized) {
-          this.setState({ email: profile.email });
+          this.setState({ emailInput: profile.emailAddress });
           if(profile.isAuthorized){
             this.setState({ alert: `Hi ${this.getFriendlyName()}!` });
 
@@ -58,28 +58,33 @@ class AuthForm extends Component {
   }
 
   handleChange(event) {
-    this.setState({ email: event.target.value });
+    this.setState({ emailInput: event.target.value });
   }
 
   isValidEmail(emailText) {
     return true;
   }
 
+  isAuthorized(){
+    // TODO: Fix
+    return this.state.isAuthorized;
+  }
+
   async handleLogin(e) {
     e.preventDefault();
-    if (this.isValidEmail(this.state.email)) {
+    if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ currentState: "Starting auth process, setting email..." });
       
-      let userModel = new UserModel({emailAddress: this.state.email});
+      let userModel = new UserModel({emailAddress: this.state.emailInput});
       this.setState({userModel: userModel});
 
-      await this.state.authService.loginMagic(this.state.email);
+      await this.state.authService.loginMagic(this.state.emailInput);
 
     }
   };
 
   getFriendlyName() {
-    const emailParts = this.state.email.split("@");
+    const emailParts = this.state.emailInput.split("@");
     return emailParts[0];
   }
 
@@ -116,7 +121,7 @@ class AuthForm extends Component {
         <div className="field">
           <label className="label">Email</label>
           <div className="control has-icons-left">
-            <input value={this.state.email} onChange={this.handleChange} className="input " type="email" name="email"
+            <input value={this.state.emailInput} onChange={this.handleChange} className="input " type="email" name="email"
               required="required" placeholder="your@email.com" />
             <span className="icon is-small is-left">
               <i className="fas fa-envelope"></i>
@@ -138,7 +143,7 @@ class AuthForm extends Component {
     }
     return (
       <div className="container" style={{ minHeight: "150px", marginBottom: "5vh" }}>
-        <label style={{fontSize: "2rem", fontWeight: "700", paddingBottom: "10px"}}>
+        <label style={{fontSize: "1.3rem", fontWeight: "700", paddingBottom: "10px"}}>
           {this.state.alert}
         </label>
         <div>{description}</div>

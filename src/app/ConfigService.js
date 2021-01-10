@@ -29,16 +29,6 @@ class ConfigService extends Component {
         return '/app/login';
     }
 
-    getSetting(key) {
-        console.log(`Fetching maybe unknown key ${key}`);
-        console.log(`Current Environment: ${this.environment}`);
-        if(this.environment !== 'production'){
-            return this.configs.development[key];
-        } else {
-            return this.configs.production[key];
-        }   
-    }
-
     get_magic_key(){        
         if(this.environment !== 'production'){
             // console.log(`Using key: ${this.configs.development.MAGIC_PUBLISHABLE_KEY}`)
@@ -48,6 +38,21 @@ class ConfigService extends Component {
         }        
     }
     
+}
+
+ConfigService.STATIC = {
+    'BACKEND_ENDPOINT': {'development': 'https://dev-api.payonk.com', 'production': "https://api.payonk.com"},    
+}
+
+ConfigService.get = function(key){
+    const environment = process.env.NODE_ENV;
+
+    if(ConfigService.STATIC[key] !== undefined){
+        const val = ConfigService.STATIC[key][environment];
+        return val;
+    }else{
+        console.error(`There was no configuration setup for ${key}`);
+    }
 }
 
 export default ConfigService;

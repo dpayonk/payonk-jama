@@ -4,5 +4,6 @@ import Loadable from "@loadable/component"
 
 const LoadableAuthForm = Loadable(() => import("./client/AuthForm"))
 const LoadableFeedViewer = Loadable(() => import("./client/FeedViewer"))
+const LoadableComments = Loadable(() => import("./client/Comments"))
 
-export { LoadableFeedViewer, LoadableAuthForm}
+export { LoadableFeedViewer, LoadableAuthForm, LoadableComments}

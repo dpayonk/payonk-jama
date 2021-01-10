@@ -1,8 +1,10 @@
+import Logger from '../Logger';
+
 class UserModel {
     constructor(props){
         if(props === undefined){
             this.emailAddress == null;
-            console.log("Initializing empty model");
+            Logger.info("UserModel: Initializing model with null email");
         }
         else if(props.emailAddress !== undefined && props.emailAddress !== null){
             UserModel.storeEmail(props.emailAddress);
@@ -12,31 +14,30 @@ class UserModel {
         }        
     }
 
-    getEmail(){        
-        return this.emailAddress;
+    updateEmail(emailAddress){
+        this.emailAddress = emailAddress;
+        UserModel.publishUpdate(this);
     }
+}
 
-    setCookie(name,value,days) {
-        var expires = "";
-        if (days) {
-            var date = new Date();
-            date.setTime(date.getTime() + (days*24*60*60*1000));
-            expires = "; expires=" + date.toUTCString();
-        }
-        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-    }
-    getCookie(name) {
-        var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
-        for(var i=0;i < ca.length;i++) {
-            var c = ca[i];
-            while (c.charAt(0)==' ') c = c.substring(1,c.length);
-            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-        }
-        return null;
-    }
-    eraseCookie(name) {   
-        document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+UserModel.onUpdate = function(callback){
+    UserModel.SUBSCRIBERS = UserModel.SUBSCRIBERS || [];
+    UserModel.SUBSCRIBERS.push(callback);
+}
+
+UserModel.publishUpdate = function(userModel){
+    // UserModel.storeEmail(emailAddress);
+    Logger.info("Should store and then propogate");
+
+    if(UserModel.SUBSCRIBERS !== undefined){
+        UserModel.SUBSCRIBERS.forEach(function(callbackFunction, index){
+            try {
+                let result = callbackFunction(userModel);  
+                Logger.info('Completed publish callback', result);          
+            } catch (error) {
+                Logger.error(`A subscriber to user updates failed:`, error);
+            }
+        });
     }
 }
 
@@ -60,8 +61,9 @@ UserModel.loadModelFromStorage = function(){
 
     if(emailAddress === null){
         console.log("No email has been stored");
-        return null;
+        return new UserModel();
     }    
+
     let userModel = new UserModel({emailAddress: emailAddress});
     return userModel;
 }

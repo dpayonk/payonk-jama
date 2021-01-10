@@ -2,49 +2,53 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
+import ConfigService from '../ConfigService';
+import { LoadableAuthForm } from '../client_library';
+import Logger from '../Logger';
+import {bannerStyle, getBannerStyle} from '../styleBuilder';
 
-import ConfigService from '../ConfigService'
-import AuthService from '../client/services/AuthService'
-
-class AuthIndex extends React.Component {
+class LoginIndex extends React.Component {
     constructor(props) {
+        /* props.authService */
         super(props);
-        this.state = {
-            authService: new AuthService(),
+        const environment = new ConfigService().get_environment();
+        this.state = {        
+            environment: environment,    
             status: "initialized",
             isLoggedIn: false,
             alert: ""
         }
     }
+
     async componentDidMount() {
+        let isLoggedIn = false;
+        let alert = "";
+
         if (window.location.search.length > 0) {
-            // Check if there is a magiclink in the query params
-            console.log(`AuthIndex.mount TODO: need email`);
-            // this.state.authService.loginMagic();
-            this.setState({ alert: "Confirming your authentication status?  Try refreshing!" })
+            alert = "Confirming your authentication status?  Try refreshing!";
         } else {
-            if (this.state.authService.isLoggedIn()) {
-                this.setState({ isLoggedIn: true, alert: "Welcome Back" });
+            isLoggedIn = await this.props.authService.isLoggedIn();
+            if (isLoggedIn) {
+                
+                alert = `Welcome Back`;                
             }
         }
-        this.setState({ status: 'mounted' });
+        this.setState({ alert: alert, isLoggedIn: isLoggedIn, status: 'mounted' });
     }
 
-    render() {
-        const environment = new ConfigService().get_environment();
-        let bannerStyle = (environment === 'production') ? { background: 'green' } : { background: 'red' };
-
-        if (this.state.status === 'initialized') {
+    render() {     
+        let environment = process.env.environment;
+        
+        if (this.state.status !== 'mounted') {
             return (<Loader />);
-        } else if (this.state.status == 'mounted' && this.state.isLoggedIn === true) {
-
+        } else if (this.state.isLoggedIn === true) {
             return (
                 <Layout location={location}>
-                    <div className="main-content dev-banner" style={bannerStyle}>
-                        <h2>{this.state.alert}</h2>
-                    </div>
                     <Helmet title="Login" />
                     <div className="container main-content">
+                        <div style={getBannerStyle(environment)}>
+                            <h2>{this.state.alert}</h2>
+                        </div>
                         <div className="columns has-text-centered">
                             <div className="column">
                             <a href="/app/feed" className="button is-large button-is-primary">
@@ -60,7 +64,7 @@ class AuthIndex extends React.Component {
             return (
                 <Layout location={location}>
                     <div className="main-content">
-                        <Loader />
+                        <LoadableAuthForm />
                     </div>
                 </Layout>
             );
@@ -68,4 +72,4 @@ class AuthIndex extends React.Component {
     }
 }
 
-export default AuthIndex
+export default LoginIndex

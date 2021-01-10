@@ -4,8 +4,83 @@ import Helmet from 'react-helmet'
 import Layout from '../../components/layout'
 import { LoadableFeedViewer } from '../client_library'
 import ConfigService from '../ConfigService'
+import { getBannerStyle } from '../styleBuilder';
+import Loader from '../../components/Loader';
+
+import Logger from "../Logger";
 
 class FeedIndex extends React.Component {
+  constructor(props) {
+    /* props.authService props.userModel */
+    super(props);
+    this.state = {
+      pics: [],
+      status: 'initialized'
+    }
+  }
+
+  async isAuthorized() {
+    let isAuthorized = false;
+
+    isAuthorized = await this.props.authService.isAuthorized(this.props.userModel.emailAddress, 'feed');
+    return isAuthorized;
+  }
+
+  statics() {
+    const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
+    return {
+      'apiEndpoint': `${apiUrl}/feed`
+    }
+  }
+
+  async getFeed() {
+    // TODO: Customize based on profile
+    let data = { accessToken: 'static:TODO' };
+    try {
+      let response = await fetch(this.statics().apiEndpoint, {
+        method: 'POST', // TODO: Change to post*GET, POST, PUT, DELETE, etc.
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data) // body data type must match "Content-Type" header
+      });
+      if (response.status === 200) {
+        let picsList = await response.json();
+        this.setState({ pics: picsList });
+      } else {
+        console.log("Route not available");
+      }
+    } catch (error) {
+      console.log("Error getting feed", error);
+    }
+  }
+
+  async componentDidMount() {
+
+    try {
+      let isAuthorized = await this.isAuthorized();
+      if (isAuthorized) {
+        this.getFeed();
+      } else {
+        console.log("FeedViewer.componentDidMount could not get userModel");
+        this.setState({ alert: "We could not retrieve user credentials" });
+      }
+      Logger.info(`FeedViewer: Setting Authorization Status: ${isAuthorized}`);
+    } catch (error) {
+      Logger.error(`FeedViewer: Error occured mounting`, error);
+    }
+    this.setState({ status: 'mounted' });
+  }
+
+  renderUnauthorized() {
+    return (
+      <div>It does not appear you are authorized yet.</div>
+    )
+  }
+
+
   render() {
     const siteTitle = get(
       this,
@@ -14,30 +89,26 @@ class FeedIndex extends React.Component {
     const location = get(this, 'props.location')
     let cfg = new ConfigService();
     const environment = cfg.get_environment();
-    let bannerStyle = {
-      position: 'absolute', top: '0px', left: '0px', marginTop: '70px',
-      background: "red", width: '100%', textAlign: 'center', color: 'white'
-    };
-    if (environment === 'production') {
-      bannerStyle.background = 'green';
-    }
 
-    return (
-      <Layout location={location}>
-        <div style={bannerStyle}>{environment}</div>
-        <Helmet title={siteTitle} />
-        <div className="container main-content">
-          <div className="main-content columns">
-            <div className="column">
-              <h1 className="has-text-centered">Our Family Feed</h1>
-              <div className="container">
-                <LoadableFeedViewer authService={this.props.authService} />
-              </div>
+    if (this.state.status !== 'mounted') {
+      return (<Loader title="Capturing memories" />);
+    }
+    else if (this.isAuthorized() === false) {
+      return this.renderUnauthorized();
+    } else {
+      return (
+        <Layout location={location}>
+          <div style={getBannerStyle(environment)}>{environment}</div>
+          <Helmet title={siteTitle} />
+          <div className="container main-content">
+            <h1 className="has-text-centered">Our Family Feed</h1>
+            <div className="container">
+              <LoadableFeedViewer pics={this.state.pics} userModel={this.props.userModel} />
             </div>
           </div>
-        </div>
-      </Layout>
-    )
+        </Layout>
+      )
+    }
   }
 }
 

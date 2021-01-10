@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import './styles/global.css'
 
 export default function HTML(props) {
   return (
@@ -8,10 +9,11 @@ export default function HTML(props) {
         <meta charSet="utf-8" />
         <meta httpEquiv="x-ua-compatible" content="ie=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/png" href="favicon.png"></link>
+        <link rel="icon" type="image/png" href="/favicon.png"></link>
         {props.headComponents}
         <link href="https://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
+        <link href="/style-overrides.css" rel="stylesheet" />
         <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" />
         <script defer src="https://go.metabet.io/js/global.js"></script>
         <script

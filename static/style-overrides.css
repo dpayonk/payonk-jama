@@ -1,4 +1,20 @@
+h1 {
+    font-size: 2rem !important;
+    margin-bottom: 20px !important;
+  }
 
+  .loader-container {
+    text-align: center;
+    margin-top: 33vh;
+  }
+  
+  .alert-message{
+    padding: 20px;
+    background:cornsilk;
+    margin: 10px 0px;
+  }
+  
+  
 p{
   margin-bottom: 1.75rem !important;
 }
@@ -35,6 +51,10 @@ h1:first, h2:first, h3:first{
   padding: 1.5rem 0rem 0rem 0rem;
 }
 
+.checkbox:last-child{
+  margin-left:8px;
+}
+
 h1 {
   font-size: 2rem !important;
   margin-bottom: 20px !important;
@@ -42,6 +62,7 @@ h1 {
 
 h2 {
   padding-bottom: '20px';
+  font-size: 1.6rem;
   text-transform: capitalize;
 }
 
