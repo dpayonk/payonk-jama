@@ -22,6 +22,9 @@ static_sites:
   - key: MAGIC_PUBLISHABLE_KEY
     scope: BUILD_TIME
     value: 'pk_test_05CC9C10E2A6DA8C'
+  - key: BACKEND_ENDPOINT
+    scope: BUILD_TIME
+    value: https://api.payonk.com/graphql
   - key: HASURA_SECRET
     scope: BUILD_TIME
     type: SECRET

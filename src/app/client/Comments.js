@@ -1,6 +1,5 @@
 import React from 'react'
-import Comment from '@bit/semantic-org.semantic-ui-react.comment'
-import Icon from '@bit/semantic-org.semantic-ui-react.icon'
+import { Button, Comment, Icon } from 'semantic-ui-react'
 
 const style = <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.css'/>
 

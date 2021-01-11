@@ -34,6 +34,9 @@ class FeedViewer extends Component {
     this.setState({ status: 'mounted' });
   }
 
+  renderDetail(pic) {
+    return (<FeedDetail key={pic.id} pic={pic} />);
+  }
 
   renderFeed() {
     console.log(this.props);
@@ -49,11 +52,14 @@ class FeedViewer extends Component {
             {
               this.props.pics.map((pic) => {
                 return (
+                  <div key={pic.id} style={{ border: "2px" }} className="column is-4">
 
-                  <div key={pic.id} style={{border: "2px"}} className="column is-4">
-                    <FeedDetail key={pic.id} pic={pic} />
+                    <div key={pic.id} className="column is-full">
+                      <img style={{ minHeight: "300px" }} alt={pic.title} className="feature-square-image" src={pic.image_url} />
+                      <p style={{ paddingTop: "7px" }}>{pic.title}</p>
+                    </div>
+
                   </div>
-
                 )
               })
             }
@@ -63,7 +69,7 @@ class FeedViewer extends Component {
     }
   }
 
-  render() {   
+  render() {
     if (this.state.status !== 'mounted') {
       return (<Loader />)
     } else {

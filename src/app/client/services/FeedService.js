@@ -5,10 +5,12 @@ class FeedService {
     statics() {
         const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
         return {
-          'apiEndpoint': `${apiUrl}/feed`
+          'apiEndpoint': `${apiUrl}/feed`,
+          'routes': [{
+            url: '/feed', params:[]
+          }]
         }
       }
-    
 
     async getFeed() {
         // TODO: Customize based on profile

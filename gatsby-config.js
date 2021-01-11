@@ -43,5 +43,17 @@ module.exports = {
         },
       },
     },
+    {
+      resolve: "gatsby-source-graphql",
+      options: {
+        typeName: "backend",
+        fieldName: "backend",
+        url: `${process.env.BACKEND_ENDPOINT}`,
+        // HTTP headers
+        headers: {
+            'x-hasura-admin-secret': `${process.env.HASURA_SECRET}`
+        },
+      },
+    },
   ],
 }

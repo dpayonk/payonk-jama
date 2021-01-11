@@ -3,11 +3,17 @@ import Helmet from 'react-helmet'
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
-import { LoadableAuthForm } from '../client_library';
 import Logger from '../Logger';
-import { bannerStyle, getBannerStyle } from '../styleBuilder';
+import { getBannerStyle } from '../styleBuilder';
 
-import { LoadableFeedViewer } from '../client_library'
+import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
+import FeedService from '../client/services/FeedService';
+import UserModel from '../client/UserModel';
+
+import Loadable from "@loadable/component"
+// const LoadableComments = Loadable(() => import("./client/Comments"))
+
+// const LoadableReactJson = Loadable(() => ReactJson)
 
 
 class RpcExplorer extends React.Component {
@@ -20,12 +26,72 @@ class RpcExplorer extends React.Component {
             status: "initialized",
             isLoggedIn: false,
             alert: "Use this to test backend functionality",
-            pics: []
+            pics: [],
+            services: [
+                { key: 'feed', klass: FeedService },
+                { key: 'profile', klass: UserModel },
+            ],
+            serviceResponse: null,
+            Log: []
         }
+
+        let self = this;
+        // redirect log output to view
+        Logger.redirectTo(function (message, obj) {
+            let log = self.state.Log;
+            log.push({ "message": message, "obj": obj });
+            self.setState({ Log: log });
+        });
     }
 
     async componentDidMount() {
         this.setState({ status: 'mounted' });
+    }
+
+    displayServiceMethods(Klass) {
+        try {
+            const klass = new Klass();
+            const serviceConfiguration = klass.statics();
+            const methods = serviceConfiguration.routes;
+            return (<div>
+                <h6>{serviceConfiguration.apiEndpoint}</h6>
+                <ul>
+                    {
+                        methods.map((route) => {
+                            return (<li>{route.url} / params: {JSON.stringify(route.params)}</li>);
+                        })
+                    }
+                </ul>
+            </div>);
+        } catch (error) {
+            return (<div>Could not parse methods</div>);
+        }
+        // return [...properties.keys()].filter(item => typeof obj[item] === 'function')
+    }
+
+    renderJsonOutput() {
+        if (this.state.serviceResponse !== null) {
+            return (<div>Not implemented</div>);
+            //    return (<ReactJson src={this.state.serviceResponse} />)
+        } else {
+            return (<div>Nothing to see here</div>);
+        }
+    }
+
+    renderServiceList() {
+
+        return (<ul className="">
+            {
+                this.state.services.map((service) => {
+                    return (
+                        <li key={service.key} style={{ border: "2px" }} className="column is-4">
+                            {service.key}
+                            <div>{this.displayServiceMethods(service.klass)}</div>
+                        </li>
+                    )
+                })
+            }
+        </ul>);
     }
 
     render() {
@@ -46,10 +112,7 @@ class RpcExplorer extends React.Component {
                             </div>
                             <div className="column is-three-fifths">
                                 <h3>List of services</h3>
-                                <ul>
-                                    <li>Auth Service</li>
-                                    <li>Feed Service</li>
-                                </ul>
+                                {this.renderServiceList()}
                             </div>
 
                             <div className="column is-two-fifths">
@@ -61,7 +124,7 @@ class RpcExplorer extends React.Component {
                             <div className="column is-three-fifths">
                                 <h3>Results</h3>
                                 <div className="result">
-                                    Service Responses
+                                    {this.renderJsonOutput()}
                                 </div>
                             </div>
                             <div className="column is-two-fifths">

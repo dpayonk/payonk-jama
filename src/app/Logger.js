@@ -15,8 +15,14 @@ Logger.info = function(message, obj){
     }
 }
 
+Logger.output = 'console';
+
 Logger.error = function(message, exc){
     console.error(message, exc);
+}
+
+Logger.redirectTo = function(arr){
+    Logger.output = arr;
 }
 
 
