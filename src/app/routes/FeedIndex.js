@@ -6,6 +6,7 @@ import { LoadableFeedViewer } from '../client_library'
 import ConfigService from '../ConfigService'
 import { getBannerStyle } from '../styleBuilder';
 import Loader from '../../components/Loader';
+import FeedService from "../client/services/FeedService";
 
 import Logger from "../Logger";
 
@@ -15,46 +16,15 @@ class FeedIndex extends React.Component {
     super(props);
     this.state = {
       pics: [],
-      status: 'initialized'
+      status: 'initialized',
+      feedService: new FeedService()
     }
   }
 
   async isAuthorized() {
     let isAuthorized = false;
-
-    isAuthorized = await this.props.authService.isAuthorized(this.props.userModel.emailAddress, 'feed');
+    isAuthorized = await this.props.authService.getAuthorizationStatus(this.props.userModel.emailAddress, 'feed');
     return isAuthorized;
-  }
-
-  statics() {
-    const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
-    return {
-      'apiEndpoint': `${apiUrl}/feed`
-    }
-  }
-
-  async getFeed() {
-    // TODO: Customize based on profile
-    let data = { accessToken: 'static:TODO' };
-    try {
-      let response = await fetch(this.statics().apiEndpoint, {
-        method: 'POST', // TODO: Change to post*GET, POST, PUT, DELETE, etc.
-        mode: 'cors',
-        cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data) // body data type must match "Content-Type" header
-      });
-      if (response.status === 200) {
-        let picsList = await response.json();
-        this.setState({ pics: picsList });
-      } else {
-        console.log("Route not available");
-      }
-    } catch (error) {
-      console.log("Error getting feed", error);
-    }
   }
 
   async componentDidMount() {
@@ -62,7 +32,8 @@ class FeedIndex extends React.Component {
     try {
       let isAuthorized = await this.isAuthorized();
       if (isAuthorized) {
-        this.getFeed();
+        let picsList = await this.state.feedService.getFeed();
+        this.setState({ pics: picsList });
       } else {
         console.log("FeedViewer.componentDidMount could not get userModel");
         this.setState({ alert: "We could not retrieve user credentials" });

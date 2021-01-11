@@ -39,18 +39,8 @@ module.exports = {
         url: "https://api.whealthy.us/v1/graphql",
         // HTTP headers
         headers: {
-          // Learn about environment variables: https://gatsby.dev/env-vars
-//          Authorization: `Bearer ${process.env.HASURA_ADMIN_TOKEN}`,
-            'x-hasura-admin-secret': `${process.env.HASURA_ADMIN_TOKEN}`
+            'x-hasura-admin-secret': `${process.env.HASURA_SECRET}`
         },
-        // // HTTP headers alternatively accepts a function (allows async)
-        // headers: async () => {
-        //   return {
-        //     Authorization: await getAuthorizationToken(),
-        //   }
-        // },
-        // Additional options to pass to node-fetch
-        // fetchOptions: {},
       },
     },
   ],

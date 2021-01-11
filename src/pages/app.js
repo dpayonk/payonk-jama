@@ -1,15 +1,15 @@
 import React from "react"
 import { Router } from "@reach/router"
-import FeedIndex from "../app/pages/FeedIndex"
-import LoginIndex from "../app/pages/LoginIndex"
-import ProfileIndex from "../app/pages/ProfileIndex"
-import AuthService from "../app/client/services/AuthService"
+import FeedIndex from "../app/routes/FeedIndex"
+import LoginIndex from "../app/routes/LoginIndex"
+import ProfileIndex from "../app/routes/ProfileIndex"
+import RpcExplorer from "../app/routes/RpcExplorer"
 import Layout from '../components/layout';
 import Loader from "../components/Loader";
 import Logger from '../app/Logger';
+import AuthService from "../app/client/services/AuthService"
 import UserModel from '../app/client/UserModel';
 import { LoadableAuthForm } from '../app/client_library';
-
 
 class App extends React.Component {
 
@@ -59,7 +59,6 @@ class App extends React.Component {
       alert = "An exception occurred loading the app.";      
       Logger.error(`app.js: Catching exception in checkAuth`, error);
     }
-    Logger.info("App")
     this.setState({ status: 'mounted', isLoggedIn: isLoggedIn, alert: alert, status: 'mounted' });
   }
 
@@ -91,6 +90,7 @@ class App extends React.Component {
             <LoginIndex userModel={this.state.userModel} authService={this.state.authService} path="/login" />
             <ProfileIndex userModel={this.state.userModel} authService={this.state.authService} path="/profile" />
             <FeedIndex userModel={this.state.userModel} authService={this.state.authService} path="/feed" />
+            <RpcExplorer userModel={this.state.userModel} authService={this.state.authService} path="/rpc" />
             <FeedIndex userModel={this.state.userModel} authService={this.state.authService} path="/" />
           </Router>
         </div>

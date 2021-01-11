@@ -22,7 +22,7 @@ static_sites:
   - key: MAGIC_PUBLISHABLE_KEY
     scope: BUILD_TIME
     value: 'pk_test_05CC9C10E2A6DA8C'
-  - key: HASURA_ADMIN_TOKEN
+  - key: HASURA_SECRET
     scope: BUILD_TIME
     type: SECRET
     value: EV[1:khxy0eA9x8Yc1r0LLRs0HDVb7NIsxq0Y:pUYGnDGQF7NG6v+zPcKk9x6icgrEZwudhaZm]

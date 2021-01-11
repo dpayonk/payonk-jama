@@ -1,10 +1,8 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
 import AuthService from './services/AuthService'
-
 import Loader from '../../components/Loader';
-import ConfigService from '../ConfigService';
 import UserModel from '../client/UserModel';
+import Logger from "../Logger";
 
 class AuthForm extends Component {
 
@@ -12,112 +10,134 @@ class AuthForm extends Component {
     super(props);
 
     this.state = {
-      emailInput: "",
-      isLoggedIn: false,
-      isAuthorized: false,
-      currentState: "initialized",
       alert: "",
       authService: new AuthService(),
+      emailInput: "",
+      fetchedAuthorization: false, isAuthorized: false,
+      fetchedLogin: false, isLoggedIn: false,
+      status: "initialized",
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  async isLoggedIn() {
-    const isLoggedIn = await this.state.authService.isLoggedIn();
-    return isLoggedIn;
-  }
-
-  async componentDidMount() {
-    const isLoggedIn = await this.isLoggedIn();
-
-    if (isLoggedIn) {
-      const profile = await this.state.authService.getAuthenticationProfile();
-      let isAuthorized = false;
-      if (profile !== null) {
-        if (!isAuthorized) {
-          this.setState({ emailInput: profile.emailAddress });
-          if(profile.isAuthorized){
-            this.setState({ alert: `Hi ${this.getFriendlyName()}!` });
-
-          } else {
-            this.setState({ alert: `Sorry, ${this.getFriendlyName()}! You have not been approved yet.` });
-          }
-        }
-        isAuthorized = profile.isAuthorized;
-      } else {
-        this.setState({ alert: "Your profile could not be fetched" });
-      }
-      this.setState({ isLoggedIn: isLoggedIn, isAuthorized: isAuthorized, profile: profile });
+  async fetchLogin() {
+    if (this.state.fetchedLogin === false) {
+      const isLoggedIn = await this.state.authService.isLoggedIn();
+      this.setState({ isLoggedIn: isLoggedIn, fetchedLogin: true });
+      return isLoggedIn;
     } else {
-
-      this.setState({ isLoggedIn: isLoggedIn });
+      return this.state.isLoggedIn;       // fetch from cache
     }
-    this.setState({ currentState: 'mounted' });
-  }
-
-  handleChange(event) {
-    this.setState({ emailInput: event.target.value });
   }
 
   isValidEmail(emailText) {
     return true;
   }
 
-  isAuthorized(){
-    // TODO: Fix
-    return this.state.isAuthorized;
-  }
-
-  async handleLogin(e) {
-    e.preventDefault();
-    if (this.isValidEmail(this.state.emailInput)) {
-      this.setState({ currentState: "Starting auth process, setting email..." });
-      
-      let userModel = new UserModel({emailAddress: this.state.emailInput});
-      this.setState({userModel: userModel});
-
-      await this.state.authService.loginMagic(this.state.emailInput);
-
-    }
-  };
-
   getFriendlyName() {
     const emailParts = this.state.emailInput.split("@");
     return emailParts[0];
   }
 
-  render() {
-    
-    let description = (<p>Register for the waitlist to check out the latest updates!</p>);
-
-    if (this.state.currentState !== 'mounted') {
-      return (
-        <div style={{ minHeight: "10vh", textAlign: "center" }}>
-          <Loader />
-        </div>);
+  async isAuthorized() {
+    if (this.state.fetchedAuthorization === false) {
+      await this.fetchProfile(); // authorization status set by getting profile
+      return this.state.isAuthorized;
+    } else {
+      return this.state.isAuthorized;       // fetch from cache
     }
+  }
 
-    if (this.state.isLoggedIn) {
-      if (this.state.isAuthorized) {
-        description = (<div>
-          <p style={{ textIndent: "20px" }}>
-            Check out the <a className="" href="/app"> private feed</a> for new pics!
-            </p>
-        </div>);
-      } else {
-        description = (<div>
-          <p style={{ textIndent: "20px" }}>
-            We don't have your email address on file yet.  Give us a few minutes to authorize you.
-            If you're impatient, send us a message.
-            </p>
-        </div>);
+  async fetchProfile() {
+    let authenticationProfile = await this.state.authService.getAuthenticationProfile();
+    Logger.info(`Profile response: `, authenticationProfile);
+    if (authenticationProfile === null) {
+      this.setState({ isAuthorized: false, fetchedAuthorization: true });
+    } else {
+      // I could say this is a alid profile
+      let authorizationStatus = await this.state.authService.getAuthorizationStatus(authenticationProfile.emailAddress);
+      this.setState({
+        isAuthorized: authorizationStatus,
+        authenticationProfile: authenticationProfile,
+        fetchedAuthorization: true
+      });
+    }
+  }
+
+  async componentDidMount() {
+    await this.fetchLogin();
+    await this.fetchProfile();
+
+    if (this.state.authenticationProfile !== null) {
+      // This is too complex combiniing a profile with magic link, need better model
+      if (this.state.isAuthorized == true) {
+        this.setState({ emailInput: this.state.authenticationProfile.emailAddress });
+        if (this.state.isAuthorized) {
+          this.setState({ alert: `Hi ${this.getFriendlyName()}!` });
+        } else {
+          this.setState({ alert: `Sorry, ${this.getFriendlyName()}! You have not been approved yet.` });
+        }
       }
+    } else {
+      this.setState({ alert: "Your profile could not be fetched" });
+    }
+    this.setState({ status: 'mounted' });
+  }
+
+  handleChange(event) {
+    this.setState({ emailInput: event.target.value });
+  }
+
+  async handleLogin(e) {
+    e.preventDefault();
+    if (this.isValidEmail(this.state.emailInput)) {
+      this.setState({ alert: "Starting auth process, setting email..." });
+      await this.state.authService.loginMagic(this.state.emailInput);
+    }
+  };
+
+  render() {
+
+    if (this.state.status !== 'mounted') {
+      return (<Loader />);
     }
 
-    if (!this.state.isLoggedIn) {
-      description = (<form>
+    if (this.state.isLoggedIn && this.state.isAuthorized) {
+      return (<div className="container" style={{ minHeight: "150px", marginBottom: "5vh" }}>
+        <label style={{ fontSize: "1.3rem", fontWeight: "700", paddingBottom: "10px" }}>
+          {this.state.alert}
+        </label>
+        <div><p style={{ textIndent: "20px" }}>
+          Check out the <a className="" href="/app"> private feed</a> for new pics!
+            </p>
+        </div>
+      </div>);
+    } else if (this.state.isLoggedIn === true && this.state.isAuthorized === false) {
+      return this.renderUnauthorized();
+    } else {
+      return this.renderLoginForm();
+    }
+  }
+
+  renderUnauthorized() {
+    let email = this.state.authenticationProfile.emailAddress;
+    return (
+      <div>
+        <p style={{ textIndent: "20px" }}>
+          We don't have your email address ({email}) on file yet.  Give us a few minutes to authorize you.
+          If you're impatient, send us a message.
+            </p>
+      </div>
+    )
+  }
+
+  renderLoginForm() {
+    return (<div>
+      <p>Register for the waitlist to check out the latest updates!</p>
+
+      <form>
         <div className="field">
           <label className="label">Email</label>
           <div className="control has-icons-left">
@@ -131,23 +151,16 @@ class AuthForm extends Component {
         </div>
         <div className="field is-grouped">
           <div className="control">
-          <div className="field">
-            <button onClick={this.handleLogin} className="button is-light is-pull-right" type="submit">
-              Register
-            </button>
+            <div className="field">
+              <button onClick={this.handleLogin} className="button is-light is-pull-right" type="submit">
+                Register
+          </button>
             </div>
           </div>
         </div>
       </form>
-      );
-    }
-    return (
-      <div className="container" style={{ minHeight: "150px", marginBottom: "5vh" }}>
-        <label style={{fontSize: "1.3rem", fontWeight: "700", paddingBottom: "10px"}}>
-          {this.state.alert}
-        </label>
-        <div>{description}</div>
-      </div>);
+    </div>
+    )
   }
 };
 

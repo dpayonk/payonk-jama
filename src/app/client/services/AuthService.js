@@ -39,7 +39,7 @@ class AuthService {
     return `${window.location.protocol}//${window.location.host}${appUrl}`;
   }
 
-  async isAuthorized(emailAddress, permissionName) {
+  async getAuthorizationStatus(emailAddress, permissionName) {
     let data = { emailAddress: emailAddress, permissionName: permissionName };
     console.log(`Checking permission ${permissionName} for email: ${emailAddress}`)
     try {
@@ -51,10 +51,10 @@ class AuthService {
         body: JSON.stringify(data)
       });
       let message = await response.json();
-      console.log(`AuthService.isAuthorized:`,message);
+      console.log(`AuthService.getAuthorizationProfile:`,message);
       
       if (message.authorized === undefined || message.authorized === null) {
-        isAuthorized = false;
+        return false;
       } else {
         return message.authorized;
       }
