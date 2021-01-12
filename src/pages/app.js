@@ -8,8 +8,8 @@ import Layout from '../components/layout';
 import Loader from "../components/Loader";
 import Logger from '../app/Logger';
 import AuthService from "../app/services/AuthService"
-import UserModel from '../app/client/UserModel';
-import { LoadableAuthForm } from '../app/client_library';
+// import UserModel from '../app/client/UserModel';
+import { LoadableAuthForm, LoadableUserModel } from '../app/client_library';
 
 class App extends React.Component {
 
@@ -23,8 +23,9 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    let userModel = UserModel.loadModelFromStorage();
-
+    console.log("Loadable User Model");
+    let userModel = LoadableUserModel.loadModelFromStorage();
+    console.log(" is working");
     this.state = {
       alert: "Hang tight",
       authService: new AuthService({userModel}),
@@ -34,7 +35,7 @@ class App extends React.Component {
     };
 
     let self = this;
-    UserModel.onUpdate(function(userModel){
+    LoadableUserModel.onUpdate(function(userModel){
       Logger.info("received update, new Model", userModel);
         self.setState({userModel: userModel });
     });

@@ -3,5 +3,6 @@ import Loadable from "@loadable/component"
 const LoadableAuthForm = Loadable(() => import("./client/AuthForm"))
 const LoadableFeedViewer = Loadable(() => import("./client/FeedViewer"))
 const LoadableComments = Loadable(() => import("./client/Comments"))
+const LoadableUserModel = Loadable(() => import("./client/UserModel"))
 
-export { LoadableFeedViewer, LoadableAuthForm, LoadableComments}
+export { LoadableFeedViewer, LoadableAuthForm, LoadableComments, LoadableUserModel}
