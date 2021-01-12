@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    `gatsby-plugin-offline`,
+    //`gatsby-plugin-offline`,
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
