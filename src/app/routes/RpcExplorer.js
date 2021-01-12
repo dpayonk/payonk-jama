@@ -7,7 +7,7 @@ import Logger from '../Logger';
 import { getBannerStyle } from '../styleBuilder';
 
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
-import FeedService from '../client/services/FeedService';
+import FeedService from '../services/FeedService';
 import UserModel from '../client/UserModel';
 
 import Loadable from "@loadable/component"

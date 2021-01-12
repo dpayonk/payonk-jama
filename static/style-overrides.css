@@ -5,7 +5,7 @@ h1 {
 
   .loader-container {
     text-align: center;
-    margin-top: 33vh;
+    margin-top: 3vh;
   }
   
   .alert-message{
@@ -74,4 +74,10 @@ nav .a {
 }
 .navbar:hover {
   background:#A5C9FF !important;
+}
+
+.feature-square-image{
+  object-fit: cover;
+  width:320px;
+  height:320px;
 }

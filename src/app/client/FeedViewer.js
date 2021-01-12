@@ -55,7 +55,7 @@ class FeedViewer extends Component {
                   <div key={pic.id} style={{ border: "2px" }} className="column is-4">
 
                     <div key={pic.id} className="column is-full">
-                      <img style={{ minHeight: "300px" }} alt={pic.title} className="feature-square-image" src={pic.image_url} />
+                      <img alt={pic.title} className="feature-square-image" src={pic.image_url} />
                       <p style={{ paddingTop: "7px" }}>{pic.title}</p>
                     </div>
 

@@ -7,7 +7,7 @@ import RpcExplorer from "../app/routes/RpcExplorer"
 import Layout from '../components/layout';
 import Loader from "../components/Loader";
 import Logger from '../app/Logger';
-import AuthService from "../app/client/services/AuthService"
+import AuthService from "../app/services/AuthService"
 import UserModel from '../app/client/UserModel';
 import { LoadableAuthForm } from '../app/client_library';
 

@@ -57,8 +57,8 @@ class ProfileIndex extends React.Component {
 
     async getAuthorizationAsync() {
         // TODO: Run on handle sync update
-        let isAuthorized = await this.props.authService.isAuthorized(this.state.emailAddress, 'feed');
-        Logger.info(`Authorization Status in Profile: ${this.emailAddress}`, isAuthorized);
+        const isAuthorized = await this.props.authService.getAuthorizationStatus(this.state.emailAddress, 'feed');
+        Logger.info(`ProfileIndex.Authorization::feed: ${this.emailAddress}`, isAuthorized);
         this.setState({ isAuthorized: isAuthorized });
     }
 

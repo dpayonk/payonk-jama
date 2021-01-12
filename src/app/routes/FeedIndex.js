@@ -6,7 +6,7 @@ import { LoadableFeedViewer } from '../client_library'
 import ConfigService from '../ConfigService'
 import { getBannerStyle } from '../styleBuilder';
 import Loader from '../../components/Loader';
-import FeedService from "../client/services/FeedService";
+import FeedService from "../services/FeedService";
 
 import Logger from "../Logger";
 

@@ -1,4 +1,4 @@
-import ConfigService from '../../ConfigService'
+import ConfigService from '../ConfigService';
 
 class FeedService {
 

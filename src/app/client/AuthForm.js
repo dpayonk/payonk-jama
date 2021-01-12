@@ -1,7 +1,6 @@
 import React, { Component } from "react"
-import AuthService from './services/AuthService'
+import AuthService from '../services/AuthService'
 import Loader from '../../components/Loader';
-import UserModel from '../client/UserModel';
 import Logger from "../Logger";
 
 class AuthForm extends Component {
@@ -101,7 +100,7 @@ class AuthForm extends Component {
   render() {
 
     if (this.state.status !== 'mounted') {
-      return (<Loader />);
+      return (<Loader title="..." />);
     }
 
     if (this.state.isLoggedIn && this.state.isAuthorized) {
