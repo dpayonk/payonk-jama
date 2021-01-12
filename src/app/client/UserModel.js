@@ -43,16 +43,29 @@ UserModel.publishUpdate = function(userModel){
 
 UserModel.storeEmail = function(emailAddress){
     // if it exists, should throw a warning
-    window.localStorage.setItem('emailAddress', emailAddress);
-    this.emailAddress = emailAddress;
+    // required for gatsby: https://www.gatsbyjs.com/docs/debugging-html-builds/
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        window.localStorage.setItem('emailAddress', emailAddress);
+        this.emailAddress = emailAddress;    
+    }
 }
 
 UserModel.getEmailFromLocalStorage = function(){
-    return window.localStorage.getItem('emailAddress');
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        return window.localStorage.getItem('emailAddress');
+    }
 }
 
 UserModel.storeKey = function(key, val){
-    window.localStorage.setItem(key, val);
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        window.localStorage.setItem(key, val);
+    }
 }
 
 UserModel.loadModelFromStorage = function(){
