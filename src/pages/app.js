@@ -12,6 +12,8 @@ import AuthService from "../app/services/AuthService"
 import UserModel from '../app/client/UserModel';
 import { LoadableAuthForm } from '../app/client_library';
 
+import 'semantic-ui-css/semantic.min.css';
+
 class App extends React.Component {
 
   statics() {

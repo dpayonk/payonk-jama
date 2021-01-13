@@ -13,6 +13,7 @@ export default function HTML(props) {
         {props.headComponents}
         <link href="https://fonts.cdnfonts.com/css/adlinnaka" rel="stylesheet" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css" />
+        <link async rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.1/dist/semantic.min.css"/>
         <link href="/style-overrides.css" rel="stylesheet" />
         <script defer src="https://use.fontawesome.com/releases/v5.14.0/js/all.js" />
         <script defer src="https://go.metabet.io/js/global.js"></script>

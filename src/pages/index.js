@@ -8,6 +8,8 @@ import Layout from '../components/layout'
 import { rhythm, scale } from '../utils/typography'
 
 import {LoadableAuthForm} from '../app/client_library'
+import 'semantic-ui-css/semantic.min.css';
+
 
 class RootIndex extends React.Component {
   render() {

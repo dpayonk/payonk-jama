@@ -1,4 +1,6 @@
 import ConfigService from '../ConfigService';
+import Logger from '../Logger';
+
 
 class FeedService {
 
@@ -12,9 +14,9 @@ class FeedService {
         }
       }
 
-    async getFeed() {
+    async fetchFeed(emailAddress) {
         // TODO: Customize based on profile
-        let data = { accessToken: 'static:TODO' };
+        let data = {emailAddress: emailAddress, accessToken: 'static:TODO' };
         try {
           let response = await fetch(this.statics().apiEndpoint, {
             method: 'POST', // TODO: Change to post*GET, POST, PUT, DELETE, etc.
@@ -26,13 +28,13 @@ class FeedService {
             body: JSON.stringify(data) // body data type must match "Content-Type" header
           });
           if (response.status === 200) {
-            let picsList = await response.json();
-            return picsList;
+            let jsonResponse = await response.json();
+            return jsonResponse.data;
           } else {
-            console.log("Route not available");
+            Logger.info(`Backend returned invalid response`);
           }
         } catch (error) {
-          console.log("Error getting feed", error);
+          Logger.error(`FeedService: An error occurred contacting the server`, error);
         }
         return [];
       }

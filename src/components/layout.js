@@ -11,6 +11,8 @@ import Navbar from '../components/Navbar'
 // Import typefaces
 // import 'typeface-montserrat'
 // import 'typeface-merriweather'
+import 'semantic-ui-css/semantic.min.css';
+
 
 export default ({ children, location }) => (
   <StaticQuery

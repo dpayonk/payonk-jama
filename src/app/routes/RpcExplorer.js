@@ -9,11 +9,7 @@ import { getBannerStyle } from '../styleBuilder';
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
 import FeedService from '../services/FeedService';
 import UserModel from '../client/UserModel';
-
 import Loadable from "@loadable/component"
-// const LoadableComments = Loadable(() => import("./client/Comments"))
-
-// const LoadableReactJson = Loadable(() => ReactJson)
 
 
 class RpcExplorer extends React.Component {

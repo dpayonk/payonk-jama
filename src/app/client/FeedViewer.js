@@ -45,20 +45,15 @@ class FeedViewer extends Component {
     } else {
       return (<div>
         <div>
-          <h2>{this.props.personalizedMessage}</h2>
+          <h2>{this.props.personalizedMessage}</h2>          
         </div>
         <div>
           <div className="columns is-multiline">
             {
               this.props.pics.map((pic) => {
                 return (
-                  <div key={pic.id} style={{ border: "2px" }} className="column is-4">
-
-                    <div key={pic.id} className="column is-full">
-                      <img alt={pic.title} className="feature-square-image" src={pic.image_url} />
-                      <p style={{ paddingTop: "7px" }}>{pic.title}</p>
-                    </div>
-
+                  <div key={pic.id} style={{ border: "0px", padding: "0px" }} className="column is-4 is-gapless">
+                    <FeedDetail pic={pic} />
                   </div>
                 )
               })

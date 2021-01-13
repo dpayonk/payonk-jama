@@ -1,38 +1,87 @@
 import React, { Component } from "react"
-import bannerImage from '../../../static/french-lick.jpg'
-//import Comments from './Comments'
-import {LoadableComments} from '../client_library';
+import Logger from '../Logger';
+import { Button, Image, Modal } from 'semantic-ui-react'
+import CommentFeed from './CommentFeed';
+//import { CommentFeed } from '..client/CommentFeed'
 
 class FeedDetail extends Component {
 
     constructor(props) {
         // props.pic
-        super(props);        
+        super(props);
         this.state = {
-            showComments: false
+            showModal: false
         };
-        this.handleChange = this.handleChange.bind(this);
+        this.handleToggle = this.handleToggle.bind(this);
     }
 
-    handleChange(){
+    handleToggle() {
+        Logger.info("Show detail in modal");
+        if (this.state.showModal === true) {
+            Logger.info("Hide Modal");
+            this.setState({ showModal: false });
+        } else {
+            Logger.info("Show Modal");
+            this.setState({ showModal: true });
+        }
+    }
 
+    onActivate() {
+
+    }
+
+    show() {
+        Logger.info("Display");
+        this.setState({ showModal: true });
+    }
+
+    renderDetails() {
+        return (
+            <div>
+                <Modal
+                    onClose={this.handleToggle}
+                    onOpen={this.handleToggle}
+                    open={this.state.showModal}>
+                    <Modal.Header>
+                        <a onClick={this.handleToggle} className="delete is-medium is-pulled-right">Close</a>
+                        <h2>{this.props.pic.title}</h2>
+
+                    </Modal.Header>
+                    <Modal.Content image>
+                        <div style={{ margin: "7px 0px 7px 0px" }}>
+                        <Image size='large' src={this.props.pic.image_url}  />
+                        </div>
+                    <div style={{ marginLeft: "7px" }} className="container">
+                        <CommentFeed />
+                    </div>
+                    </Modal.Content>
+                <Modal.Actions>
+                    <a style={{ visibility: 'hidden' }} className="button button-is-primary is-pulled-right">
+                        Like
+                        </a>
+                </Modal.Actions>
+                </Modal>
+            </div >
+        )
     }
 
     render() {
-        let commentDetails = (<div></div>);
-        if(this.state.showComments === true){
-            commentDetails = (<LoadableComments />);
-        }
+
+
         return (
-            <div key={this.props.pic.id} style={{ marginTop: "3vh" }} className="columns is-centered">
-                <div className="column is-full">
-                    <img style={{minHeight: "300px"}} alt={this.props.pic.title} className="feature-square-image" src={this.props.pic.image_url} />
-                    <p style={{ paddingTop: "7px" }}>{this.props.pic.title}</p>
-                    {commentDetails}
+            <div>
+                <div key={this.props.pic.id} style={{ marginTop: "3vh" }} className="is-centered">
+                    <img onClick={this.handleToggle} alt={this.props.pic.title} className="feature-square-image" src={this.props.pic.image_url} />                    
+                    <div>
+                        {this.renderDetails()}
+                    </div>
                 </div>
-            </div>)
+            </div>
+        )
+
     }
 
 }
+
 
 export default FeedDetail

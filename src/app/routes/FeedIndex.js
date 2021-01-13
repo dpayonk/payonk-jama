@@ -7,8 +7,9 @@ import ConfigService from '../ConfigService'
 import { getBannerStyle } from '../styleBuilder';
 import Loader from '../../components/Loader';
 import FeedService from "../services/FeedService";
-
 import Logger from "../Logger";
+
+import 'semantic-ui-css/semantic.min.css';
 
 class FeedIndex extends React.Component {
   constructor(props) {
@@ -32,7 +33,8 @@ class FeedIndex extends React.Component {
     try {
       let isAuthorized = await this.isAuthorized();
       if (isAuthorized) {
-        let picsList = await this.state.feedService.getFeed();
+        Logger.info(`Fetching feed for ${this.props.userModel.emailAddress}`);
+        let picsList = await this.state.feedService.fetchFeed(this.props.userModel.emailAddress);
         this.setState({ pics: picsList });
       } else {
         console.log("FeedViewer.componentDidMount could not get userModel");
