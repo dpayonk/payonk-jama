@@ -51,7 +51,7 @@ class MediaUploader extends React.Component {
         // action="https://dev-api.payonk.com/upload"
         return (
             <div>
-                <form  method="post" enctype="multipart/form-data">
+                <form  method="post" encType="multipart/form-data">
                     <div className="field">
                         <label className="label">File</label>
                         <div className="control">
