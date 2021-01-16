@@ -1,14 +1,15 @@
 import { Magic } from 'magic-sdk';
 import ConfigService from '../ConfigService';
 import Logger from '../Logger';
-import UserModel from '../client/UserModel';
+import UserModel from '../models/UserModel';
+import StateStore from '../StateStore';
 
 
 class AuthService { 
   statics(){
     const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
     return {
-      'apiEndpoint': `${apiUrl}/authorized`
+      'apiEndpoint': `${apiUrl}/profile/authorized`
     }
   }
   constructor(props) {
@@ -92,6 +93,7 @@ class AuthService {
     UserModel.storeKey('accessToken', accessToken);
     UserModel.storeKey('updatedAt', new Date());
     UserModel.storeKey('updatedBy', 'loginWithCredential');
+    StateStore.publishEvent('onLogin', {'accessToken': accessToken });    
   }
 
   async getAuthenticationProfile() {
@@ -111,5 +113,6 @@ class AuthService {
     }
   }
 }
+
 
 export default AuthService

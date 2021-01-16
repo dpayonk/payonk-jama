@@ -42,14 +42,14 @@ class AuthForm extends Component {
 
   async isAuthorized() {
     if (this.state.fetchedAuthorization === false) {
-      await this.fetchProfile(); // authorization status set by getting profile
+      await this.fetchAuthorizationProfile(); // authorization status set by getting profile
       return this.state.isAuthorized;
     } else {
       return this.state.isAuthorized;       // fetch from cache
     }
   }
 
-  async fetchProfile() {
+  async fetchAuthorizationProfile() {
     let authenticationProfile = await this.state.authService.getAuthenticationProfile();
     Logger.info(`Profile response: `, authenticationProfile);
     if (authenticationProfile === null) {
@@ -67,7 +67,7 @@ class AuthForm extends Component {
 
   async componentDidMount() {
     await this.fetchLogin();
-    await this.fetchProfile();
+    await this.fetchAuthorizationProfile();
 
     if (this.state.authenticationProfile !== null) {
       // This is too complex combiniing a profile with magic link, need better model
@@ -134,7 +134,7 @@ class AuthForm extends Component {
 
   renderLoginForm() {
     return (<div>
-      <p>Register for the waitlist to check out the latest updates!</p>
+      <p>Register for the waitlist for the latest updates!</p>
 
       <form>
         <div className="field">

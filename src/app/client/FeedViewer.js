@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import Loader from '../../components/Loader';
-import UserModel from "./UserModel";
+import UserModel from "../models/UserModel";
 import FeedDetail from './FeedDetail';
 import ConfigService from '../ConfigService';
 import Logger from "../Logger";

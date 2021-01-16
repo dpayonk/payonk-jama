@@ -2,6 +2,48 @@ const each = require('lodash/each')
 const Promise = require('bluebird')
 const path = require('path')
 
+
+/**
+ * Implement Gatsby's Node APIs in this file.
+ *
+ * See: https://www.gatsbyjs.org/docs/node-apis/
+ * Found here https://github.com/sayjeyhi/snakeAndLadders/blob/master/gatsby-node.js
+ * and closed with this reco: https://github.com/gatsbyjs/gatsby/issues/17661
+ */
+exports.onCreateWebpackConfig = ({
+  stage,
+  rules,
+  loaders,
+  plugins,
+  actions
+}) => {
+
+  actions.setWebpackConfig({
+    resolve: {
+      alias: {
+        '~components': path.resolve(__dirname, 'src/components'),
+        '~images': path.resolve(__dirname, 'src/images'),
+        '~hooks': path.resolve(__dirname, 'src/lib/hooks')
+      },
+    }
+  });
+
+  if (stage === "develop-html") {
+    actions.setWebpackConfig({
+      module: {
+        rules: [
+          {
+            test: /canvas/,
+            use: loaders.null(),
+          },
+        ],
+      },
+    })
+  }
+};
+
+
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
   const indexPage = path.resolve('./src/pages/index.js')

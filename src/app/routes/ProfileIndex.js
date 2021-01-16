@@ -4,7 +4,8 @@ import get from 'lodash/get'
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader'
 import Logger from '../Logger';
-import UserModel from '../client/UserModel';
+import UserModel from '../models/UserModel'
+import ProfileService from '../services/ProfileService';
 
 class ProfileIndex extends React.Component {
 
@@ -18,10 +19,13 @@ class ProfileIndex extends React.Component {
             status: "initialized",
             alert: "",
             synced: false,
+            accessToken: '',
+            profileService: new ProfileService(),
+            profile: null,
             emailAddress: "" /* coalesce of internal and magic profile */
         };
         this.handleLogout = this.handleLogout.bind(this);
-        this.handleSync = this.handleSync.bind(this);
+        this.handleSave = this.handleSave.bind(this);
         let self = this;
         UserModel.onUpdate(function (userModel) {
             // this may not be reproducible, since emailAddress state is not always updated
@@ -29,7 +33,7 @@ class ProfileIndex extends React.Component {
         });
     }
 
-    async handleSync() {
+    async handleSave() {
         Logger.info("Updating userModel email", this.state.emailAddress);
         this.props.userModel.updateEmail(this.state.emailAddress);
     }
@@ -43,6 +47,9 @@ class ProfileIndex extends React.Component {
             if (this.state.emailAddress !== this.props.userModel.emailAddress) {
                 return false;
             } else {
+                if(this.state.profile.emailAddress !== this.props.userModel.emailAddress){
+                    return false;
+                }
                 Logger.info("Should be true now");
                 return true;
             }
@@ -66,12 +73,17 @@ class ProfileIndex extends React.Component {
         try {
             let authenticationProfile = await this.props.authService.getAuthenticationProfile();
             if (authenticationProfile !== null) {
+                let profile = await this.state.profileService.fetchUserProfile();
+
                 this.setState({
+                    profile: profile,
                     publicAddress: authenticationProfile.publicAddress,
                     emailAddress: authenticationProfile.emailAddress
                 });
 
+
                 this.getAuthorizationAsync();
+
 
             } else {
                 Logger.info("Profile Index could not fetch Authentication Profile.  Setting to null");
@@ -99,11 +111,6 @@ class ProfileIndex extends React.Component {
         }
     }
 
-    async shouldComponentUpdate() {
-        Logger.info("Compoonent should udpate");
-        return true;
-    }
-
     renderAlert(alert) {
 
         if (this.state.alert === '' && alert === '') {
@@ -122,13 +129,6 @@ class ProfileIndex extends React.Component {
 
     renderSync() {
         return (<div style={{ margin: "30px 0px" }}>
-            <div >
-                <div className="field">
-                    <button onClick={this.handleSync} className="button button-primary is-pulled-right">
-                        <i className="fas fa-sync"></i>
-                    </button>
-                </div>
-            </div>
             <div>
                 <div className="field">
                     <label className="label">Profile State: {(this.state.synced) ? "" : "Not synced"}</label>
@@ -155,14 +155,13 @@ class ProfileIndex extends React.Component {
                     <section className="main-content">
                         <div className="columns is-centered">
                             <div className="column is-half">
-
-
-                                <h1 style={{ paddingBottom: "3vh" }}>My Profile</h1>
+                                <h1 className="has-text-centered" style={{ paddingBottom: "3vh" }}>My Profile</h1>
                                 <section className="container profile-settings">
                                     <div style={{ minHeight: "40px" }}>
                                         {this.renderAlert(alert)}
                                     </div>
-                                    <div>
+
+                                    <div className="box">
                                         <h2>My Account</h2>
                                         <div id="email-control" className="field">
                                             <label className="label">Email</label>
@@ -186,8 +185,20 @@ class ProfileIndex extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div style={{ marginTop: "30px" }}>
-                                        <h2>App Settings</h2>
+                                    <div className="box">
+                                        <div className="field">
+                                            <button onClick={this.handleSave} className={ (this.state.synced) ? "button is-pulled-right is-primary" : "button is-pulled-right is-danger"}>
+                                                Update Profile
+                                            </button>
+
+                                            <h2>Profile Settings</h2>
+                                        </div>
+
+                                        <div>
+                                            <h3>Settings</h3>
+                                            <label>Email</label>
+                                            <p>{this.state.profile.emailAddress}</p>
+                                        </div>
                                         <div>
                                             {this.renderSync()}
                                         </div>
@@ -202,21 +213,22 @@ class ProfileIndex extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="field">
-                                        <button onClick={this.handleSave} className="button button-primary is-pulled-right">Update Profile</button>
-                                    </div>
+
                                 </section>
                             </div>
-                            </div>
+                        </div>
                         <div className="columns is-centered">
                             <div className="column is-half">
-                                <h2>Actions</h2>
-                                <section className="profile-actions">
-                                    <br />
-                                    <div className="field">
-                                        <button onClick={this.handleLogout} className="button button-primary is-pulled-right">Logout</button>
-                                    </div>
-                                </section>
+                                <div className="box">
+                                    <h2>Actions</h2>
+                                    <section className="profile-actions">
+                                        <br />
+                                        <div className="field">
+                                            <button onClick={this.handleLogout} className="button button-primary is-pulled-right">Logout</button>
+                                        </div>
+                                        <br />
+                                    </section>
+                                </div>
                             </div>
                         </div>
                     </section>
