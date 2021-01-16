@@ -13,11 +13,9 @@ class AuthService {
     }
   }
   constructor(props) {
-    // TODO: Pull from localStorage the sessionToken perhaps...
-    // super(props)
-    // props.userModel
-    this.UserModel = (props!== undefined) ? props.userModel : null;
     this.cfg = new ConfigService();
+    // TODO: Pull from localStorage the sessionToken perhaps...
+    this.UserModel = (props!== undefined) ? props.userModel : null;
   }
 
   getMagicFactory() {
@@ -31,8 +29,37 @@ class AuthService {
     return isLoggedIn;
   }
 
-  hasBeenHere() {
-    return true;
+  async logout() {
+    let m = this.getMagicFactory();
+    m.user.logout();
+  }
+
+  async loginMagic(emailAddress) {
+    // Method to start authentication, 
+    UserModel.storeEmail(emailAddress);
+    let token = await this.getMagicFactory().auth.loginWithMagicLink({
+      email: emailAddress,
+      showUI: true,
+      redirectURI: this.getRedirectUri()
+    });
+    this.saveAuthentication(token);
+  }
+
+  // Move to AccountProfileService
+  async saveAuthentication(didToken){
+    Logger.info(`Saving DID Token: ${didToken}`);
+    // removing this and only storing didId, can look it up on the server
+    // UserModel.storeEmail(emailAddress);
+    UserModel.storeKey('didToken', token);
+    UserModel.storeKey('updatedAt', new Date());
+    UserModel.storeKey('updatedBy', 'loginWithMagicLink');
+    StateStore.publishEvent('onLogin', {'accessToken': accessToken });    
+  }
+
+  async onRedirectLogin() {
+    // Method called by redirect (from app.js)
+    let didToken = this.getMagicFactory().auth.loginWithCredential();
+    this.saveAuthentication(didToken);
   }
 
   getRedirectUri() {
@@ -67,33 +94,6 @@ class AuthService {
       Logger.error("An exception occurred trying to obtain authorization", error);
       return false;
     }
-  }
-
-  async loginMagic(emailAddress) {
-    let token = await this.getMagicFactory().auth.loginWithMagicLink({
-      email: emailAddress,
-      showUI: true,
-      redirectURI: this.getRedirectUri()
-    });
-    Logger.info(`Saving ${emailAddress} and DID Token: ${token}`);
-    UserModel.storeEmail(emailAddress);
-    UserModel.storeKey('accessToken', token);
-    UserModel.storeKey('updatedAt', new Date());
-    UserModel.storeKey('updatedBy', 'loginWithMagicLink');
-  }
-
-  async logout() {
-    let m = this.getMagicFactory();
-    m.user.logout();
-  }
-
-  async onRedirectLogin() {
-    let m = this.getMagicFactory();
-    let accessToken = await m.auth.loginWithCredential();
-    UserModel.storeKey('accessToken', accessToken);
-    UserModel.storeKey('updatedAt', new Date());
-    UserModel.storeKey('updatedBy', 'loginWithCredential');
-    StateStore.publishEvent('onLogin', {'accessToken': accessToken });    
   }
 
   async getAuthenticationProfile() {

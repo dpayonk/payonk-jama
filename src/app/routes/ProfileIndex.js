@@ -5,7 +5,7 @@ import Layout from '../../components/layout'
 import Loader from '../../components/Loader'
 import Logger from '../Logger';
 import UserModel from '../models/UserModel'
-import ProfileService from '../services/ProfileService';
+import AccountProfileService from '../services/AccountProfileService';
 
 class ProfileIndex extends React.Component {
 
@@ -14,13 +14,13 @@ class ProfileIndex extends React.Component {
         Logger.info("Profile Index", props);
         /* props.authService, props.userModel */
         this.state = {
+            alert: "",
+            status: "initialized",
             isAuthorized: false,
             publicAddress: "",
-            status: "initialized",
-            alert: "",
             synced: false,
             accessToken: '',
-            profileService: new ProfileService(),
+            accountProfileService: new AccountProfileService(),
             profile: null,
             emailAddress: "" /* coalesce of internal and magic profile */
         };
@@ -73,7 +73,7 @@ class ProfileIndex extends React.Component {
         try {
             let authenticationProfile = await this.props.authService.getAuthenticationProfile();
             if (authenticationProfile !== null) {
-                let profile = await this.state.profileService.fetchUserProfile();
+                let profile = await this.state.accountProfileService.fetchUserProfile();
 
                 this.setState({
                     profile: profile,

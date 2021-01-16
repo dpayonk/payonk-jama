@@ -1,10 +1,10 @@
 import { Magic } from 'magic-sdk';
 import ConfigService from '../ConfigService';
 import Logger from '../Logger';
-import Profile from '../models/Profile';
+import AccountProfile from '../models/AccountProfile';
 
 
-class ProfileService { 
+class AccountProfileService { 
   statics(){
     const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
     return {
@@ -13,18 +13,13 @@ class ProfileService {
   }
   constructor(props) {
     // TODO: Pull from localStorage the sessionToken perhaps...
-    // super(props)
     // props.userModel
     this.profileModel = (props!== undefined) ? props.profileModel : null;
     this.cfg = new ConfigService();
   }
 
-  hasBeenHere() {
-    return true;
-  }
-
   async createProfile(){
-    let profile = new Profile();
+    let profile = new AccountProfile();
     profile.emailAddress = 'dennis@payonk.com';
     return profile;
   }
@@ -50,4 +45,4 @@ class ProfileService {
   }
 }
 
-export default ProfileService
+export default AccountProfileService

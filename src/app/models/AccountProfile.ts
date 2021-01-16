@@ -1,4 +1,4 @@
-class Profile {
+class AccountProfile {
     emailAddress: string;
     accessToken: string;
 
@@ -12,4 +12,4 @@ class Profile {
 }
 
 
-export default Profile;
+export default AccountProfile;
