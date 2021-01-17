@@ -8,9 +8,9 @@ import Logger from '../Logger';
 import { getBannerStyle } from '../styleBuilder';
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
 import FeedService from '../services/FeedService';
-import UserModel from '../models/UserModel';
+import userSession from '../models/UserSession';
 import { LoadableFilerobotImageEditor } from '../client_library'
-import MediaUploader from '../client/MediaUploader';
+import MediaUploader from '../client_components/MediaUploader';
 
 
 class DebugIndex extends React.Component {
@@ -24,10 +24,6 @@ class DebugIndex extends React.Component {
             isLoggedIn: false,
             alert: "Use this to test backend functionality",
             pics: [],
-            services: [
-                { key: 'feed', klass: FeedService },
-                { key: 'profile', klass: UserModel },
-            ],
             editImageUrL: 'https://nyc3.digitaloceanspaces.com/com.payonk.clique/20210114-181146--20210114-174832--stephen-walker-unsplash.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=KSB4OEBLVBM6HPQGPVDM%2F20210115%2Fnyc3%2Fs3%2Faws4_request&X-Amz-Date=20210115T001146Z&X-Amz-Expires=6000&X-Amz-SignedHeaders=host&X-Amz-Signature=2920e95f97ee6d1cbc0895f42ebb181f483c901ffe43943004e327955d20e750',
             editImageUrl: 'https://nyc3.digitaloceanspaces.com/com.payonk.clique/20210114-181146--20210114-174832--stephen-walker-unsplash.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=KSB4OEBLVBM6HPQGPVDM%2F20210115%2Fnyc3%2Fs3%2Faws4_request&X-Amz-Date=20210115T001146Z&X-Amz-Expires=6000&X-Amz-SignedHeaders=host&X-Amz-Signature=2920e95f97ee6d1cbc0895f42ebb181f483c901ffe43943004e327955d20e750',
             showImageEditor: false,
@@ -169,7 +165,7 @@ class DebugIndex extends React.Component {
                                 <h3>Console</h3>
                                 <div className="container">
 
-                                    <LoadableFeedViewer pics={this.state.pics} userModel={this.props.userModel} />
+                                    <LoadableFeedViewer pics={this.state.pics} userSession={this.props.userSession} />
                                 </div>
                             </div>
                             <div className="column is-two-fifths">

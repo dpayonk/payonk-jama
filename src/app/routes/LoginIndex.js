@@ -6,6 +6,7 @@ import ConfigService from '../ConfigService';
 import { LoadableAuthForm } from '../client_library';
 import Logger from '../Logger';
 import { bannerStyle, getBannerStyle } from '../styleBuilder';
+import AccountProfileService from '../services/AccountProfileService';
 
 class LoginIndex extends React.Component {
     constructor(props) {
@@ -17,6 +18,7 @@ class LoginIndex extends React.Component {
             status: "initialized",
             isLoggedIn: false,
             feedAuthorization: false,
+            accountService: new AccountProfileService(),
             alert: ""
         }
     }
@@ -33,7 +35,7 @@ class LoginIndex extends React.Component {
                 alert = `Welcome Back`;
                 let authenticationProfile = await this.props.authService.getAuthenticationProfile();
                 if (authenticationProfile !== null) {
-                    let authorized = await this.props.authService.getAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
+                    let authorized = await this.state.accountService.getAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
                     this.setState({ emailAddress: authenticationProfile.emailAddress, feedAuthorization: authorized });
                 }
             }

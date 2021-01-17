@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import AuthService from '../services/AuthService'
 import Loader from '../../components/Loader';
 import Logger from "../Logger";
+import AccountProfileService from "../services/AccountProfileService";
 
 class AuthForm extends Component {
 
@@ -11,6 +12,7 @@ class AuthForm extends Component {
     this.state = {
       alert: "",
       authService: new AuthService(),
+      accountService: new AccountProfileService(),
       emailInput: "",
       fetchedAuthorization: false, isAuthorized: false,
       fetchedLogin: false, isLoggedIn: false,
@@ -35,11 +37,6 @@ class AuthForm extends Component {
     return true;
   }
 
-  getFriendlyName() {
-    const emailParts = this.state.emailInput.split("@");
-    return emailParts[0];
-  }
-
   async isAuthorized() {
     if (this.state.fetchedAuthorization === false) {
       await this.fetchAuthorizationProfile(); // authorization status set by getting profile
@@ -56,7 +53,7 @@ class AuthForm extends Component {
       this.setState({ isAuthorized: false, fetchedAuthorization: true });
     } else {
       // I could say this is a alid profile
-      let authorizationStatus = await this.state.authService.getAuthorizationStatus(authenticationProfile.emailAddress);
+      let authorizationStatus = await this.state.accountService.getAuthorizationStatus(authenticationProfile.emailAddress);
       this.setState({
         isAuthorized: authorizationStatus,
         authenticationProfile: authenticationProfile,
@@ -72,12 +69,7 @@ class AuthForm extends Component {
     if (this.state.authenticationProfile !== null) {
       // This is too complex combiniing a profile with magic link, need better model
       if (this.state.isAuthorized == true) {
-        this.setState({ emailInput: this.state.authenticationProfile.emailAddress });
-        if (this.state.isAuthorized) {
-          this.setState({ alert: `Hi ${this.getFriendlyName()}!` });
-        } else {
-          this.setState({ alert: `Sorry, ${this.getFriendlyName()}! You have not been approved yet.` });
-        }
+        this.setState({ emailInput: this.state.authenticationProfile.emailAddress });        
       }
     } else {
       this.setState({ alert: "Your profile could not be fetched" });

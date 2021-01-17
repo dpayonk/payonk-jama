@@ -40,7 +40,7 @@ StateStore.subscribe = function (eventKey, callback) {
 }
 
 StateStore.publishEvent = function (eventKey, props) {
-    // UserModel.storeEmail(emailAddress);
+
     Logger.info(`Publishing ${eventKey} with props:`, props);
 
     if (StateStore.SUBSCRIBERS === undefined) {
@@ -57,7 +57,10 @@ StateStore.publishEvent = function (eventKey, props) {
                 Logger.error(`A subscriber to user updates failed:`, error);
             }
         });
+    } else {
+        StateStore.SUBSCRIBERS[eventKey] = [];
     }
+    return StateStore.SUBSCRIBERS[eventKey].length;
 }
 
 StateStore.eventKeys = ['onLogin'];

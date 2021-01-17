@@ -1,16 +1,16 @@
 import React from "react"
 import { Router } from "@reach/router"
+import Layout from '../components/layout';
+import Loader from "../components/Loader";
 import FeedIndex from "../app/routes/FeedIndex"
 import LoginIndex from "../app/routes/LoginIndex"
 import ProfileIndex from "../app/routes/ProfileIndex"
 import DebugIndex from "../app/routes/DebugIndex"
 import CreatorIndex from '../app/routes/CreatorIndex'
-import Layout from '../components/layout';
-import Loader from "../components/Loader";
 import Logger from '../app/Logger';
-import AuthService from "../app/services/AuthService"
-
-import UserModel from '../app/models/UserModel';
+import AuthService from "../app/services/AuthService";
+import AccountProfileService from "../app/services/AccountProfileService";
+import UserStore from '../app/repository/UserStore';
 import { LoadableAuthForm } from '../app/client_library';
 
 import 'semantic-ui-css/semantic.min.css';
@@ -27,22 +27,22 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    let userModel = UserModel.loadModelFromStorage();
-    Logger.info(`Retreived userModel from storage`, userModel);
+    let userSession = UserStore.loadUserSessionFromStorage();
+    Logger.info(`Retreived userSession from storage`, userSession);
     this.state = {
       alert: "Hang tight",
-      authService: new AuthService({ userModel }),
+      authService: new AuthService(),
       isLoggedIn: false,
       status: 'loading',
-      userModel: userModel
+      userSession: userSession
     };
 
     let self = this;
-    UserModel.onUpdate(function (userModel) {
-      Logger.info("received update, new Model", userModel);
-      self.setState({ userModel: userModel });
-    });
-    // TODO: Subscribe to UserModel changes
+
+    UserStore.onSessionUpdate(function (model) {
+      Logger.info("received update, new Model", model);
+      self.setState({ userSession: model });
+    });    
   }
 
   async componentDidMount() {
@@ -52,7 +52,10 @@ class App extends React.Component {
     try {
       if (window.location.search.length > 0) {
         Logger.info("app.js: Magic credential detected. Check auth onRedirect");
-        await this.state.authService.onRedirectLogin();
+        let authenticationProfile = await this.state.authService.onAuthenticationRedirectCallback();
+        // Create a Profile now
+        let service = new AccountProfileService();
+        service.createProfile(authenticationProfile);
         isLoggedIn = await this.state.authService.isLoggedIn();
         if(isLoggedIn){
           Logger.info(`TODO: Create Profile on backend`);
@@ -94,12 +97,12 @@ class App extends React.Component {
       return (
         <div>
           <Router basepath="/app">
-            <LoginIndex userModel={this.state.userModel} authService={this.state.authService} path="/login" />
-            <ProfileIndex userModel={this.state.userModel} authService={this.state.authService} path="/profile" />
-            <FeedIndex userModel={this.state.userModel} authService={this.state.authService} path="/feed" />
-            <CreatorIndex userModel={this.state.userModel} authService={this.state.authService} path="/creator" />
-            <DebugIndex userModel={this.state.userModel} authService={this.state.authService} path="/debug" />
-            <FeedIndex userModel={this.state.userModel} authService={this.state.authService} path="/" />
+            <LoginIndex userSession={this.state.userSession} authService={this.state.authService} path="/login" />
+            <ProfileIndex userSession={this.state.userSession} authService={this.state.authService} path="/profile" />
+            <FeedIndex userSession={this.state.userSession} authService={this.state.authService} path="/feed" />
+            <CreatorIndex userSession={this.state.userSession} authService={this.state.authService} path="/creator" />
+            <DebugIndex userSession={this.state.userSession} authService={this.state.authService} path="/debug" />
+            <FeedIndex userSession={this.state.userSession} authService={this.state.authService} path="/" />
           </Router>
         </div>
       );

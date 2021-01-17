@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import Loader from '../../components/Loader';
-import UserModel from "../models/UserModel";
 import FeedDetail from './FeedDetail';
 import ConfigService from '../ConfigService';
 import Logger from "../Logger";
@@ -16,7 +15,7 @@ class FeedViewer extends Component {
 
   constructor(props) {
     super(props);
-    /* props.userModel */
+    /* props.userSession */
     this.state = {
       personalizedMessage: "",
       status: "initialized"

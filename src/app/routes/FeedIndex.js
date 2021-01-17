@@ -10,21 +10,24 @@ import FeedService from "../services/FeedService";
 import Logger from "../Logger";
 
 import 'semantic-ui-css/semantic.min.css';
+import AccountProfileService from '../services/AccountProfileService'
 
 class FeedIndex extends React.Component {
   constructor(props) {
-    /* props.authService props.userModel */
+    /* props.authService props.userSession */
     super(props);
     this.state = {
       pics: [],
       status: 'initialized',
+      accountService: new AccountProfileService(),
       feedService: new FeedService()
     }
   }
 
   async isAuthorized() {
     let isAuthorized = false;
-    isAuthorized = await this.props.authService.getAuthorizationStatus(this.props.userModel.emailAddress, 'feed');
+
+    isAuthorized = await this.state.accountService.getAuthorizationStatus(this.props.userSession.emailAddress, 'feed');
     return isAuthorized;
   }
 
@@ -33,11 +36,11 @@ class FeedIndex extends React.Component {
     try {
       let isAuthorized = await this.isAuthorized();
       if (isAuthorized) {
-        Logger.info(`Fetching feed for ${this.props.userModel.emailAddress}`);
-        let picsList = await this.state.feedService.fetchFeed(this.props.userModel.emailAddress);
+        Logger.info(`Fetching feed for ${this.props.userSession.emailAddress}`);
+        let picsList = await this.state.feedService.fetchFeed(this.props.userSession.emailAddress);
         this.setState({ pics: picsList });
       } else {
-        console.log("FeedViewer.componentDidMount could not get userModel");
+        console.log("FeedViewer.componentDidMount could not get userSession");
         this.setState({ alert: "We could not retrieve user credentials" });
       }
       Logger.info(`FeedViewer: Setting Authorization Status: ${isAuthorized}`);
@@ -76,7 +79,7 @@ class FeedIndex extends React.Component {
           <div className="container main-content">
             <h1 className="has-text-centered">Our Family Feed</h1>
             <div className="container">
-              <LoadableFeedViewer pics={this.state.pics} userModel={this.props.userModel} />
+              <LoadableFeedViewer pics={this.state.pics} userSession={this.props.userSession} />
             </div>
           </div>
         </Layout>

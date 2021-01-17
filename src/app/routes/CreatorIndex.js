@@ -6,12 +6,9 @@ import ConfigService from '../ConfigService';
 import StateStore from '../StateStore';
 import Logger from '../Logger';
 import { getBannerStyle } from '../styleBuilder';
-
-import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
 import FeedService from '../services/FeedService';
-import UserModel from '../models/UserModel';
 import { LoadableFilerobotImageEditor } from '../client_library'
-import MediaUploader from '../client/MediaUploader';
+import MediaUploader from '../client_components/MediaUploader';
 
 
 class CreatorIndex extends React.Component {
@@ -87,7 +84,6 @@ class CreatorIndex extends React.Component {
 
                             <div className="column is-two-fifths">
                                 <h3>Sidebar</h3>
-                                <LoadableFeedViewer pics={this.state.pics} userModel={this.props.userModel} />
                             </div>
                         </div>
                     </div >
