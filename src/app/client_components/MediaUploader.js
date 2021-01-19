@@ -3,7 +3,7 @@ import StateStore from '../StateStore';
 
 class MediaUploader extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             'filename': '',
@@ -13,14 +13,14 @@ class MediaUploader extends React.Component {
         this.handleUpload = this.handleUpload.bind(this);
     }
 
-    handleUpload(event){
+    handleUpload(event) {
         this.upload();
         event.preventDefault();
     }
 
-    async upload(){
+    async upload() {
         // https://stackoverflow.com/questions/48284011/how-to-post-image-with-fetch
-        const fileInput = document.querySelector('#image-input-uploader') ;
+        const fileInput = document.querySelector('#image-input-uploader');
         const formData = new FormData();
         formData.append('picture', fileInput.files[0]);
         let self = this;
@@ -29,29 +29,29 @@ class MediaUploader extends React.Component {
             mode: 'cors',
             method: "POST",
             body: formData
-          });
-        debugger;
-        if (res.ok){
+        });
+
+        if (res.ok) {
             let responseMessage = await res.json();
-            let data  = responseMessage.data;
-            if(data !== undefined){
+            let data = responseMessage.data;
+            if (data !== undefined) {
                 let picture = data.picture;
                 let image_url = data.image_url;
-                self.setState({picture: picture, image_url: image_url });
-                StateStore.publishEvent('imageUpload', {'imageUrl': image_url});  
+                self.setState({ picture: picture, image_url: image_url });
+                StateStore.publishEvent('imageUpload', { 'imageUrl': image_url });
             } else {
                 console.log('Interface error');
-            }         
+            }
         } else if (res.status == 401) {
             alert("Oops! ");
-        }          
+        }
     }
 
-    render(){
+    render() {
         // action="https://dev-api.payonk.com/upload"
         return (
             <div>
-                <form  method="post" encType="multipart/form-data">
+                <form method="post" encType="multipart/form-data">
                     <div className="field">
                         <label className="label">File</label>
                         <div className="control">
@@ -59,15 +59,15 @@ class MediaUploader extends React.Component {
                         </div>
                     </div>
                     <label className="label">Preview</label>
-                    <img style={{maxHeight: "40px"}} src={this.state.image_url} />
+                    <img style={{ maxHeight: "40px" }} src={this.state.image_url} />
                     <button onClick={this.handleUpload} type="submit" name="upload" value="upload" className="button is-primary is-pulled-right">
                         Upload
                     </button>
                     <div>
-                    
-                </div>
+
+                    </div>
                 </form>
-                
+
             </div>
         );
     }

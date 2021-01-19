@@ -1,10 +1,41 @@
 
 
 class Logger{
-    // Simple Logger class to centralize console.log for debugging
+    static debug: (message: any, obj: any) => void;
+    static info: (message: any, obj: any) => void;
+    static alert: (message: any, obj: any) => void;
+    static warn: (message: any, obj: any) => void;
+    static error: (message: any, exc: any) => void;
+    static redirectTo: (arr: any) => void;
+    static output: any;
+    static publishEvent: (eventKey: any, props: any) => any;
+    static subscribe: (eventKey: any, callback: any) => void;
+    static SUBSCRIBERS: any;
+
     constructor(){
-        console.log("Use Static Functions please");
+        //console.log("Use Static Functions please");
     }
+
+    debug(message, obj){
+        Logger.debug(message, obj);
+    }
+
+    info(message, obj){
+        Logger.info(message, obj);
+    }
+
+    warn(message, obj){
+        Logger.warn(message, obj);
+    }
+
+    alert(message, obj){
+        Logger.alert(message, obj);
+    }
+
+    error(message, obj){
+        Logger.error(message, obj);
+    }
+
 }
 
 Logger.output = 'console';
@@ -18,6 +49,17 @@ Logger.debug = function(message, obj){
     }
     Logger.publishEvent('debug',{message: message, obj: obj});
 }
+
+
+Logger.alert = function(message, obj){
+    if(obj !== undefined){
+        console.log(message, obj)
+    } else {
+        console.log(message);
+    }
+    Logger.publishEvent('alert',{message: message, obj: obj});
+}
+
 
 Logger.info = function(message, obj){
     if(obj !== undefined){

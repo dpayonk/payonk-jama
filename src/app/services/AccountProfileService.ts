@@ -12,8 +12,8 @@ class AccountProfileService extends BaseService {
     const apiUrl = this.cfg.get('BACKEND_ENDPOINT');
     return {
       'authorizedRouteUrl': { url: `${apiUrl}/account/authorized` },
-      'createProfileRouteUrl': { url: `${apiUrl}/account/create` },
       'myProfileRouteUrl': { url: `${apiUrl}/account/me` },
+      'createProfileRouteUrl': { url: `${apiUrl}/session/create` },
     }
   }
 
@@ -33,6 +33,7 @@ class AccountProfileService extends BaseService {
 
       if (ok && errors === "") {        
         if(data.jwt_token !== undefined){
+          Logger.alert(`A new JWT token was issued`, data.jwt_token);
           UserStore.publishJWT(data.jwt_token);
         }
         return model;
@@ -52,7 +53,7 @@ class AccountProfileService extends BaseService {
       if (ok && errors === "") {
         return model as AccountProfile;
       } else {
-        Logger.warn('AccountProfileService.fetchMyProfile: Permission error');
+        Logger.warn('AccountProfileService.fetchMyProfile: Permission error', errors);
         // This is mostly a permission error
       }
     } catch (error) {
@@ -69,7 +70,7 @@ class AccountProfileService extends BaseService {
       permissionName: permissionName
     };
 
-    Logger.info(`Checking permission ${permissionName} for email: ${emailAddress}`)
+    Logger.info(`Checking permission ${permissionName} for email: ${emailAddress}`, emailAddress);
     try {
 
       let response = await fetch(this.endpoints().authorizedRouteUrl.url, {

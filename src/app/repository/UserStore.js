@@ -69,8 +69,17 @@ UserStore.clearAuthentication = function(){
     } 
 }
 
+UserStore.clearAll = function(){
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        UserStore.clearAuthentication();
+        window.localStorage.removeItem('jwtToken');
+    } 
+}
+
+
 UserStore.publishJWT = function(jwtToken){
-    debugger;
     Logger.info(`New JWT token saved!`);        
     UserStore.storeJWT(jwtToken);  
 }
@@ -88,7 +97,7 @@ UserStore.loadUserSessionFromStorage = function(){
     } else {
         let session = new UserSession();        
         session.authenticationProfile = new AuthenticationProfile(emailAddress, didToken);
-        session.accountProfile = new AccountProfile(emailAddress);
+        session.accountProfile = new AccountProfile({emailAddress});
         return session;    
     }    
 }

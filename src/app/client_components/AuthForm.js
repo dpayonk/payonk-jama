@@ -86,6 +86,7 @@ class AuthForm extends Component {
     if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ alert: "Starting auth process, setting email..." });
       await this.state.authService.loginMagic(this.state.emailInput);
+      debugger;
     }
   };
 

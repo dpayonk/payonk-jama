@@ -3,7 +3,7 @@
 
 export interface ISerializableObject {
   [x: string]: any;
-  fromJson: (json_data) => any;
+  //fromJson: (json_data) => any;
 }
 
 export interface IParsedResponse {

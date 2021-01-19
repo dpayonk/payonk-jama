@@ -1,6 +1,5 @@
 import React from 'react'
 import get from 'lodash/get'
-
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader'
 import Logger from '../Logger';
@@ -11,7 +10,6 @@ import MagicProfileComponent from '../magic/MagicProfileComponent';
 import AccountProfile from '../models/AccountProfile';
 import UserSession from '../models/UserSession';
 import AuthService from "../services/AuthService";
-import { iteratee } from 'lodash';
 
 
 type ProfileProps = {
@@ -57,11 +55,11 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
         let emailToUse = this.state.authenticationProfile.emailAddress;
         let didTokenToUse = this.state.authenticationProfile.didToken;
         if (this.state.authenticationProfile.didToken !== null) {
-            Logger.debug(`Creating session with ${emailToUse} and ${didTokenToUse} `);
+            Logger.debug(`Creating session with ${emailToUse} and ${didTokenToUse} `, didTokenToUse);
             let resultMessage = await this.accountProfileService.createProfile(this.state.authenticationProfile);
             Logger.warn('Should we update the accountProfile of parent?', resultMessage);
         } else {
-            Logger.warn(`The user has not been authenticated yet.`);
+            Logger.warn(`The user has not been authenticated yet. No did token present`, emailToUse);
             this.setState({ alert: 'Check to make sure you are authenticated' })
         }
     }
@@ -81,7 +79,7 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
             return false;
         }
 
-        Logger.info("ProfileIndex.getProfileSyncState.  Profiles are in sync");
+        Logger.info("ProfileIndex.getProfileSyncState. Profiles are in sync", this.props.userSession);
         return true;
     }
 
@@ -108,7 +106,6 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
                 synced: this.getProfileSyncState(), authenticationProfile: authenticationProfile
             });
         } catch (error) {
-            debugger;
             console.error(`ProfileIndex.componentDidMount: Exception fetching profile`, error);
         }
 
@@ -177,11 +174,10 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Authorization Status</label>
+                    <label className="label">Role Status</label>
                     <div className="control">
                         <label className="checkbox" >
-                            <input type="checkbox" checked={!!this.state.isAuthorized}  />
-                            <span>Authorized</span>
+                            {this.state.accountProfile.currentRole}
                         </label>
                     </div>
                 </div>

@@ -1,4 +1,6 @@
 import React from 'react'
+import Logger from '../Logger';
+import UserStore from '../repository/UserStore';
 import AuthService from '../services/AuthService'
 
 
@@ -9,7 +11,9 @@ export default ({ emailAddress, publicAddress, didToken }) => {
     function handleLogout() {
         let service = new AuthService();
         service.logout();
-        alert = "You have been logged out!";
+        // clear all local
+        UserStore.clearAll();
+        Logger.alert("You have been logged out!");
         console.log("redirect?");
     };
 

@@ -65,12 +65,13 @@ class App extends React.Component {
       if (window.location.search.length > 0) {
         Logger.info("app.js: Magic credential detected. Check auth onRedirect");
         let authenticationProfile = await this.authService.onAuthenticationRedirectCallback();
-        // Create a Profile now
-        let service = new AccountProfileService();
-        service.createProfile(authenticationProfile);
         isLoggedIn = await this.authService.isLoggedIn();
+        
+        debugger;
         if (isLoggedIn) {
-          Logger.info(`TODO: Create Profile on backend`);
+          debugger;
+          let profileMessage = await AccountProfileService.getInstance().createProfile(authenticationProfile);
+          Logger.alert('New Profile created', profileMessage);
         }
       } else {
         alert = "Magic link not found in query string.  Verifying credentials with API";
