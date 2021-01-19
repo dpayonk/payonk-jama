@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import UserStore from "./repository/UserStore";
 
 
 class ConfigService extends Component {
@@ -38,10 +39,22 @@ class ConfigService extends Component {
         }        
     }
     
+    get(key){
+        return ConfigService.get(key);
+    }
+
+    getJWT(){
+        return UserStore.getJWT();
+    }
 }
 
 ConfigService.STATIC = {
     'BACKEND_ENDPOINT': {'development': 'https://dev-api.payonk.com', 'production': "https://api.payonk.com"},    
+}
+
+ConfigService.getBackend = function(){
+    const environment = process.env.NODE_ENV;
+    return ConfigService.STATIC['BACKEND_ENDPOINT'][environment];
 }
 
 ConfigService.get = function(key){

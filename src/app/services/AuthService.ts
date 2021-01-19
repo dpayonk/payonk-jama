@@ -1,13 +1,14 @@
 import { Magic } from 'magic-sdk';
 import ConfigService from '../ConfigService';
 import Logger from '../Logger';
-import AuthenticationProfile from '../models/AuthenticationProfile';
+import AuthenticationProfile from '../magic/AuthenticationProfile';
 import UserStore from '../repository/UserStore';
 import StateStore from '../StateStore';
 
 
 class AuthService {
   cfg: ConfigService; 
+  static getInstance: () => any;
 
   statics(){
     const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
@@ -33,6 +34,8 @@ class AuthService {
   async logout() {
     let m = this.getMagicFactory();
     m.user.logout();
+    // remove from localStorage as well
+    UserStore.clearAuthentication();
   }
 
   async loginMagic(emailAddress: string) {
@@ -88,6 +91,15 @@ class AuthService {
     } else {
       return null;
     }
+  }
+}
+
+AuthService.getInstance = function(){
+  if(this.SINGLETON !== undefined){
+    return this.SINGLETON;
+  } else {
+    this.SINGLETON = new AuthService({});
+    return this.SINGLETON;
   }
 }
 

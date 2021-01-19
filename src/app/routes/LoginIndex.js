@@ -6,11 +6,12 @@ import ConfigService from '../ConfigService';
 import { LoadableAuthForm } from '../client_library';
 import Logger from '../Logger';
 import { bannerStyle, getBannerStyle } from '../styleBuilder';
+import AuthService from '../services/AuthService';
 import AccountProfileService from '../services/AccountProfileService';
 
 class LoginIndex extends React.Component {
     constructor(props) {
-        /* props.authService */
+        
         super(props);
         const environment = new ConfigService().get_environment();
         this.state = {
@@ -21,6 +22,7 @@ class LoginIndex extends React.Component {
             accountService: new AccountProfileService(),
             alert: ""
         }
+        this.authService = AuthService.getInstance();
     }
 
     async componentDidMount() {
@@ -30,12 +32,12 @@ class LoginIndex extends React.Component {
         if (window.location.search.length > 0) {
             alert = "Confirming your authentication status?  Try refreshing!";
         } else {
-            isLoggedIn = await this.props.authService.isLoggedIn();
+            isLoggedIn = await this.authService.isLoggedIn();
             if (isLoggedIn) {
                 alert = `Welcome Back`;
-                let authenticationProfile = await this.props.authService.getAuthenticationProfile();
+                let authenticationProfile = await this.authService.getAuthenticationProfile();
                 if (authenticationProfile !== null) {
-                    let authorized = await this.state.accountService.getAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
+                    let authorized = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
                     this.setState({ emailAddress: authenticationProfile.emailAddress, feedAuthorization: authorized });
                 }
             }

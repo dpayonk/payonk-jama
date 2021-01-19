@@ -38,7 +38,6 @@ class FeedViewer extends Component {
   }
 
   renderFeed() {
-    console.log(this.props);
     if (this.props.pics.length === 0) {
       return (<div>Nothing to show yet</div>);
     } else {

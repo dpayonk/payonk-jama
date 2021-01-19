@@ -1,6 +1,6 @@
 import Logger from '../Logger';
 import AccountProfile from '../models/AccountProfile';
-import AuthenticationProfile from '../models/AuthenticationProfile';
+import AuthenticationProfile from '../magic/AuthenticationProfile';
 import UserSession from '../models/UserSession';
 import StateStore from '../StateStore';
 
@@ -43,6 +43,14 @@ UserStore.storeEmail = function(emailAddress){
     }
 }
 
+UserStore.storeJWT = function(jwtToken){
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        UserStore.storeKey('jwtToken', jwtToken);        
+    }
+}
+
 UserStore.storeKey = function(key, val){
     if (typeof window === `undefined`) {
         console.log("NOOP, for gatsby");
@@ -51,18 +59,36 @@ UserStore.storeKey = function(key, val){
     }
 }
 
+UserStore.clearAuthentication = function(){
+    if (typeof window === `undefined`) {
+        console.log("NOOP, for gatsby");
+    } else {
+        window.localStorage.removeItem('emailAddress');
+        window.localStorage.removeItem('publicAddress');
+        window.localStorage.removeItem('didToken');
+    } 
+}
+
+UserStore.publishJWT = function(jwtToken){
+    debugger;
+    Logger.info(`New JWT token saved!`);        
+    UserStore.storeJWT(jwtToken);  
+}
+
+
 // TODO: Move to defined model
 UserStore.loadUserSessionFromStorage = function(){
     // This should load data from localStorage (didToken, email, etc.) for authentication
     // and JWT token for API access and authorizationStatus
-    
     let emailAddress = UserStore.getEmailAddress();
-    if(emailAddress === null){
+    let didToken = UserStore.getDidToken();
+    if(emailAddress === null || didToken === null){
         Logger.info("UserStore could not load model from localCache");
+        return null;
     } else {
-        let session = new UserSession();
-        session.authenticationProfile = new AuthenticationProfile();
-        session.accountProfile = new AccountProfile();
+        let session = new UserSession();        
+        session.authenticationProfile = new AuthenticationProfile(emailAddress, didToken);
+        session.accountProfile = new AccountProfile(emailAddress);
         return session;    
     }    
 }
@@ -74,8 +100,11 @@ UserStore.getEmailAddress = function(){
 
 
 UserStore.getJWT = function(){
-    const didToken = (typeof window === `undefined`) ? null : window.localStorage.getItem('JWT');
-    return didToken;
+    const jwtToken = (typeof window === `undefined`) ? null : window.localStorage.getItem('jwtToken');
+    if(jwtToken === undefined){
+        return null;
+    }
+    return jwtToken;
 }
 
 

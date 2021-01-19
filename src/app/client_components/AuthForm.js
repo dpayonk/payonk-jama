@@ -53,7 +53,7 @@ class AuthForm extends Component {
       this.setState({ isAuthorized: false, fetchedAuthorization: true });
     } else {
       // I could say this is a alid profile
-      let authorizationStatus = await this.state.accountService.getAuthorizationStatus(authenticationProfile.emailAddress);
+      let authorizationStatus = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress);
       this.setState({
         isAuthorized: authorizationStatus,
         authenticationProfile: authenticationProfile,

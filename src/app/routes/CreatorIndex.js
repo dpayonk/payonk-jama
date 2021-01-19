@@ -13,7 +13,6 @@ import MediaUploader from '../client_components/MediaUploader';
 
 class CreatorIndex extends React.Component {
     constructor(props) {
-        /* props.authService */
         super(props);
         const environment = new ConfigService().get_environment();
         this.state = {

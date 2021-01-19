@@ -1,10 +1,30 @@
 import React from 'react'
-//class Welcome extends React.Component {
+import AuthService from '../services/AuthService'
 
 
-export default ({emailAddress, publicAddress, didToken}) => {
+export default ({ emailAddress, publicAddress, didToken }) => {
+
+    let alert = (didToken !== undefined && didToken !== "") ? "Logged In" : "";
+
+    function handleLogout() {
+        let service = new AuthService();
+        service.logout();
+        alert = "You have been logged out!";
+        console.log("redirect?");
+    };
+
+
+
     return (
         <div>
+
+            <div className="field">
+                <div className="control">
+                    <button onClick={handleLogout} className="button button-primary is-pulled-right">Logout</button>
+                    <div className="">{alert}</div>
+                </div>
+            </div>
+
             <div id="email-control" className="field">
                 <label className="label">Email</label>
                 <div className="control has-icons-left">

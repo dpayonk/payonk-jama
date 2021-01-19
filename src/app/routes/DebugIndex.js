@@ -11,11 +11,13 @@ import FeedService from '../services/FeedService';
 import userSession from '../models/UserSession';
 import { LoadableFilerobotImageEditor } from '../client_library'
 import MediaUploader from '../client_components/MediaUploader';
+import AccountProfileService from '../services/AccountProfileService';
+import ServiceExplorer from '../client_components/dev_tools/ServiceExplorer';
 
 
 class DebugIndex extends React.Component {
     constructor(props) {
-        /* props.authService */
+        
         super(props);
         const environment = new ConfigService().get_environment();
         this.state = {
@@ -29,6 +31,7 @@ class DebugIndex extends React.Component {
             showImageEditor: false,
             feedService: new FeedService(),
             serviceResponse: null,
+            services: [AccountProfileService],
             Log: []
         }
 
@@ -57,27 +60,6 @@ class DebugIndex extends React.Component {
         this.setState({ status: 'mounted' });
     }
 
-    displayServiceMethods(Klass) {
-        try {
-            const klass = new Klass();
-            const serviceConfiguration = klass.statics();
-            const methods = serviceConfiguration.routes;
-            return (<div>
-                <h6>{serviceConfiguration.apiEndpoint}</h6>
-                <ul>
-                    {
-                        methods.map((route) => {
-                            return (<li key={route.url}>{route.url} / params: {JSON.stringify(route.params)}</li>);
-                        })
-                    }
-                </ul>
-            </div>);
-        } catch (error) {
-            return (<div>Could not parse methods</div>);
-        }
-        // return [...properties.keys()].filter(item => typeof obj[item] === 'function')
-    }
-
     renderJsonOutput() {
         if (this.state.serviceResponse !== null) {
             return (<div>Not implemented</div>);
@@ -85,23 +67,6 @@ class DebugIndex extends React.Component {
         } else {
             return (<div>Nothing to see here</div>);
         }
-    }
-
-
-    renderServiceList() {
-
-        return (<ul className="">
-            {
-                this.state.services.map((service) => {
-                    return (
-                        <li key={service.key} style={{ border: "2px" }} className="column is-4">
-                            {service.key}
-                            <div>{this.displayServiceMethods(service.klass)}</div>
-                        </li>
-                    )
-                })
-            }
-        </ul>);
     }
 
     render() {
@@ -155,7 +120,7 @@ class DebugIndex extends React.Component {
                                 </div>
                                 <div className="services-component">
                                     <h3>Service List</h3>
-                                    {this.renderServiceList()}
+                                    <ServiceExplorer Klass={this.state.services[0]} />
                                 </div>
 
                             </div>
