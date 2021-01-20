@@ -18,7 +18,7 @@ static_sites:
   - key: COSMIC_READ_KEY
     scope: BUILD_TIME
     type: SECRET
-    value: EV[1:WUPX1usWiNufHolgmJLuootnQNovpNEE:lwEX+wETAUbxokoyg6BU1RZa3IyO+BxzwTBrsCllMruUh18uBwnajmHtKYC7bykxPn6ihb+QbnHSsUwxK1qk7b0o]
+    value: EV[1:5JoN3ujouJKwGfR13zz8y6NA3nc4eeyg:f2PpjO4z0W1yUE3MIfipW4f90NlHOfXvtY6O3gf1MmNnbj8mATOndKY0JxnBHq/ZZ6Oq5NyTo5dniK7jkpdd7eko]
   - key: MAGIC_PUBLISHABLE_KEY
     scope: BUILD_TIME
     value: 'pk_test_05CC9C10E2A6DA8C'

@@ -89,16 +89,11 @@ class App extends React.Component {
     this.setState({ serverHealth: serverHealth , status: 'mounted', isLoggedIn: isLoggedIn, status: 'mounted' });
   }
 
-  renderLoadingMessage() {
-    return (<Loader title="Hang tight" />);
-  }
-
-
-
   render() {
     const alert = (this.state.alert === '') ? `Backend: ${ConfigService.getBackend()}` : this.state.alert;
+    
     if (this.state.status === 'loading') {
-      return this.renderLoadingMessage();
+      return (<Loader title="Hang tight, validating your account!" />)
     }
 
     if (this.state.status === 'mounted' && this.state.isLoggedIn === false) {
@@ -118,7 +113,7 @@ class App extends React.Component {
 
     return (
       <div>
-        <div style={{background: alertStyle, minWidth: "200px", padding:"7px", position: "absolute", bottom: "0px", left: "0px"}}>
+        <div id="dev-bar" style={{background: alertStyle, minWidth: "200px", padding:"7px", position: "absolute", bottom: "0px", left: "0px"}}>
           {alert}
         </div>
         <Router basepath="/app">

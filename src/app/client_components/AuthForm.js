@@ -3,6 +3,7 @@ import AuthService from '../services/AuthService'
 import Loader from '../../components/Loader';
 import Logger from "../Logger";
 import AccountProfileService from "../services/AccountProfileService";
+import UserStore from "../repository/UserStore";
 
 class AuthForm extends Component {
 
@@ -85,7 +86,8 @@ class AuthForm extends Component {
     e.preventDefault();
     if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ alert: "Starting auth process, setting email..." });
-      await this.state.authService.loginMagic(this.state.emailInput);
+      let didToken = await this.state.authService.loginMagic(this.state.emailInput);
+      UserStore.publishLogin(this.state.emailInput, didToken);
       debugger;
     }
   };

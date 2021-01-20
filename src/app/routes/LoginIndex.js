@@ -25,23 +25,19 @@ class LoginIndex extends React.Component {
         this.authService = AuthService.getInstance();
     }
 
-    async componentDidMount() {
-        let isLoggedIn = false;
+    async componentDidMount() {        
         let alert = "";
 
-        if (window.location.search.length > 0) {
-            alert = "Confirming your authentication status?  Try refreshing!";
-        } else {
-            isLoggedIn = await this.authService.isLoggedIn();
-            if (isLoggedIn) {
-                alert = `Welcome Back`;
-                let authenticationProfile = await this.authService.getAuthenticationProfile();
-                if (authenticationProfile !== null) {
-                    let authorized = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
-                    this.setState({ emailAddress: authenticationProfile.emailAddress, feedAuthorization: authorized });
-                }
+        let isLoggedIn = await this.authService.isLoggedIn();
+        if (isLoggedIn) {
+            alert = `Welcome Back`;
+            let authenticationProfile = await this.authService.getAuthenticationProfile();
+            if (authenticationProfile !== null) {
+                let authorized = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress, 'feed');
+                this.setState({ emailAddress: authenticationProfile.emailAddress, feedAuthorization: authorized });
             }
         }
+    
 
         this.setState({ alert: alert, isLoggedIn: isLoggedIn, status: 'mounted' });
     }

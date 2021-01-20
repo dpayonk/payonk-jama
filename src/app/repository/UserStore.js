@@ -19,6 +19,10 @@ class UserStore {
     }    
 }
 
+UserStore.publishLogin = function(emailAddress, didToken){
+    debugger;
+}
+
 UserStore.onSessionUpdate = function(callback){
     StateStore.subscribe('session:update', callback);
 }
