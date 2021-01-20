@@ -1,8 +1,8 @@
 import React, { Component } from "react"
-import Loader from '../../components/Loader';
+import Loader from '../../../components/Loader';
 import FeedDetail from './FeedDetail';
-import ConfigService from '../ConfigService';
-import Logger from "../Logger";
+import ConfigService from '../../ConfigService';
+import Logger from "../../Logger";
 
 
 class FeedViewer extends Component {

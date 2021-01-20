@@ -1,6 +1,6 @@
-import React, { Component } from "react"
-import Logger from '../Logger';
-import { Button, Image, Modal } from 'semantic-ui-react'
+import React, { Component } from "react";
+import Logger from '../../Logger';
+import { Button, Image, Modal } from 'semantic-ui-react';
 import CommentFeed from './CommentFeed';
 
 class FeedDetail extends Component {
