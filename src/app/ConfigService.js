@@ -57,6 +57,15 @@ ConfigService.getBackend = function(){
     return ConfigService.STATIC['BACKEND_ENDPOINT'][environment];
 }
 
+ConfigService.getDebugMode = function(){
+    const environment = process.env.NODE_ENV;
+    if(environment === 'development'){
+        return true;
+    } else {
+        return true;
+    }
+}
+
 ConfigService.get = function(key){
     const environment = process.env.NODE_ENV;
 

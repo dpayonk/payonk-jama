@@ -32,11 +32,12 @@ class App extends React.Component {
     let userSession = UserStore.loadUserSessionFromStorage();
     Logger.info(`Retreived userSession from storage`, userSession);
     this.state = {
-      alert: "Hang tight",
+      alert: "",
       serverHealth: false,
       isLoggedIn: false,
       status: 'loading',
-      userSession: userSession
+      userSession: userSession,
+      debugMode: true
     };
     this.authService = new AuthService();
     this.backend = new BaseService(ConfigService.getBackend());
@@ -47,6 +48,12 @@ class App extends React.Component {
     UserStore.onSessionUpdate(function (model) {
       Logger.info("received update, new Model", model);
       self.setState({ userSession: model });
+    });
+
+    Logger.subscribe("alert", function(props){
+      /* Display to notification area */
+      self.setState({alert: props.message});
+      setTimeout(() => self.setState({alert:''}), 3000);
     });
 
     Logger.subscribe("debug", function(props){
@@ -85,13 +92,19 @@ class App extends React.Component {
       Logger.error(`app.js: Catching exception in checkAuth`, error);
     }
 
+    let debugMode = ConfigService.getDebugMode();
+
+
     let serverHealth = await this.backend.getHealth();
-    this.setState({ serverHealth: serverHealth , status: 'mounted', isLoggedIn: isLoggedIn, status: 'mounted' });
+    this.setState({ serverHealth: serverHealth , 
+      debugMode: debugMode,
+      status: 'mounted', isLoggedIn: isLoggedIn, status: 'mounted' });
   }
 
   render() {
     const alert = (this.state.alert === '') ? `Backend: ${ConfigService.getBackend()}` : this.state.alert;
     
+
     if (this.state.status === 'loading') {
       return (<Loader title="Hang tight, validating your account!" />)
     }
@@ -109,11 +122,16 @@ class App extends React.Component {
       );
     }
 
-    let alertStyle = (this.state.serverHealth === true) ? "lightgreen" : 'red';
+    const alertVisibility = (this.state.debugMode) ? {visibility: 'hidden'} : {};
+    let alertBackground = (this.state.serverHealth === true) ? "lightgreen" : 'red';
 
     return (
       <div>
-        <div id="dev-bar" style={{background: alertStyle, minWidth: "200px", padding:"7px", position: "absolute", bottom: "0px", left: "0px"}}>
+        <div id="dev-bar" style={{
+          background: alertBackground, 
+          visibility: alertVisibility, 
+          minWidth: "200px", padding:"7px", 
+          position: "absolute", bottom: "0px", left: "0px"}}>
           {alert}
         </div>
         <Router basepath="/app">

@@ -31,8 +31,8 @@ class AccountProfileService extends BaseService {
         AccountProfile
       );
 
-      if (ok && errors === "") {        
-        if(data.jwt_token !== undefined){
+      if (ok && errors === "") {
+        if (data.jwt_token !== undefined) {
           Logger.alert(`A new JWT token was issued`, data.jwt_token);
           UserStore.publishJWT(data.jwt_token);
         }
@@ -70,7 +70,7 @@ class AccountProfileService extends BaseService {
       permissionName: permissionName
     };
 
-    Logger.info(`Checking permission ${permissionName} for email: ${emailAddress}`, emailAddress);
+    Logger.info(`Checking permission ${permissionName} for email:`, emailAddress);
     try {
 
       let response = await fetch(this.endpoints().authorizedRouteUrl.url, {
@@ -83,22 +83,27 @@ class AccountProfileService extends BaseService {
       if (jsonResponse.data === undefined) {
         throw new Error('Invalid Schema Response.  No data element defined');
       }
+      // [server url](payonk/controllers/is_authorized_url)
       let data = jsonResponse.data // changed to be more graphql like
+      // jsonResponse = {data: {authenticated: bool, authorized: bool}, errors: string}
 
-      if (data.authorized === undefined || data.authorized === null) {
-        return false;
+      if (jsonResponse.errors === '') {
+        if (data.authorized !== undefined || data.authorized !== null) {
+          return data.authorized;
+        }
       } else {
-        return data.authorized;
+        Logger.error('AccountProfileService.fetchAuthorizationStatus: Error in response', jsonResponse.errors)
       }
     } catch (error) {
       Logger.error("An exception occurred trying to obtain authorization", error);
-      return false;
+      // may need to set serverHealth to false
     }
+    return false; // only returns true on happy path
   }
 }
 
-AccountProfileService.getInstance = function(){
-  if(this.SINGLETON !== undefined){
+AccountProfileService.getInstance = function () {
+  if (this.SINGLETON !== undefined) {
     return this.SINGLETON;
   } else {
     this.SINGLETON = new AccountProfileService();

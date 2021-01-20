@@ -51,16 +51,12 @@ class AuthService {
 
   // Move to AccountProfileService
   async saveAuthentication(didToken: string){
-    Logger.info(`Saving DID Token: ${didToken}`);
-    // removing this and only storing didId, can look it up on the server
-    // Need to determine the dependencies
-    // Do I want AuthService to have a ProfileService?
-    // if not, how do I make sure the published event will have subscribers
     UserStore.storeKey('didToken', didToken);
     UserStore.storeKey('updatedAt', new Date());
     let subscribers = StateStore.publishEvent('onLogin', {'didToken': didToken });
-    Logger.info(`Subscribers notified: ${subscribers}`);
-    return new AuthenticationProfile("noEmailYet", didToken);
+    Logger.info(`Subscribers notified:`, subscribers);
+    
+    return new AuthenticationProfile(UserStore.getEmailAddress(), didToken);
   }
 
   async onAuthenticationRedirectCallback(): Promise<AuthenticationProfile>  {

@@ -135,7 +135,7 @@ class AuthForm extends Component {
         <div className="field">
           <label className="label">Email</label>
           <div className="control has-icons-left">
-            <input value={this.state.emailInput} onChange={this.handleChange} className="input " type="email" name="email"
+            <input style={{maxWidth: "400px"}} value={this.state.emailInput} onChange={this.handleChange} className="input " type="email" name="email"
               required="required" placeholder="your@email.com" />
             <span className="icon is-small is-left">
               <i className="fas fa-envelope"></i>
