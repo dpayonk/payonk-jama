@@ -52,6 +52,10 @@ ConfigService.STATIC = {
     'BACKEND_ENDPOINT': {'development': 'https://dev-api.payonk.com', 'production': "https://api.payonk.com"},    
 }
 
+ConfigService.getEnvironment = function(){
+    return process.env.NODE_ENV;
+}
+
 ConfigService.getBackend = function(){
     const environment = process.env.NODE_ENV;
     return ConfigService.STATIC['BACKEND_ENDPOINT'][environment];

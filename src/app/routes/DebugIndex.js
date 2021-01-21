@@ -8,7 +8,6 @@ import Logger from '../Logger';
 import { getBannerStyle } from '../styleBuilder';
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
 import FeedService from '../services/FeedService';
-import userSession from '../models/UserSession';
 import { LoadableFilerobotImageEditor } from '../client_library'
 import MediaUploader from '../client_components/MediaUploader';
 import AccountProfileService from '../services/AccountProfileService';
@@ -130,7 +129,7 @@ class DebugIndex extends React.Component {
                                 <h3>Console</h3>
                                 <div className="container">
 
-                                    <LoadableFeedViewer pics={this.state.pics} userSession={this.props.userSession} />
+                                    <LoadableFeedViewer pics={this.state.pics} />
                                 </div>
                             </div>
                             <div className="column is-two-fifths">

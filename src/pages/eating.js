@@ -27,27 +27,24 @@ class RecipeIndex extends React.Component {
             <img className="feature-square-image" src={headline} />
           </div>
         </div>
-        <div className="container columns">
-          <div className="column is-three-fifths" >
-            <h2>Recent Recipes</h2>
+        <div className="container columns multiline">
             {recipes.map(({ node }) => {
               const title = get(node, 'title') || node.slug
+              const i = get(node,'metadata.hero.imgix_url') || 'None';
               return (
-                <div style={{ paddingTop: "1.5rem" }} key={node.slug}>
+                <div className="column is-one-third has-text-centered" style={{ paddingTop: "1.5rem" }} key={node.slug}>
+                  <img src="" />
                   <h3>
                     <Link style={{ boxShadow: 'none' }} to={`/recipes/${node.slug}`}>
                       {title}
                     </Link>
                   </h3>
                   <small>{node.created}</small>
+                  {i}
+                  {JSON.stringify(node)}
                 </div>
               )
             })}
-
-          </div>
-          <div className="column is-two-fifths">
-            
-          </div>
         </div>
         <div className="container columns">
           

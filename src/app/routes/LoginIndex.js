@@ -10,8 +10,10 @@ import AuthService from '../services/AuthService';
 import AccountProfileService from '../services/AccountProfileService';
 
 class LoginIndex extends React.Component {
+    // User should already be authenticated and validated from the app.js
+    // consider changing this to a confirmation page of sorts to enter in 
+    // other information and create/edit or tutorial
     constructor(props) {
-        
         super(props);
         const environment = new ConfigService().get_environment();
         this.state = {
@@ -25,7 +27,7 @@ class LoginIndex extends React.Component {
         this.authService = AuthService.getInstance();
     }
 
-    async componentDidMount() {        
+    async componentDidMount() {
         let alert = "";
 
         let isLoggedIn = await this.authService.isLoggedIn();
@@ -37,39 +39,30 @@ class LoginIndex extends React.Component {
                 this.setState({ emailAddress: authenticationProfile.emailAddress, feedAuthorization: authorized });
             }
         }
-    
+
 
         this.setState({ alert: alert, isLoggedIn: isLoggedIn, status: 'mounted' });
     }
 
-    renderApps() {
-        if (this.state.feedAuthorization === true) {
-            return (<div>
-                <a href="/app/feed" className="button is-large button-is-primary">
-                    Check out the feed
-                </a>
-            </div>);
-        } else {
-            return (<div>Hello, we have not yet authorized you for any apps</div>);
-        }
-    }
-
     render() {
-        let environment = process.env.environment;
-
         if (this.state.status !== 'mounted') {
             return (<Loader />);
-        } else if (this.state.isLoggedIn === true) {
+        }
+
+        if (this.state.isLoggedIn === true && this.state.feedAuthorization === true) {
             return (
                 <Layout location={location}>
                     <Helmet title="Login" />
                     <div className="container main-content">
-                        <div style={getBannerStyle(environment)}>
+                        <div style={getBannerStyle(this.state.environment)}>
                             <h2>{this.state.alert}</h2>
                         </div>
                         <div className="columns has-text-centered">
                             <div className="column">
-                                {this.renderApps()}
+                                <div>
+                                    <a href="/app/feed" className="button is-large button-is-primary">
+                                        Check out the feed</a>
+                                </div>
                             </div>
 
                         </div>
@@ -80,6 +73,7 @@ class LoginIndex extends React.Component {
             return (
                 <Layout location={location}>
                     <div className="main-content">
+                        <div>Hello, we have not yet authorized you for any apps</div>
                         <LoadableAuthForm />
                     </div>
                 </Layout>

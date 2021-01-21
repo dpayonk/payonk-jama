@@ -54,8 +54,7 @@ class RecipePostTemplate extends React.Component {
             marginBottom: '2vh',
             position: 'relative',
           }}
-        />
-        <img style={{maxWidth: "50vw"}} src={recipe.metadata.hero.imgix_url} />
+        />       
         <div
           className="post-content" style={{marginTop: "80px"}}
           dangerouslySetInnerHTML={{ __html: recipe.content }}
@@ -77,7 +76,7 @@ class RecipePostTemplate extends React.Component {
         >
           {previous && (
             <li>
-              <Link to={`blog/${previous.slug}`} rel="prev">
+              <Link to={`/recipes/${previous.slug}`} rel="prev">
                 ← {previous.title}
               </Link>
             </li>
@@ -85,7 +84,7 @@ class RecipePostTemplate extends React.Component {
 
           {next && (
             <li>
-              <Link to={`recipes/${next.slug}`} rel="next">
+              <Link to={`/recipes/${next.slug}`} rel="next">
                 {next.title} →
               </Link>
             </li>

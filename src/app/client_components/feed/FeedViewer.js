@@ -15,7 +15,6 @@ class FeedViewer extends Component {
 
   constructor(props) {
     super(props);
-    /* props.userSession */
     this.state = {
       personalizedMessage: "",
       status: "initialized"

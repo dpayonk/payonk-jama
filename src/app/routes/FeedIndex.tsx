@@ -3,78 +3,70 @@ import get from 'lodash/get'
 import Helmet from 'react-helmet'
 import Layout from '../../components/layout'
 import { LoadableFeedViewer } from '../client_library'
-import ConfigService from '../ConfigService'
-import { getBannerStyle } from '../styleBuilder';
-import Loader from '../../components/Loader';
-import FeedService from "../services/FeedService";
-import Logger from "../Logger";
+import Loader from '../../components/Loader'
+import FeedService from '../services/FeedService'
+import Logger from '../Logger'
 import AccountProfileService from '../services/AccountProfileService'
-import UserSession from '../models/UserSession'
-import 'semantic-ui-css/semantic.min.css';
+import AccountProfile from '../models/AccountProfile'
 
 type ProfileProps = {
-  userSession: UserSession;
 }
+  /* userSession: UserSession */
+
 
 type ProfileState = {
-  alert: string;
-  isAuthorized: boolean;
-  pics: [];
-  status: string;
+  alert: string
+  isAuthorized: boolean
+  pics: []
+  status: string
+  accountProfile: AccountProfile
 }
 
 class FeedIndex extends React.Component<ProfileProps, ProfileState> {
-  accountService: any
+  accountProfileService: AccountProfileService
   feedService: FeedService
 
   constructor(props) {
-    /* props.userSession */
-    super(props);
+    super(props)
+
     this.state = {
       isAuthorized: false,
-      alert: "",
+      alert: '',
       pics: [],
       status: 'initialized',
+      accountProfile: null
     }
-    this.feedService = new FeedService();
-    this.accountService = AccountProfileService.getInstance();
-  }
-
-  async fetchAuthorization() {
-    let isAuthorized = false;
-
-    isAuthorized = await this.accountService.fetchAuthorizationStatus(
-      this.props.userSession.authenticationProfile.emailAddress, 'feed');
-
-    this.setState({ isAuthorized: isAuthorized });
-    return isAuthorized;
+    this.feedService = new FeedService()
+    this.accountProfileService = AccountProfileService.getInstance();
   }
 
   async componentDidMount() {
+    let isAuthorized = false;
 
     try {
-      let isAuthorized = await this.fetchAuthorization();
+      // this route should not be called unless already authenticated   
+      let accountProfile = await this.accountProfileService.fetchMyProfile();
+      
+      this.setState({accountProfile: accountProfile});
+      // could move to fetchMyProfile and return permissions?
+      isAuthorized = await this.accountProfileService.fetchAuthorizationStatus(
+        this.state.accountProfile.emailAddress,
+        'feed'
+      )
+
       if (isAuthorized) {
-        Logger.info(`Fetching feed for ${this.props.userSession.authenticationProfile.emailAddress}`);
-        let picsList = await this.feedService.fetchFeed(this.props.userSession.authenticationProfile.emailAddress);
-        this.setState({ pics: picsList });
-      } else {
-        console.log("FeedViewer.componentDidMount could not get userSession");
-        this.setState({ alert: "We could not retrieve user credentials" });
+        let picsList = await this.feedService.fetchFeed(
+          this.state.accountProfile.emailAddress
+        )
+        this.setState({ pics: picsList })
       }
-      Logger.info(`FeedViewer: Setting Authorization Status: ${isAuthorized}`);
+
+      Logger.info(`FeedViewer: Setting Authorization Status: ${isAuthorized}`, isAuthorized);
     } catch (error) {
-      Logger.error(`FeedViewer: Error occured mounting`, error);
+      Logger.error(`FeedViewer: Error occured mounting`, error)
     }
-    this.setState({ status: 'mounted' });
+    this.setState({ status: 'mounted', isAuthorized: isAuthorized })
   }
-
-  renderUnauthorized() {
-    return (
-      <div>It does not appear you are authorized yet.</div>
-    )
-  }
-
 
   render() {
     const siteTitle = get(
@@ -82,24 +74,24 @@ class FeedIndex extends React.Component<ProfileProps, ProfileState> {
       'props.data.cosmicjsSettings.metadata.site_title'
     )
     const location = get(this, 'props.location')
-    let cfg = new ConfigService();
-    const environment = cfg.get_environment();
 
     if (this.state.status !== 'mounted') {
-      return (<Loader title="Capturing memories" />);
+      return <Loader title="Capturing memories" />
     }
+
     if (this.state.isAuthorized === false) {
-      return this.renderUnauthorized();
+      return (<div>It does not appear you are authorized yet.</div>);
     }
 
     return (
-      <Layout location={location}>
-        <div style={getBannerStyle(environment)}>{environment}</div>
+      <Layout location={location}>    
         <Helmet title={siteTitle} />
         <div className="container main-content">
           <h1 className="has-text-centered">Our Family Feed</h1>
           <div className="container">
-            <LoadableFeedViewer pics={this.state.pics} userSession={this.props.userSession} />
+            <LoadableFeedViewer
+              pics={this.state.pics}
+            />
           </div>
         </div>
       </Layout>

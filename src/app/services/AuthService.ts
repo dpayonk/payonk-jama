@@ -50,7 +50,7 @@ class AuthService {
   }
 
   // Move to AccountProfileService
-  async saveAuthentication(didToken: string){
+  async saveAuthentication(didToken: string): Promise<AuthenticationProfile> {
     UserStore.storeKey('didToken', didToken);
     UserStore.storeKey('updatedAt', new Date());
     let subscribers = StateStore.publishEvent('onLogin', {'didToken': didToken });
@@ -62,7 +62,7 @@ class AuthService {
   async onAuthenticationRedirectCallback(): Promise<AuthenticationProfile>  {
     // Method called by redirect (from app.js)
     let didToken = await this.getMagicFactory().auth.loginWithCredential();
-    let authenticationProfile = this.saveAuthentication(didToken);
+    let authenticationProfile = await this.saveAuthentication(didToken);
     return authenticationProfile;
   }
 

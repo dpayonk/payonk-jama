@@ -97,7 +97,6 @@ Logger.subscribe = function (eventKey, callback) {
         Logger.SUBSCRIBERS[eventKey] = [];
         Logger.SUBSCRIBERS[eventKey].push(callback);
     }
-    console.log(`Registered Logger.${eventKey} subscriber:`, callback);
 }
 
 Logger.publishEvent = function (eventKey, props) {
