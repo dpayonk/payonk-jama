@@ -53,7 +53,7 @@ export default ({ children, location }) => (
       if (location !== undefined && location.pathname === rootPath) {
         header = (
           <div>
-            <Navbar />
+            <Navbar isAuthenticated={true} />
           <section style={{marginTop: "-71px"}} className="hero">
             <div className="hero-body" style={{backgroundImage: 'url("https://imgix.cosmicjs.com/d8ce4010-39c8-11eb-9ccb-e16da6a16ff7-EFFECTS.jpg?w=2000")', backgroundSize: 'cover', backgroundPosition: 'right', width: '100%', height: '24.5rem', position: 'relative', marginBottom: '2.625rem'}}>
            

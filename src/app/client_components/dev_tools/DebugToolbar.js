@@ -9,7 +9,8 @@ class DebugToolbar extends React.Component {
         this.state = {
             debugMode: false,
             serverHealth: false,
-            alert: ConfigService.getEnvironment()
+            alert: ConfigService.getEnvironment(),
+            status: 'initialized'
         }
         this.backend = new BaseService(ConfigService.getBackend());
 
@@ -33,28 +34,36 @@ class DebugToolbar extends React.Component {
         if (serverHealth !== true) {
             this.setState({ debugMode: true, alert: 'Backend offline' });
         }
-        this.setState({ serverHealth: serverHealth });
+        this.setState({ serverHealth: serverHealth, status: 'mounted' });
     }
 
     render() {
-        let alertBackground = (this.state.serverHealth === true) ? "lightgreen" : 'red';
-        let alertVisibility = 'hidden';
 
-        if (this.props.alert !== undefined && this.props.alert !== "") {
-            debugger;
+        let alertClass = 'notification is-info';
+        let alertVisibility = (this.props.alert !== undefined && this.props.alert !== "") ? 'visible' : 'hidden';
+
+        if (this.state.serverHealth !== true) {
             alertVisibility = 'visible';
+            alertClass = 'notification is-danger';
+        }
+        if (this.state.status !== 'mounted') {
+            return (<div></div>);
         }
 
         return (
             <div id="debug-toolbar" style={{
-                background: alertBackground,
                 visibility: alertVisibility,
-                minWidth: "200px", padding: "7px",
-                position: "absolute", bottom: "0px", left: "0px"
+                minWidth: "200px",
+                marginBottom: "7px", padding: "7px",
+                position: "absolute", bottom: "0px", right: "10px"
             }}>
-                {this.props.alert}
-                <br />
-                {this.state.alert}
+                <div className={alertClass}>
+                    {this.props.alert}
+                    <div style={{ borderTop: "1px solid grey" }}>
+                        {this.state.alert}
+                    </div>
+                </div>
+
             </div>
 
         )

@@ -14,7 +14,7 @@ export default ({ emailAddress, publicAddress, didToken }) => {
         // clear all local
         UserStore.clearAll();
         Logger.alert("You have been logged out!");
-        console.log("redirect?");
+        // console.log("redirect?");
     };
 
 

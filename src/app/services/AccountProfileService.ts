@@ -78,15 +78,15 @@ class AccountProfileService extends BaseService {
     emailAddress: string,
     permissionName: string
   ): Promise<boolean> {
-    let didToken = 'TODO: Find how to pass this through'
     let variables = {
       email_address: emailAddress,
       permissionName: permissionName,
     }
-    let jwtToken = UserStore.getJWT()
-
-    if (jwtToken === undefined || jwtToken === null) {
-      Logger.alert('Checking authorization as a public user.  Please make sure to create a session', jwtToken)
+    if (this.hasJWT() === false) {
+      Logger.alert(
+        'Checking authorization as a public user.  Please make sure to create a session',
+        {}
+      )
     }
 
     Logger.info(
@@ -135,7 +135,7 @@ AccountProfileService.getInstance = function() {
   if (this.SINGLETON !== undefined) {
     return this.SINGLETON
   } else {
-    this.SINGLETON = new AccountProfileService();
+    this.SINGLETON = new AccountProfileService()
     return this.SINGLETON
   }
 }

@@ -1,5 +1,6 @@
 import ConfigService from '../ConfigService';
 import Logger from '../Logger';
+import UserStore from '../repository/UserStore';
 import { ISerializableObject, IParsedResponse } from './BaseInterfaces';
 
 
@@ -12,6 +13,10 @@ class BaseService {
     this.baseUrl = (url !== "") ? url : this.cfg.get('BACKEND_ENDPOINT');
   }
 
+  hasJWT(): boolean {
+    return (UserStore.getJWT() !== null);
+  }
+
   endpoints(): any {
     const apiUrl = this.cfg.get('BACKEND_ENDPOINT');
     return {
@@ -22,14 +27,14 @@ class BaseService {
   }
 
   generateHeaders() {
-    const jwt = this.cfg.getJWT();
+    const jwt = UserStore.getJWT();
     if (jwt !== null) {
       return {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${jwt}`
       };
     }
-    Logger.info('JWT tokens are not currently present');
+    Logger.debug('JWT tokens are not currently present', jwt);
     return {
       'Content-Type': 'application/json'
     }

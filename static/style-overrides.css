@@ -93,3 +93,13 @@ ul li {
   list-style-type: square;
   margin: 10px 0px 10px 40px;
 }
+
+.data-detail-control{
+  margin: 7px 28px 7px 28px;
+  padding: 0px 14px 18px 0px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.data-detail-control .label {
+  text-indent: 4px;
+}

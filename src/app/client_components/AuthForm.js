@@ -21,7 +21,22 @@ class AuthForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
+  }
+
+  async componentDidMount() {
+    await this.fetchLogin();
+    await this.fetchAuthorizationProfile();
+
+    if (this.state.authenticationProfile !== null) {
+      // This is too complex combiniing a profile with magic link, need better model
+      if (this.state.isAuthorized == true) {
+        this.setState({ emailInput: this.state.authenticationProfile.emailAddress });        
+      }
+    } else {
+      this.setState({ alert: "Your profile could not be fetched" });
+    }
+    this.setState({ status: 'mounted' });
   }
 
   async fetchLogin() {
@@ -48,41 +63,23 @@ class AuthForm extends Component {
   }
 
   async fetchAuthorizationProfile() {
+    let isAuthorized = false;
     let authenticationProfile = await this.state.authService.getAuthenticationProfile();
-    Logger.info(`Profile response: `, authenticationProfile);
-    if (authenticationProfile === null) {
-      this.setState({ isAuthorized: false, fetchedAuthorization: true });
-    } else {
-      // I could say this is a alid profile
-      let authorizationStatus = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress);
+
+    if (authenticationProfile !== null) {      
+      isAuthorized = await this.state.accountService.fetchAuthorizationStatus(authenticationProfile.emailAddress);
       this.setState({
-        isAuthorized: authorizationStatus,
-        authenticationProfile: authenticationProfile,
-        fetchedAuthorization: true
+        authenticationProfile: authenticationProfile,        
       });
     }
-  }
-
-  async componentDidMount() {
-    await this.fetchLogin();
-    await this.fetchAuthorizationProfile();
-
-    if (this.state.authenticationProfile !== null) {
-      // This is too complex combiniing a profile with magic link, need better model
-      if (this.state.isAuthorized == true) {
-        this.setState({ emailInput: this.state.authenticationProfile.emailAddress });        
-      }
-    } else {
-      this.setState({ alert: "Your profile could not be fetched" });
-    }
-    this.setState({ status: 'mounted' });
+    this.setState({ isAuthorized: isAuthorized, fetchedAuthorization: true });
   }
 
   handleChange(event) {
     this.setState({ emailInput: event.target.value });
   }
 
-  async handleLogin(e) {
+  async handleRegister(e) {
     e.preventDefault();
     if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ alert: "Starting auth process, setting email..." });
@@ -119,8 +116,10 @@ class AuthForm extends Component {
     let email = this.state.authenticationProfile.emailAddress;
     return (
       <div>
-        <p style={{ textIndent: "20px" }}>
-          We don't have your email address ({email}) on file yet.  Give us a few minutes to authorize you.
+        <p style={{ fontSize: "1.4rem", textIndent: "10px", maxWidth: "600px" }}>
+          We don't have your email address ({email}) on file yet.  
+          <br/><br/>
+          Give us a few minutes to authorize you.
           If you're impatient, send us a message.
             </p>
       </div>
@@ -146,7 +145,7 @@ class AuthForm extends Component {
         <div className="field is-grouped">
           <div className="control">
             <div className="field">
-              <button onClick={this.handleLogin} className="button is-light is-pull-right" type="submit">
+              <button onClick={this.handleRegister} className="button is-light is-pull-right" type="submit">
                 Register
           </button>
             </div>

@@ -8,11 +8,13 @@ import AccountProfileService from '../services/AccountProfileService'
 import AuthenticationProfile from '../magic/AuthenticationProfile'
 import MagicProfileComponent from '../magic/MagicProfileComponent'
 import AccountProfile from '../models/AccountProfile'
-import UserSession from '../models/UserSession'
 import AuthService from '../services/AuthService'
+import LocalSettingsPartial from '../client_components/profile/LocalSettingsPartial'
+import AccountProfilePartial from '../client_components/profile/AccountProfilePartial'
 
 type ProfileProps = {
-//  userSession: UserSession
+  //  userSession: UserSession
+  // Example way to explicitly define input into component, great for documentation
 }
 
 type ProfileState = {
@@ -30,9 +32,9 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
   authService: AuthService
 
   constructor(props: ProfileProps) {
-    super(props);
-    this.accountProfileService = AccountProfileService.getInstance();
-    this.authService = AuthService.getInstance();
+    super(props)
+    this.accountProfileService = AccountProfileService.getInstance()
+    this.authService = AuthService.getInstance()
 
     //     let accountProfile = this.accountProfileService.
     this.state = {
@@ -41,15 +43,16 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       isAuthorized: false,
       synced: false,
       jwtToken: UserStore.getJWT(),
-      authenticationProfile: null, // authenticationProfile
-      accountProfile: null //accountProfile (set up on componentDidMount)
+      authenticationProfile: null, // initialized onCompomenentDidMount
+      accountProfile: null, // initialized onCompomenentDidMount
     }
-    
+
     this.handleCreateProfile = this.handleCreateProfile.bind(this)
     let self = this
     UserStore.onUpdate(function(model) {
       // this may not be reproducible, since emailAddress state is not always updated
-      self.refreshAuthorization()
+      let refreshed = self.refreshAuthorization()
+      Logger.alert(`You're session has been refreshed`, refreshed)
     })
   }
 
@@ -58,29 +61,27 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       let authenticationProfile = await this.authService.getAuthenticationProfile();
 
       if (authenticationProfile !== null && this.state.jwtToken !== null) {
-        let accountProfile = await this.accountProfileService.fetchMyProfile(
-          authenticationProfile
-        )
+        let accountProfile = await this.accountProfileService.fetchMyProfile()
         Logger.warn(
           'Should we update the accountProfile of parent?',
           accountProfile
         )
         this.setState({ accountProfile: accountProfile })
-      } else if (this.state.jwtToken === null){
+      } else if (this.state.jwtToken === null) {
         this.setState({
-          alert: 'There is no session set up on this browser. Please create a session',
+          alert:
+            'There is no session set up on this browser. Please create a session',
         })
-
       } else {
         this.setState({
           alert: 'Your authentication profile could not be retrieved',
         })
       }
 
-      this.setState({
-        synced: this.getProfileSyncState(),
-        authenticationProfile: authenticationProfile,
-      })
+      // https://stackoverflow.com/questions/33613728/what-happens-when-using-this-setstate-multiple-times-in-react-component
+      this.setState({authenticationProfile: authenticationProfile}, () => {
+        this.setState({synced: this.getProfileSyncState(),});
+      });
     } catch (error) {
       console.error(
         `ProfileIndex.componentDidMount: Exception fetching profile`,
@@ -91,8 +92,8 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
     this.setState({ status: 'mounted' })
   }
 
-
   async handleCreateProfile() {
+    // child components with state will rerender on any stateUpdate
     let emailToUse = this.state.authenticationProfile.emailAddress
     let didTokenToUse = this.state.authenticationProfile.didToken
     if (this.state.authenticationProfile.didToken !== null) {
@@ -118,38 +119,40 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
 
   getProfileSyncState() {
     // Compares email addresses for authentication (magic) and account (internal) profiles
-    // Magic Email could be different from local profile
     if (this.state.authenticationProfile === null) {
       this.setState({ alert: 'Your profile is not complete!' })
-      return false
+      return false;
     }
 
-    // check syncing of authenticationProfile email and accountProfile email
     if (
       this.state.authenticationProfile.emailAddress !==
       this.state.accountProfile.emailAddress
     ) {
       this.setState({ alert: 'Email Addresses do not match' })
 
-      return false
+      return false;
     }
 
-    return true
+    return true;
   }
 
-  async refreshAuthorization() {
+  async refreshAuthorization(): Promise<boolean> {
     // TODO: Run on handle sync update
-
-    const isAuthorized = await this.accountProfileService.fetchAuthorizationStatus(
-      this.state.authenticationProfile.emailAddress,
-      'feed'
-    )
-    this.setState({ isAuthorized: isAuthorized })
+    try {
+      const isAuthorized = await this.accountProfileService.fetchAuthorizationStatus(
+        this.state.authenticationProfile.emailAddress,
+        'feed'
+      )
+      this.setState({ isAuthorized: isAuthorized })
+    } catch (exc) {
+      return false;
+    }
+    return true;
   }
 
-  renderAlert(alert) {
-    if (this.state.alert === '' && alert === '') {
-      return <div></div>
+  renderAlert() {
+    if (this.state.alert === '') {
+      return null;
     }
 
     return (
@@ -163,75 +166,8 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
     )
   }
 
-  renderAccountProfile() {
-    if (this.state.accountProfile === null) {
-      return (
-        <div className="box">
-          <div style={{ paddingBottom: '20px' }} id="account-profile">
-            <h2>My Account Profile</h2>
-            <div>Your account profile could not be fetched</div>
-            <div className="is-pulled-right">
-              <button
-                onClick={this.handleCreateProfile}
-                className={
-                  this.state.synced
-                    ? 'button is-pulled-right is-primary'
-                    : 'button is-pulled-right is-danger'
-                }
-              >
-                Create Profile
-              </button>
-            </div>
-          </div>
-        </div>
-      )
-    }
-    return (
-      <div className="box">
-        <h2>My Account Profile</h2>
-        <div className="is-pulled-right">
-          <button
-            onClick={this.handleCreateProfile}
-            className={
-              this.state.synced
-                ? 'button is-pulled-right is-primary'
-                : 'button is-pulled-right is-danger'
-            }
-          >
-            Refresh Session
-          </button>
-        </div>
-        <div>
-          <label className="label">Email</label>
-          <div className="field">{this.state.accountProfile.emailAddress}</div>
-        </div>
-        <div>
-          <div style={{ margin: '30px 0px' }}>
-            <div>
-              <div className="field">
-                <label className="label">Profile State</label>
-                <div className="control">
-                  {this.state.synced ? 'Synchronized' : 'Not synced'}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="field">
-          <label className="label">Role Status</label>
-          <div className="control">
-            <label className="checkbox">
-              {this.state.accountProfile.currentRole}
-            </label>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   render() {
-    const location = get(this, 'props.location')
-    let jwtToken = UserStore.getJWT()
+    const location = get(this, 'props.location')    
 
     if (this.state.status !== 'mounted') {
       return <Loader />
@@ -240,7 +176,9 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       <Layout location={location}>
         <div className="columns is-centered is-multiline">
           <div id="profile-header" className="column is-full">
-            <div className="is-pulled-right">{this.renderAlert('')}</div>
+            <div className="is-pulled-right">
+              {this.renderAlert()}
+            </div>
             <h1>My Profile</h1>
           </div>
           <div id="authentication-profile-settings" className="column is-half">
@@ -254,16 +192,10 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
             </div>
           </div>
           <div id="account-profile-settings" className="column is-half">
-            {this.renderAccountProfile()}
+            <AccountProfilePartial accountProfile={this.state.accountProfile} />
           </div>
           <div id="account-local-settings" className="column is-half">
-            <div className="box">
-              <h3>Local Settings</h3>
-              <div style={{ background: 'yellow', padding: '7px' }}>
-                <label className="label">Session Access Token</label>
-                <div className="field">{jwtToken}</div>
-              </div>
-            </div>
+            <LocalSettingsPartial props={this.state.accountProfile} />
           </div>
         </div>
       </Layout>

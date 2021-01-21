@@ -59,7 +59,7 @@ class App extends React.Component {
   render() {
 
     if (this.state.status === 'loading') {
-      return (<Loader title="Hang tight, validating your account!" />)
+      return (<Loader title="Hang tight, starting up the app!" />)
     }
 
     if (this.state.status === 'mounted' && this.state.isLoggedIn === false) {

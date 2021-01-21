@@ -55,9 +55,7 @@ class FeedIndex extends React.Component<ProfileProps, ProfileState> {
       )
 
       if (isAuthorized) {
-        let picsList = await this.feedService.fetchFeed(
-          this.state.accountProfile.emailAddress
-        )
+        let picsList = await this.feedService.fetchMyFeed()
         this.setState({ pics: picsList })
       }
 

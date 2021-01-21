@@ -59,9 +59,13 @@ class LoginIndex extends React.Component {
                         </div>
                         <div className="columns has-text-centered">
                             <div className="column">
-                                <div>
-                                    <a href="/app/feed" className="button is-large button-is-primary">
-                                        Check out the feed</a>
+                                <div className="has-text-centered">
+                                    <a style={{ height: "150px", width: "150px" }} href="/app/feed" className="button is-primary is-large">
+                                        <span className="icon">
+                                            <i style={{ display: 'block', fontSize: '3rem' }} className="fas fa-image"></i>
+                                        </span>
+                                    </a>
+                                    <div>Our Feed</div>
                                 </div>
                             </div>
 
@@ -73,8 +77,13 @@ class LoginIndex extends React.Component {
             return (
                 <Layout location={location}>
                     <div className="main-content">
-                        <div>Hello, we have not yet authorized you for any apps</div>
-                        <LoadableAuthForm />
+                        <div className="columns is-centered">
+                            <div className="column is-half">
+                                <h1>Hello</h1>
+                                <p>We could authorize you for any apps yet.</p>
+                                <LoadableAuthForm />
+                            </div>
+                        </div>
                     </div>
                 </Layout>
             );

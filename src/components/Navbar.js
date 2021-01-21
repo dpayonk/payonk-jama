@@ -4,6 +4,7 @@ import React from 'react'
 class Navbar extends React.Component {
 
   constructor(props) {
+    // props.isAuthenticated
     super(props);
     // this.state.isDisplayed = false;
     this.state = {
@@ -20,6 +21,7 @@ class Navbar extends React.Component {
 
   render() {
     const isDisplayed = this.state.isDisplayed;
+    const isAuthenticated = (this.props.isAuthenticated !== undefined && this.props.isAuthenticated === true);
 
     return (
       <nav id="main-menu" style={{ width: '100%', background: 'transparent', zIndex: 1 }} className="navbar" role="navigation" aria-label="main navigation">
@@ -81,7 +83,7 @@ class Navbar extends React.Component {
             <div className="navbar-item">
               <div className="buttons">
                 <a href="/app/login" className="button is-light">
-                  Log in
+                  {(isAuthenticated) ? "App" : "Login"}                  
                   </a>
               </div>
             </div>

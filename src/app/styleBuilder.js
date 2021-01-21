@@ -6,7 +6,7 @@ const bannerStyle = {
     textAlign: "center", 
     color: "white",
     minHeight: "40px",
-    background: "red",
+    background: "#f14668",
     padding: "10px 5px",
     marginBottom: "10px"
 }
@@ -21,7 +21,7 @@ function getBannerStyle(environment){
     background: 'green'
   }
   if(environment !== 'production'){
-    customStyle.background = 'red';
+    customStyle.background = '#f14668';
   }
 
   return { ...bannerStyle, ...customStyle};

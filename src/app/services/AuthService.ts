@@ -9,14 +9,8 @@ import StateStore from '../StateStore';
 class AuthService {
   cfg: ConfigService; 
   static getInstance: () => any;
-
-  statics(){
-    const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
-    return {
-      'apiEndpoint': `${apiUrl}/account/authorized`
-    }
-  }
-  constructor(props) {
+  
+  constructor() {
     this.cfg = new ConfigService();
   }
 
@@ -27,7 +21,7 @@ class AuthService {
 
   async isLoggedIn() {
     const isLoggedIn = await this.getMagicFactory().user.isLoggedIn();
-    Logger.info(`AuthService.isLoggedIn(): ${isLoggedIn}`);
+    Logger.info(`AuthService.isLoggedIn():`, isLoggedIn);
     return isLoggedIn;
   }
 
@@ -71,7 +65,7 @@ class AuthService {
     return `${window.location.protocol}//${window.location.host}${appUrl}`;
   }
 
-  async getAuthenticationProfile() {
+  async getAuthenticationProfile(): Promise<AuthenticationProfile> {
     if (await this.isLoggedIn()) {
       try {
         const { issuer, email, publicAddress } = await this.getMagicFactory().user.getMetadata();

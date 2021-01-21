@@ -42,10 +42,6 @@ class ConfigService extends Component {
     get(key){
         return ConfigService.get(key);
     }
-
-    getJWT(){
-        return UserStore.getJWT();
-    }
 }
 
 ConfigService.STATIC = {
