@@ -33,7 +33,7 @@
     "typography-theme-wordpress-2016": "^0.16.19"
   },
   "devDependencies": {
-    "cypress": "^6.2.1",
+    /*"cypress": "^6.2.1", removed for publishing */
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.22.0",
     "prettier": "^1.19.1"
