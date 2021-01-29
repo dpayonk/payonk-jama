@@ -1,7 +1,6 @@
 import Logger from '../Logger';
 import AccountProfile from '../models/AccountProfile';
 import AuthenticationProfile from '../magic/AuthenticationProfile';
-import UserSession from '../models/UserSession';
 import StateStore from '../StateStore';
 
 class UserStore {
@@ -86,24 +85,6 @@ UserStore.clearAll = function(){
 UserStore.publishJWT = function(jwtToken){
     Logger.info(`New JWT token saved!`);        
     UserStore.storeJWT(jwtToken);  
-}
-
-
-// TODO: Move to defined model
-UserStore.loadUserSessionFromStorage = function(){
-    // This should load data from localStorage (didToken, email, etc.) for authentication
-    // and JWT token for API access and authorizationStatus
-    let emailAddress = UserStore.getEmailAddress();
-    let didToken = UserStore.getDidToken();
-    if(emailAddress === null || didToken === null){
-        Logger.info("UserStore could not load model from localCache");
-        return null;
-    } else {
-        let session = new UserSession();        
-        session.authenticationProfile = new AuthenticationProfile(emailAddress, didToken);
-        session.accountProfile = new AccountProfile({emailAddress});
-        return session;    
-    }    
 }
 
 UserStore.getEmailAddress = function(){

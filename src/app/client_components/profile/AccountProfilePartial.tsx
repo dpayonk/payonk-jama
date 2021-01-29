@@ -3,59 +3,66 @@ import AccountProfile from '../../models/AccountProfile'
 import UserStore from '../../repository/UserStore'
 
 type ProfileProps = {
-  accountProfile: AccountProfile
+  accountProfile: AccountProfile,
+  refreshProfileCallback: any
 }
 
-export default ({ accountProfile }: ProfileProps) => {
-  function handleSave(event) {
-    console.log('Save')
-  }
+export default ({ accountProfile, refreshProfileCallback }: ProfileProps) => {
+  let alertMessage = 'You have not been authorized with a '
+  let localEmail = UserStore.getEmailAddress()
+  let synced = false
 
   function handleCreate(event) {
-    console.log('Create')
+    console.log(event);
+    debugger;
+    refreshProfileCallback();
   }
 
-  let localEmail = UserStore.getEmailAddress()
-  const synced = localEmail === accountProfile.emailAddress
-  let alertMessage = ( synced ) ? '' : `Please refresh your session.  You've been unauthorized`;
-  let ActionButton = (accountProfile === null) ? (
-    <button
-      onClick={handleSave}
-      className={
-        synced
-          ? 'button is-pulled-right is-primary'
-          : 'button is-pulled-right is-danger'
-      }
-    >
-      Create Profile
-    </button>
-  ) : (
-    <button
-      onClick={handleCreate}
-      className={
-        synced
-          ? 'button is-pulled-right is-primary'
-          : 'button is-pulled-right is-danger'
-      }
-    >
-      Refresh Session
-    </button>
-  )
+  if (accountProfile === null) {
+    // if no AccountProfile, could be because expired JWT token
+    return (
+      <div className="box" style={{minHeight: "200px"}}>
+        <h2>My Account Profile</h2>
+        <button
+          onClick={handleCreate}
+          className="button is-pulled-right is-danger"
+        >
+          Create Session
+        </button>
+      </div>
+    )
+  }
+
+  synced = localEmail === accountProfile.emailAddress
+  alertMessage = synced
+    ? ''
+    : `The account email we have for you may not be the same as the one used to authenticate.`
 
   return (
     <div className="box">
-      <div className="is-pulled-right">{ActionButton}</div>
+      <div className="is-pulled-right">
+        <button
+          onClick={handleCreate}
+          className={
+            synced
+              ? 'button is-pulled-right is-primary'
+              : 'button is-pulled-right is-danger'
+          }
+        >
+          Refresh Profile
+        </button>
+      </div>
       <h2>My Account Profile</h2>
-      <div style={{minHeight: '40px'}}>
-      {alertMessage.length > 0 &&
-        <div className="alert-message">
-        {alertMessage}
-        </div>
-      }
+      <div style={{ minHeight: '40px' }}>
+        {alertMessage.length > 0 && (
+          <div className="alert-message">{alertMessage}</div>
+        )}
       </div>
       <div className="data-detail-control">
         <label className="label">Email</label>
-        <div className="field is-pulled-right">{accountProfile.emailAddress}</div>
+        <div className="field is-pulled-right">
+          {accountProfile.emailAddress}
+        </div>
       </div>
       <div className="data-detail-control">
         <label className="label">Role Status</label>

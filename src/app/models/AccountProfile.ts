@@ -4,6 +4,8 @@ import Logger from '../Logger';
 
 
 class AccountProfile extends SerializationMixin implements ISerializableObject {
+    key: string = "";
+    createdAt: string = "";
     emailAddress: string = ""; // need to define default to implement hydrate
     currentRole: string = "";
     friendlyName: string = "Guest";

@@ -49,6 +49,9 @@ class DebugToolbar extends React.Component {
         if (this.state.status !== 'mounted') {
             return (<div></div>);
         }
+        if(alertVisibility !== 'visible'){
+            Logger.info("DebugToolbar not visible");
+        }
 
         return (
             <div id="debug-toolbar" style={{

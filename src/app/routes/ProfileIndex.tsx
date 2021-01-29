@@ -13,7 +13,6 @@ import LocalSettingsPartial from '../client_components/profile/LocalSettingsPart
 import AccountProfilePartial from '../client_components/profile/AccountProfilePartial'
 
 type ProfileProps = {
-  //  userSession: UserSession
   // Example way to explicitly define input into component, great for documentation
 }
 
@@ -33,10 +32,9 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
 
   constructor(props: ProfileProps) {
     super(props)
-    this.accountProfileService = AccountProfileService.getInstance()
-    this.authService = AuthService.getInstance()
+    this.accountProfileService = AccountProfileService.getInstance();
+    this.authService = AuthService.getInstance();
 
-    //     let accountProfile = this.accountProfileService.
     this.state = {
       alert: '',
       status: 'initialized',
@@ -68,14 +66,9 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
         )
         this.setState({ accountProfile: accountProfile })
       } else if (this.state.jwtToken === null) {
-        this.setState({
-          alert:
-            'There is no session set up on this browser. Please create a session',
-        })
+        Logger.alert(`You have been logged out.  Please refresh your session.`, this.state.jwtToken);
       } else {
-        this.setState({
-          alert: 'Your authentication profile could not be retrieved',
-        })
+        Logger.alert(`Your profile could not be retrieved.  Please refresh your session.`, this.state.jwtToken);
       }
 
       // https://stackoverflow.com/questions/33613728/what-happens-when-using-this-setstate-multiple-times-in-react-component
@@ -123,6 +116,10 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       this.setState({ alert: 'Your profile is not complete!' })
       return false;
     }
+    if (this.state.accountProfile === null){
+      this.setState({alert: 'Your acount profile is not set up'});
+      return false;
+    }
 
     if (
       this.state.authenticationProfile.emailAddress !==
@@ -158,8 +155,6 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
     return (
       <div style={{ minHeight: '40px', minWidth: '40vw' }}>
         <div className="alert-message">
-          {alert}
-          <br />
           {this.state.alert}
         </div>
       </div>
@@ -192,7 +187,8 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
             </div>
           </div>
           <div id="account-profile-settings" className="column is-half">
-            <AccountProfilePartial accountProfile={this.state.accountProfile} />
+            <AccountProfilePartial 
+            refreshProfileCallback={this.handleCreateProfile} accountProfile={this.state.accountProfile} />
           </div>
           <div id="account-local-settings" className="column is-half">
             <LocalSettingsPartial props={this.state.accountProfile} />

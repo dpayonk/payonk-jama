@@ -11,7 +11,6 @@ import AccountProfile from '../models/AccountProfile'
 
 type ProfileProps = {
 }
-  /* userSession: UserSession */
 
 
 type ProfileState = {
