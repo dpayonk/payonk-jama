@@ -4,7 +4,7 @@ import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
 import StateStore from '../StateStore';
-import Logger from '../Logger';
+import {Logger} from 'payonkjs';
 import { getBannerStyle } from '../styleBuilder';
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
 import FeedService from '../services/FeedService';

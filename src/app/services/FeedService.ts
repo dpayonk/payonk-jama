@@ -1,6 +1,5 @@
-import BaseService from '../base/BaseService'
+import { BaseService, Logger } from 'payonkjs'
 import ConfigService from '../ConfigService'
-import Logger from '../Logger'
 
 class FeedService extends BaseService {
   statics() {
@@ -27,12 +26,15 @@ class FeedService extends BaseService {
         headers: this.generateHeaders(),
       })
       if (response.ok) {
-        let jsonResponse = await response.json();
-        if(jsonResponse.data != null){
-          return jsonResponse.data.pics;
+        let jsonResponse = await response.json()
+        if (jsonResponse.data != null) {
+          return jsonResponse.data.pics
         } else {
-          Logger.info(`FeedService.fetchFeed: Could not parse result `, jsonResponse.data);
-        }        
+          Logger.info(
+            `FeedService.fetchFeed: Could not parse result `,
+            jsonResponse.data
+          )
+        }
       } else {
         Logger.info(`FeedService.fetchFeed: Fetching error`, response.status)
       }

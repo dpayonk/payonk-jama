@@ -4,8 +4,7 @@ import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
 import { LoadableAuthForm } from '../client_library';
-import Logger from '../Logger';
-import { bannerStyle, getBannerStyle } from '../styleBuilder';
+import { getBannerStyle } from '../styleBuilder';
 import AuthService from '../services/AuthService';
 import AccountProfileService from '../services/AccountProfileService';
 

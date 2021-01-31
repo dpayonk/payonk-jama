@@ -2,8 +2,7 @@ import React, { Component } from "react"
 import Loader from '../../../components/Loader';
 import FeedDetail from './FeedDetail';
 import ConfigService from '../../ConfigService';
-import Logger from "../../Logger";
-
+import {Logger} from 'payonkjs';
 
 class FeedViewer extends Component {
   statics() {

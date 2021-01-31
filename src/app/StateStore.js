@@ -1,5 +1,5 @@
-import Logger from './Logger';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import {Logger} from 'payonkjs';
+// import { ApolloClient, InMemoryCache } from '@apollo/client';
 // import { gql } from '@apollo/client';
 
 class StateStore {

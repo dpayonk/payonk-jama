@@ -1,6 +1,6 @@
 import React from 'react'
 import AccountProfile from '../../models/AccountProfile'
-import UserStore from '../../repository/UserStore'
+import {UserRepository} from 'payonkjs';
 
 type ProfileProps = {
   accountProfile: AccountProfile,
@@ -9,7 +9,7 @@ type ProfileProps = {
 
 export default ({ accountProfile, refreshProfileCallback }: ProfileProps) => {
   let alertMessage = 'You have not been authorized with a '
-  let localEmail = UserStore.getEmailAddress()
+  let localEmail = UserRepository.getEmailAddress()
   let synced = false
 
   function handleCreate(event) {

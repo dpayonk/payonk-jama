@@ -5,7 +5,7 @@ import Layout from '../../components/layout'
 import { LoadableFeedViewer } from '../client_library'
 import Loader from '../../components/Loader'
 import FeedService from '../services/FeedService'
-import Logger from '../Logger'
+import {Logger} from 'payonkjs';
 import AccountProfileService from '../services/AccountProfileService'
 import AccountProfile from '../models/AccountProfile'
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Logger from '../../Logger';
+import {Logger} from 'payonkjs';
 import { Image, Modal } from 'semantic-ui-react';
 import CommentFeed from './CommentFeed';
 

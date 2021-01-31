@@ -1,9 +1,8 @@
 import React from 'react'
 import get from 'lodash/get'
+import {Logger, UserRepository} from 'payonkjs';
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader'
-import Logger from '../Logger'
-import UserStore from '../repository/UserStore'
 import AccountProfileService from '../services/AccountProfileService'
 import AuthenticationProfile from '../magic/AuthenticationProfile'
 import MagicProfileComponent from '../magic/MagicProfileComponent'
@@ -40,14 +39,14 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       status: 'initialized',
       isAuthorized: false,
       synced: false,
-      jwtToken: UserStore.getJWT(),
+      jwtToken: UserRepository.getJWT(),
       authenticationProfile: null, // initialized onCompomenentDidMount
       accountProfile: null, // initialized onCompomenentDidMount
     }
 
     this.handleCreateProfile = this.handleCreateProfile.bind(this)
     let self = this
-    UserStore.onUpdate(function(model) {
+    UserRepository.onUpdate(function(model) {
       // this may not be reproducible, since emailAddress state is not always updated
       let refreshed = self.refreshAuthorization()
       Logger.alert(`You're session has been refreshed`, refreshed)

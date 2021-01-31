@@ -1,6 +1,5 @@
 import React from 'react';
-import Logger from '../../Logger';
-
+import {Logger} from 'payonkjs';
 
 class ServiceExplorer extends React.Component {
     constructor(props){

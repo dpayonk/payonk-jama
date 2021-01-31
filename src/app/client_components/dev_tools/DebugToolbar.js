@@ -1,7 +1,7 @@
 import React from 'react';
+import {BaseService, Logger} from 'payonkjs';
 import ConfigService from "../../ConfigService";
-import BaseService from '../../base/BaseService';
-import Logger from '../../Logger';
+
 
 class DebugToolbar extends React.Component {
     constructor(props) {

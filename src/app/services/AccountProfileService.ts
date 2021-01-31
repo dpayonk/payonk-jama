@@ -1,9 +1,7 @@
-import Logger from '../Logger'
+import {BaseService, Logger, ISerializableObject, IParsedResponse, UserRepository} from 'payonkjs';
 import AccountProfile from '../models/AccountProfile'
 import AuthenticationProfile from '../magic/AuthenticationProfile'
-import BaseService from '../base/BaseService'
-import UserStore from '../repository/UserStore'
-import { ISerializableObject, IParsedResponse } from '../base/BaseInterfaces'
+
 
 class AccountProfileService extends BaseService {
   static getInstance: () => AccountProfileService
@@ -37,7 +35,7 @@ class AccountProfileService extends BaseService {
       if (ok && errors === '') {
         if (data.jwt_token !== undefined) {
           Logger.alert(`A new JWT token was issued`, data.jwt_token)
-          UserStore.publishJWT(data.jwt_token)
+          UserRepository.publishJWT(data.jwt_token)
         }
         return model
       }

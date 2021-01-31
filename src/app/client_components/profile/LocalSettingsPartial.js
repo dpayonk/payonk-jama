@@ -1,12 +1,12 @@
 import React from 'react'
-import UserStore from '../../repository/UserStore';
+import {UserRepository} from 'payonkjs';
 
 
 export default ({ props }) => {
     function handleRefresh() {
 
     }
-    let jwtToken = UserStore.getJWT();
+    let jwtToken = UserRepository.getJWT();
     let expiry = "Not implemented";
 
     return (

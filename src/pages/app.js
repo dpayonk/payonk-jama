@@ -1,5 +1,6 @@
 import React from "react"
 import { Router } from "@reach/router"
+import { Logger } from 'payonkjs';
 import Layout from '../components/layout';
 import Loader from "../components/Loader";
 import FeedIndex from "../app/routes/FeedIndex"
@@ -7,12 +8,10 @@ import LoginIndex from "../app/routes/LoginIndex"
 import ProfileIndex from "../app/routes/ProfileIndex"
 import DebugIndex from "../app/routes/DebugIndex"
 import CreatorIndex from '../app/routes/CreatorIndex'
-import Logger from '../app/Logger';
 import AuthService from "../app/services/AuthService";
 import AccountProfileService from "../app/services/AccountProfileService";
-import UserStore from '../app/repository/UserStore';
 import { LoadableAuthForm, LoadableDebugToolbar } from '../app/client_library';
-import 'semantic-ui-css/semantic.min.css'; // not working for some reason
+
 
 class App extends React.Component {
 
@@ -28,10 +27,10 @@ class App extends React.Component {
     // This requires a lot of coordination, but the app is the only place we know 
     // we can subscribe to global updates (besides singletons loaded here? )
     // perhaps instantiate statestore here?
-    UserStore.onSessionUpdate(function (model) {
-      Logger.info("received update, new Model", model);
-      self.setState({ userSession: model });
-    });
+    // UserRepository.onSessionUpdate(function (model) {
+    //   Logger.info("received update, new Model", model);
+    //   self.setState({ userSession: model });
+    // });
   }
 
   async componentDidMount() {
@@ -39,7 +38,7 @@ class App extends React.Component {
 
     try {
 
-      if (window.location.search.length > 0) { 
+      if (window.location.search.length > 0) {
         // Looking for magic credential in query string
         let authenticationProfile = await this.authService.onAuthenticationRedirectCallback();
         let accountProfile = AccountProfileService.getInstance().createProfile(authenticationProfile);
@@ -50,7 +49,7 @@ class App extends React.Component {
     } catch (error) {
       Logger.error("app.js: An exception occurred loading the app.", error);
     }
-        
+
     this.setState({
       status: 'mounted', isLoggedIn: isLoggedIn, status: 'mounted'
     });

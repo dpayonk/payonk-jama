@@ -1,8 +1,8 @@
 import { Magic } from 'magic-sdk';
+import {Logger, UserRepository} from 'payonkjs';
 import ConfigService from '../ConfigService';
-import Logger from '../Logger';
+
 import AuthenticationProfile from '../magic/AuthenticationProfile';
-import UserStore from '../repository/UserStore';
 import StateStore from '../StateStore';
 
 
@@ -29,12 +29,12 @@ class AuthService {
     let m = this.getMagicFactory();
     m.user.logout();
     // remove from localStorage as well
-    UserStore.clearAuthentication();
+    UserRepository.clearAll();
   }
 
   async loginMagic(emailAddress: string) {
     // Method to start authentication, 
-    UserStore.storeEmail(emailAddress);
+    UserRepository.storeEmail(emailAddress);
     let didToken = await this.getMagicFactory().auth.loginWithMagicLink({
       email: emailAddress,
       showUI: true,
@@ -45,12 +45,12 @@ class AuthService {
 
   // Move to AccountProfileService
   async saveAuthentication(didToken: string): Promise<AuthenticationProfile> {
-    UserStore.storeKey('didToken', didToken);
-    UserStore.storeKey('updatedAt', new Date());
+    UserRepository.storeKey('didToken', didToken);
+    UserRepository.storeKey('updatedAt', new Date().toString());
     let subscribers = StateStore.publishEvent('onLogin', {'didToken': didToken });
     Logger.info(`Subscribers notified:`, subscribers);
     
-    return new AuthenticationProfile(UserStore.getEmailAddress(), didToken);
+    return new AuthenticationProfile(UserRepository.getEmailAddress(), didToken);
   }
 
   async onAuthenticationRedirectCallback(): Promise<AuthenticationProfile>  {

@@ -1,6 +1,5 @@
 import {ISerializableObject} from '../base/BaseInterfaces';
-import SerializationMixin from '../base/BaseMixins';
-import Logger from '../Logger';
+import {Logger, SerializationMixin} from 'payonkjs';
 
 
 class AccountProfile extends SerializationMixin implements ISerializableObject {

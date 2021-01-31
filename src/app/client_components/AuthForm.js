@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import AuthService from '../services/AuthService'
 import Loader from '../../components/Loader';
-import Logger from "../Logger";
+import {Logger, UserRepository} from 'payonkjs';
 import AccountProfileService from "../services/AccountProfileService";
-import UserStore from "../repository/UserStore";
+
 
 class AuthForm extends Component {
 
@@ -84,7 +84,7 @@ class AuthForm extends Component {
     if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ alert: "Starting auth process, setting email..." });
       let didToken = await this.state.authService.loginMagic(this.state.emailInput);
-      UserStore.publishLogin(this.state.emailInput, didToken);
+      UserRepository.publishLogin(this.state.emailInput, didToken);
       debugger;
     }
   };

@@ -1,10 +1,10 @@
 import React from 'react'
 import Helmet from 'react-helmet'
+import {Logger} from 'payonkjs';
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
 import StateStore from '../StateStore';
-import Logger from '../Logger';
 import { getBannerStyle } from '../styleBuilder';
 import FeedService from '../services/FeedService';
 import { LoadableFilerobotImageEditor } from '../client_library'
@@ -21,7 +21,6 @@ class CreatorIndex extends React.Component {
             isLoggedIn: false,
             alert: "Create a piece of content...",
             editImageUrl: 'https://nyc3.digitaloceanspaces.com/com.payonk.clique/20210114-181146--20210114-174832--stephen-walker-unsplash.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=KSB4OEBLVBM6HPQGPVDM%2F20210115%2Fnyc3%2Fs3%2Faws4_request&X-Amz-Date=20210115T001146Z&X-Amz-Expires=6000&X-Amz-SignedHeaders=host&X-Amz-Signature=2920e95f97ee6d1cbc0895f42ebb181f483c901ffe43943004e327955d20e750',
-            showImageEditor: false,
             feedService: new FeedService(),
             Log: [],
             pics: []

@@ -1,6 +1,5 @@
 import React from 'react'
-import Logger from '../Logger';
-import UserStore from '../repository/UserStore';
+import {Logger, UserRepository} from 'payonkjs';
 import AuthService from '../services/AuthService'
 
 
@@ -12,7 +11,7 @@ export default ({ emailAddress, publicAddress, didToken }) => {
         let service = new AuthService();
         service.logout();
         // clear all local
-        UserStore.clearAll();
+        UserRepository.clearAll();
         Logger.alert("You have been logged out!");
         // console.log("redirect?");
     };
