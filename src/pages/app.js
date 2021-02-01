@@ -118,6 +118,7 @@ class App extends React.Component {
             <ProfileIndex path="/" />
           </PrivateRoute>
           <DebugIndex path="/debug" />
+          <LoginIndex onLoginCallback={this.onLogin} path="/" />
           <Redirector isLoggedIn={this.state.isLoggedIn} default />
         </Router>
       </div>
