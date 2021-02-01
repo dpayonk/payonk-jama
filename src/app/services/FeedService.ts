@@ -2,6 +2,16 @@ import { BaseService, Logger } from 'payonkjs'
 import ConfigService from '../ConfigService'
 
 class FeedService extends BaseService {
+  static SINGLETON: FeedService
+  static getInstance(): FeedService {
+    if (this.SINGLETON !== undefined) {
+      return this.SINGLETON
+    } else {
+      this.SINGLETON = new FeedService(ConfigService.getBackend())
+      return this.SINGLETON
+    }
+  }
+
   statics() {
     const apiUrl = ConfigService.get('BACKEND_ENDPOINT')
     return {

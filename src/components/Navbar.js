@@ -69,7 +69,7 @@ class Navbar extends React.Component {
 
                 </a>
                 <hr className="navbar-divider" />
-                <a href="/app/profile" className="navbar-item" style={{ boxShadow: "none" }}>
+                <a href="/app/home/profile" className="navbar-item" style={{ boxShadow: "none" }}>
                   My Profile
             </a>
 

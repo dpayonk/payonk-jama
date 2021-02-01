@@ -1,6 +1,7 @@
 import React from 'react'
 import {Logger, UserRepository} from 'payonkjs';
-import AuthService from '../services/AuthService'
+import AuthService from '../services/AuthService';
+import {StateStore, EventKeys} from '../StateStore';
 
 
 export default ({ emailAddress, publicAddress, didToken }) => {
@@ -8,12 +9,12 @@ export default ({ emailAddress, publicAddress, didToken }) => {
     let alert = (didToken !== undefined && didToken !== "") ? "Logged In" : "";
 
     function handleLogout() {
-        let service = new AuthService();
+        let service = AuthService.getInstance();
         service.logout();
         // clear all local
         UserRepository.clearAll();
         Logger.alert("You have been logged out!");
-        // console.log("redirect?");
+        StateStore.publishEvent(EventKeys.onLogout);
     };
 
 

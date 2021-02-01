@@ -13,8 +13,6 @@ export default ({ accountProfile, refreshProfileCallback }: ProfileProps) => {
   let synced = false
 
   function handleCreate(event) {
-    console.log(event);
-    debugger;
     refreshProfileCallback();
   }
 

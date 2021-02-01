@@ -1,27 +1,22 @@
-import {ISerializableObject} from '../base/BaseInterfaces';
-import {Logger, SerializationMixin} from 'payonkjs';
-
+import { ISerializableObject, SerializationMixin, Logger } from 'payonkjs';
 
 class AccountProfile extends SerializationMixin implements ISerializableObject {
     key: string = "";
     createdAt: string = "";
-    emailAddress: string = ""; // need to define default to implement hydrate
+    emailAddress: string = ""; // need to define default to implement fillFromJSON
     currentRole: string = "";
     friendlyName: string = "Guest";
+    authenticated: boolean = false;
 
     
     static validateJsonResponse: (json_data: any) => boolean;
-    static fromJson: (jsonResponse: any) => AccountProfile;
+    static fromJson: (jsonResponse: any) => AccountProfile | null;
 
     constructor(props: Object = {}) {
-        super();        
-        this.hydrate(props);
+        super();
+        this.fillFromJSON(props);            
     }
     
-    greet() {
-        return "Hello, " + this.emailAddress;
-    }
-
     toJson(){
         return {
             'emailAddress': this.emailAddress,      
@@ -29,7 +24,7 @@ class AccountProfile extends SerializationMixin implements ISerializableObject {
         }
     }
 
-    fromJson(jsonResponse){
+    fromJson(jsonResponse: any){
         return AccountProfile.fromJson(jsonResponse);
     }
 }
@@ -45,14 +40,15 @@ AccountProfile.validateJsonResponse = function(json_data): boolean{
 }
 
 
-AccountProfile.fromJson = function(jsonResponse: Object): AccountProfile{
+AccountProfile.fromJson = function(jsonResponse: Object): AccountProfile | null {
     try{
         if(AccountProfile.validateJsonResponse(jsonResponse)){
             let jsonData = AccountProfile.convertToCamelCase(jsonResponse);
             return new AccountProfile(jsonData); 
         }
     }catch(exc){
-        Logger.alert('AccountProfile.fromJson: Could not serialize response:', jsonResponse);
+        Logger.warn(`AccountProfile.fromJson: ${exc.toString()}`, exc);
+        Logger.alert(`AccountProfile.fromJson: Could not serialize response:`, jsonResponse);
     }
     
     return null;

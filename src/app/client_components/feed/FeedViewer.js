@@ -6,7 +6,7 @@ import {Logger} from 'payonkjs';
 
 class FeedViewer extends Component {
   statics() {
-    const apiUrl = ConfigService.get('BACKEND_ENDPOINT');
+    const apiUrl = ConfigService.getBackend();
     return {
       'apiEndpoint': `${apiUrl}/feed`
     }

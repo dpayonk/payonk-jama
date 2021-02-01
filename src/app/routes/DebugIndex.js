@@ -3,7 +3,6 @@ import Helmet from 'react-helmet'
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
-import StateStore from '../StateStore';
 import {Logger} from 'payonkjs';
 import { getBannerStyle } from '../styleBuilder';
 import { LoadableAuthForm, LoadableFeedViewer } from '../client_library'
@@ -18,7 +17,7 @@ class DebugIndex extends React.Component {
     constructor(props) {
         
         super(props);
-        const environment = new ConfigService().get_environment();
+        const environment = ConfigService.getEnvironmente();
         this.state = {
             environment: environment,
             status: "initialized",
@@ -33,17 +32,6 @@ class DebugIndex extends React.Component {
             services: [AccountProfileService],
             Log: []
         }
-
-        let self = this;
-        // redirect log output to view
-        // Logger.redirectTo(function (message, obj) {
-        //     let log = self.state.Log;
-        //     log.push({ "message": message, "obj": obj, "key": self.uuidv4()});
-        //     self.setState({ Log: log });
-        // });
-        StateStore.subscribe("imageUpload", function(props){            
-            self.setState({editImageUrl: props.imageUrl})
-        });
     }
 
     uuidv4() {

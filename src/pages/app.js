@@ -1,5 +1,5 @@
 import React from "react"
-import { Router } from "@reach/router"
+import { navigate, Router } from "@reach/router"
 import { Logger } from 'payonkjs';
 import Layout from '../components/layout';
 import Loader from "../components/Loader";
@@ -10,8 +10,45 @@ import DebugIndex from "../app/routes/DebugIndex"
 import CreatorIndex from '../app/routes/CreatorIndex'
 import AuthService from "../app/services/AuthService";
 import AccountProfileService from "../app/services/AccountProfileService";
-import { LoadableAuthForm, LoadableDebugToolbar } from '../app/client_library';
+import {StateStore, EventKeys} from '../app/StateStore';
 
+import { LoadableDebugToolbar } from '../app/client_library';
+
+
+class PrivateRoute extends React.Component {
+  render() {
+    if (this.props.isLoggedIn !== true) {
+      navigate('/app/login');
+      return (<LoginIndex alert="You are not authorized to view this page" />);
+    }
+
+    return (<div>
+      {this.props.children}
+    </div>
+
+    )
+  }
+}
+
+class Redirector extends React.Component {
+
+  render() {
+    if (this.props.isLoggedIn !== true) {
+      navigate('/app/login');
+      return (<LoginIndex alert="You have been logged out!" />);
+    }
+
+    return (
+      <Layout>
+        <div className="columns">
+          <div style={{margin:"40px 0px"}} className="column has-text-centered">
+          <h1>The page you are looking for does not exist</h1>
+          </div>
+        </div>
+      </Layout>
+    )
+  }
+}
 
 class App extends React.Component {
 
@@ -21,16 +58,12 @@ class App extends React.Component {
       isLoggedIn: false,
       status: 'loading',
     };
-    this.authService = new AuthService();
+    this.authService = AuthService.getInstance();
 
     let self = this;
-    // This requires a lot of coordination, but the app is the only place we know 
-    // we can subscribe to global updates (besides singletons loaded here? )
-    // perhaps instantiate statestore here?
-    // UserRepository.onSessionUpdate(function (model) {
-    //   Logger.info("received update, new Model", model);
-    //   self.setState({ userSession: model });
-    // });
+    StateStore.subscribe(EventKeys.onLogout, function(){
+      self.setState({isLoggedIn: false});
+    });
   }
 
   async componentDidMount() {
@@ -40,9 +73,9 @@ class App extends React.Component {
 
       if (window.location.search.length > 0) {
         // Looking for magic credential in query string
-        let authenticationProfile = await this.authService.onAuthenticationRedirectCallback();
-        let accountProfile = AccountProfileService.getInstance().createProfile(authenticationProfile);
-        Logger.alert('app.js: Create a new profile for you.', accountProfile);
+        let authenticationProfile = await this.authService.handleMagicAuthenticationRedirect();
+        let accountProfile = await AccountProfileService.getInstance().createProfile(authenticationProfile);
+        Logger.alert('app.js: Created profile!', accountProfile);
       }
 
       isLoggedIn = await this.authService.isLoggedIn();
@@ -55,34 +88,37 @@ class App extends React.Component {
     });
   }
 
+  onLogin(accountProfile) {
+    if(accountProfile !== undefined && accountProfile !== null){
+
+      this.setState({ isLoggedIn: true });
+      navigate('/app/home');  
+    }
+  }
+
   render() {
 
     if (this.state.status === 'loading') {
       return (<Loader title="Hang tight, starting up the app!" />)
     }
 
-    if (this.state.status === 'mounted' && this.state.isLoggedIn === false) {
-      return (
-        <Layout location={location}>
-          <div className="columns is-centered" style={{ textAlign: "center", marginTop: "33vh" }}>
-            <div className="is-half">
-              <LoadableAuthForm title="Ask for permission" />
-            </div>
-          </div>
-        </Layout>
-      );
-    }
-
     return (
       <div id="root">
         <LoadableDebugToolbar />
         <Router basepath="/app">
-          <LoginIndex path="/login" />
-          <ProfileIndex path="/profile" />
-          <FeedIndex path="/feed" />
-          <CreatorIndex path="/creator" />
+          <LoginIndex onLoginCallback={this.onLogin} path="/login" />
+          <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/home">
+            <ProfileIndex path="/profile" />
+            <CreatorIndex path="/creator" />
+          </PrivateRoute>
+          <PrivateRoute isLoggedIn={this.state.isLoggedIn} path="/feed">
+            <FeedIndex path="/" />
+          </PrivateRoute>
+          <PrivateRoute path="/profile" isLoggedIn={this.state.isLoggedIn}>
+            <ProfileIndex path="/" />
+          </PrivateRoute>
           <DebugIndex path="/debug" />
-          <FeedIndex path="/" />
+          <Redirector isLoggedIn={this.state.isLoggedIn} default />
         </Router>
       </div>
     );

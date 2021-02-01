@@ -1,19 +1,20 @@
 import React, { Component } from "react"
+import {Logger} from 'payonkjs';
+import Loader from '../Loader';
 import AuthService from '../services/AuthService'
-import Loader from '../../components/Loader';
-import {Logger, UserRepository} from 'payonkjs';
 import AccountProfileService from "../services/AccountProfileService";
-
 
 class AuthForm extends Component {
 
   constructor(props) {
+    // props should have an eventHandler to call when 
+    // user has loggedIn or logged out
     super(props);
 
     this.state = {
       alert: "",
-      authService: new AuthService(),
-      accountService: new AccountProfileService(),
+      authService: AuthService.getInstance(),
+      accountService: AccountProfileService.getInstance(),
       emailInput: "",
       fetchedAuthorization: false, isAuthorized: false,
       fetchedLogin: false, isLoggedIn: false,
@@ -21,7 +22,7 @@ class AuthForm extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleRegister = this.handleRegister.bind(this);
+    this.handleRegistration = this.handleRegistration.bind(this);
   }
 
   async componentDidMount() {
@@ -30,7 +31,7 @@ class AuthForm extends Component {
 
     if (this.state.authenticationProfile !== null) {
       // This is too complex combiniing a profile with magic link, need better model
-      if (this.state.isAuthorized == true) {
+      if (this.state.isAuthorized === true) {
         this.setState({ emailInput: this.state.authenticationProfile.emailAddress });        
       }
     } else {
@@ -53,15 +54,6 @@ class AuthForm extends Component {
     return true;
   }
 
-  async isAuthorized() {
-    if (this.state.fetchedAuthorization === false) {
-      await this.fetchAuthorizationProfile(); // authorization status set by getting profile
-      return this.state.isAuthorized;
-    } else {
-      return this.state.isAuthorized;       // fetch from cache
-    }
-  }
-
   async fetchAuthorizationProfile() {
     let isAuthorized = false;
     let authenticationProfile = await this.state.authService.getAuthenticationProfile();
@@ -79,13 +71,18 @@ class AuthForm extends Component {
     this.setState({ emailInput: event.target.value });
   }
 
-  async handleRegister(e) {
+  async handleRegistration(e) {
     e.preventDefault();
     if (this.isValidEmail(this.state.emailInput)) {
       this.setState({ alert: "Starting auth process, setting email..." });
       let didToken = await this.state.authService.loginMagic(this.state.emailInput);
-      UserRepository.publishLogin(this.state.emailInput, didToken);
-      debugger;
+
+      Logger.alert("This is the page that started the auth process", didToken);
+      if(this.props.redirectCallback !== undefined){
+        this.props.eventHandler(this.state.emailInput, didToken);
+      } else {
+        Logger.alert("There is no event handler defined for auth form");
+      }
     }
   };
 
@@ -128,8 +125,6 @@ class AuthForm extends Component {
 
   renderLoginForm() {
     return (<div>
-      <p>Register for the waitlist for the latest updates!</p>
-
       <form>
         <div className="field">
           <label className="label">Email</label>
@@ -145,7 +140,7 @@ class AuthForm extends Component {
         <div className="field is-grouped">
           <div className="control">
             <div className="field">
-              <button onClick={this.handleRegister} className="button is-light is-pull-right" type="submit">
+              <button onClick={this.handleRegistration} className="button is-light is-pull-right" type="submit">
                 Register
           </button>
             </div>

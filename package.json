@@ -20,7 +20,7 @@
     "gatsby-source-graphql": "^2.12.0",
     "lodash": "^4.17.20",
     "magic-sdk": "^4.0.2",
-    "payonkjs": "^1.0.1",
+    "payonkjs": "^1.0.5",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-helmet": "^5.2.1",

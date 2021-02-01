@@ -1,5 +1,4 @@
 import React from 'react';
-import StateStore from '../StateStore';
 
 class MediaUploader extends React.Component {
 
@@ -38,7 +37,6 @@ class MediaUploader extends React.Component {
                 let picture = data.picture;
                 let image_url = data.image_url;
                 self.setState({ picture: picture, image_url: image_url });
-                StateStore.publishEvent('imageUpload', { 'imageUrl': image_url });
             } else {
                 console.log('Interface error');
             }

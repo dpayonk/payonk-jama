@@ -4,19 +4,17 @@ import {Logger} from 'payonkjs';
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader';
 import ConfigService from '../ConfigService';
-import StateStore from '../StateStore';
 import { getBannerStyle } from '../styleBuilder';
 import FeedService from '../services/FeedService';
 import { LoadableFilerobotImageEditor } from '../client_library'
 import MediaUploader from '../client_components/MediaUploader';
-
+import {StateStore, EventKeys} from '../StateStore';
 
 class CreatorIndex extends React.Component {
     constructor(props) {
         super(props);
-        const environment = new ConfigService().get_environment();
         this.state = {
-            environment: environment,
+            environment: ConfigService.getEnvironment(),
             status: "initialized",
             isLoggedIn: false,
             alert: "Create a piece of content...",
@@ -27,7 +25,7 @@ class CreatorIndex extends React.Component {
         }
 
         let self = this;
-        StateStore.subscribe("imageUpload", function (props) {
+        StateStore.subscribe(EventKeys.imageUpload, function (props) {
             self.setState({ editImageUrl: props.imageUrl })
         });
     }

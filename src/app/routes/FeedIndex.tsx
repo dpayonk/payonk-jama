@@ -5,13 +5,11 @@ import Layout from '../../components/layout'
 import { LoadableFeedViewer } from '../client_library'
 import Loader from '../../components/Loader'
 import FeedService from '../services/FeedService'
-import {Logger} from 'payonkjs';
+import { Logger } from 'payonkjs'
 import AccountProfileService from '../services/AccountProfileService'
 import AccountProfile from '../models/AccountProfile'
 
-type ProfileProps = {
-}
-
+type ProfileProps = {}
 
 type ProfileState = {
   alert: string
@@ -33,32 +31,38 @@ class FeedIndex extends React.Component<ProfileProps, ProfileState> {
       alert: '',
       pics: [],
       status: 'initialized',
-      accountProfile: null
+      accountProfile: null,
     }
-    this.feedService = new FeedService()
-    this.accountProfileService = AccountProfileService.getInstance();
+    this.feedService = FeedService.getInstance()
+    this.accountProfileService = AccountProfileService.getInstance()
   }
 
   async componentDidMount() {
-    let isAuthorized = false;
+    let isAuthorized = false
 
     try {
-      // this route should not be called unless already authenticated   
-      let accountProfile = await this.accountProfileService.fetchMyProfile();
-      
-      this.setState({accountProfile: accountProfile});
-      // could move to fetchMyProfile and return permissions?
-      isAuthorized = await this.accountProfileService.fetchAuthorizationStatus(
-        this.state.accountProfile.emailAddress,
-        'feed'
-      )
+      // this route should not be called unless already authenticated
+      let accountProfile = await this.accountProfileService.fetchMyProfile()
+      debugger
+      if (accountProfile !== null) {
+        this.setState({ accountProfile: accountProfile })
 
-      if (isAuthorized) {
-        let picsList = await this.feedService.fetchMyFeed()
-        this.setState({ pics: picsList })
+        // could move to fetchMyProfile and return permissions?
+        isAuthorized = await this.accountProfileService.fetchAuthorizationStatus(
+          this.state.accountProfile.emailAddress,
+          'feed'
+        )
+
+        if (isAuthorized) {
+          let picsList = await this.feedService.fetchMyFeed()
+          this.setState({ pics: picsList })
+        }
       }
 
-      Logger.info(`FeedViewer: Setting Authorization Status: ${isAuthorized}`, isAuthorized);
+      Logger.info(
+        `FeedViewer: Setting Authorization Status: ${isAuthorized}`,
+        isAuthorized
+      )
     } catch (error) {
       Logger.error(`FeedViewer: Error occured mounting`, error)
     }
@@ -77,18 +81,20 @@ class FeedIndex extends React.Component<ProfileProps, ProfileState> {
     }
 
     if (this.state.isAuthorized === false) {
-      return (<div>It does not appear you are authorized yet.</div>);
+      return (
+        <Layout location="/feed">
+          <div>It does not appear you are authorized yet.</div>
+        </Layout>
+      )
     }
 
     return (
-      <Layout location={location}>    
+      <Layout location={location}>
         <Helmet title={siteTitle} />
         <div className="container main-content">
           <h1 className="has-text-centered">Our Family Feed</h1>
           <div className="container">
-            <LoadableFeedViewer
-              pics={this.state.pics}
-            />
+            <LoadableFeedViewer pics={this.state.pics} />
           </div>
         </div>
       </Layout>
