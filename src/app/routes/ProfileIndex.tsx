@@ -167,7 +167,7 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       return <Loader />
     }
     return (
-      <Layout location={location}>
+      <Layout location={location} isLoggedIn="true">
         <div className="columns is-centered is-multiline">
           <div id="profile-header" className="column is-full">
             <div className="is-pulled-right">

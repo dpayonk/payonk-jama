@@ -126,7 +126,7 @@ class LoginIndex extends React.Component {
 
         if (this.state.isLoggedIn === true && this.state.feedAuthorization === true) {
             return (
-                <Layout location={location}>
+                <Layout isLoggedIn={this.state.isLoggedIn} location={location}>
                     <Helmet title="Login" />
                     <div className="container main-content">
                         <div style={getBannerStyle(this.state.environment)}>

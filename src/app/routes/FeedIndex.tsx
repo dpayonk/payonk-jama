@@ -89,7 +89,7 @@ class FeedIndex extends React.Component<ProfileProps, ProfileState> {
     }
 
     return (
-      <Layout location={location}>
+      <Layout location={location} isLoggedIn="true">
         <Helmet title={siteTitle} />
         <div className="container main-content">
           <h1 className="has-text-centered">Our Family Feed</h1>
