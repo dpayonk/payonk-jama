@@ -89,6 +89,7 @@ class App extends React.Component {
   }
 
   onLogin(accountProfile) {
+    debugger;
     if(accountProfile !== undefined && accountProfile !== null){
 
       this.setState({ isLoggedIn: true });

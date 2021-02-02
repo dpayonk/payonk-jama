@@ -139,6 +139,7 @@ class AccountProfileService extends BaseService {
       permissionName: permissionName,
     };
 
+    debugger;
     if (this.hasJWT() === false) {
       Logger.alert("No token present.  A profile needs to be created.", null);
       return false;

@@ -1,13 +1,14 @@
 import React from 'react'
 import get from 'lodash/get'
 import {Logger, UserRepository} from 'payonkjs';
+import AuthService from '../services/AuthService'
+import AccountProfileService from '../services/AccountProfileService'
+import ProfileService from '../services/ProfileService'
+import AuthenticationProfile from '../magic/AuthenticationProfile'
+import AccountProfile from '../models/AccountProfile'
 import Layout from '../../components/layout'
 import Loader from '../../components/Loader'
-import AccountProfileService from '../services/AccountProfileService'
-import AuthenticationProfile from '../magic/AuthenticationProfile'
 import MagicProfileComponent from '../magic/MagicProfileComponent'
-import AccountProfile from '../models/AccountProfile'
-import AuthService from '../services/AuthService'
 import LocalSettingsPartial from '../client_components/profile/LocalSettingsPartial'
 import AccountProfilePartial from '../client_components/profile/AccountProfilePartial'
 
@@ -28,11 +29,13 @@ type ProfileState = {
 class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
   accountProfileService: AccountProfileService
   authService: AuthService
+  profileService: ProfileService
 
   constructor(props: ProfileProps) {
     super(props)
     this.accountProfileService = AccountProfileService.getInstance();
     this.authService = AuthService.getInstance();
+    this.profileService = ProfileService.getInstance();
 
     this.state = {
       alert: '',
@@ -58,7 +61,7 @@ class ProfileIndex extends React.Component<ProfileProps, ProfileState> {
       let authenticationProfile = await this.authService.getAuthenticationProfile();
 
       if (authenticationProfile !== null && this.state.jwtToken !== null) {
-        let accountProfile = await this.accountProfileService.fetchMyProfile()
+        let accountProfile = await this.profileService.fetchMyProfile()
         Logger.warn(
           'Should we update the accountProfile of parent?',
           accountProfile
